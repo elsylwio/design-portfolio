@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay-Per-Use — Interview Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#1A1A1A; --ink-mid:#5c5049; --ink-soft:#8a7d74;
+    --bg:#fbf6f0; --card:#fff; --border:#e4d8cc;
+    --teal:#4fa383; --teal-light:#e3f5ec;
+    --purple:#a99bd6; --purple-light:#f1eefb;
+    --red:#b6849f; --red-light:#f5e9f0;
+    --orange:#7d8fd4; --orange-light:#eaedfa;
+    --lav:#c7bce8;
+    --hero-teal:#b7e4d3; --hero-mauve:#d9c9d6; --hero-purple:#c7bce8;
+  }
+  html,body{height:100%}
+  body{
+    font-family:'Inter',sans-serif; background:#e9e0d5; color:var(--ink);
+    -webkit-font-smoothing:antialiased; overflow:hidden;
+  }
+  /* DECK / SLIDE STAGE */
+  .deck{position:fixed; inset:0; display:flex; align-items:center; justify-content:center}
+  .slide{
+    position:absolute; width:100%; height:100%;
+    display:none; flex-direction:column;
+    padding:6vh 7vw; background:var(--bg);
+    opacity:0; transition:opacity .35s ease;
+  }
+  .slide.active{display:flex; opacity:1}
+  .slide.gradient{
+    background:linear-gradient(135deg,var(--hero-teal) 0%,var(--hero-mauve) 55%,var(--hero-purple) 100%);
+  }
+
+  /* Shared type */
+  .eyebrow{
+    font-size:clamp(11px,1vw,13px); font-weight:600; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--ink-soft);
+    display:flex; align-items:center; gap:12px; margin-bottom:26px;
+  }
+  .eyebrow::before{content:''; width:34px; height:1.5px; background:var(--ink-soft)}
+  .phase-tag{
+    padding:4px 12px; border-radius:20px;
+    font-size:clamp(10px,.9vw,12px); font-weight:600; letter-spacing:.06em; text-transform:uppercase;
+  }
+  .p-discover{background:var(--purple-light); color:#5a4a8a}
+  .p-define{background:var(--teal-light); color:#2f7a5e}
+  .p-develop{background:var(--red-light); color:#7a4a63}
+  .p-deliver{background:var(--orange-light); color:#3d4a8a}
+
+  h1{font-family:'DM Serif Display',serif; font-weight:400; line-height:1.06; letter-spacing:-.01em}
+  h2{font-family:'DM Serif Display',serif; font-weight:400; line-height:1.12;
+     font-size:clamp(28px,3.8vw,50px); max-width:20ch; margin-bottom:24px}
+  h2 em{font-style:italic; color:transparent; -webkit-text-stroke:1.3px var(--ink)}
+  .lead{font-size:clamp(15px,1.5vw,21px); color:var(--ink-mid); line-height:1.6; max-width:60ch}
+
+  /* Title slide */
+  .title-eyebrow{font-size:clamp(11px,1vw,13px); font-weight:600; letter-spacing:.16em;
+    text-transform:uppercase; color:var(--ink-soft); margin-bottom:28px}
+  .title-slide h1{font-size:clamp(40px,6vw,82px); max-width:16ch; margin-bottom:28px}
+  .title-slide h1 em{font-style:italic; color:transparent; -webkit-text-stroke:1.5px var(--ink)}
+  .title-sub{font-size:clamp(15px,1.6vw,22px); color:var(--ink-mid); max-width:48ch; line-height:1.6; margin-bottom:44px}
+  .title-meta{display:flex; gap:44px; flex-wrap:wrap}
+  .title-meta .ml{font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:4px}
+  .title-meta .mv{font-size:clamp(13px,1.2vw,16px); color:var(--ink)}
+
+  /* Metrics */
+  .metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:14px}
+  .metrics.three{grid-template-columns:repeat(3,1fr)}
+  .metric{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:26px 20px; text-align:center}
+  .metric .n{font-family:'DM Serif Display',serif; font-size:clamp(30px,3.6vw,48px); color:var(--teal); line-height:1; margin-bottom:8px}
+  .metric .l{font-size:clamp(11px,1vw,13.5px); color:var(--ink-soft); line-height:1.45}
+
+  /* Two-col */
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:8px}
+  .cols.tilt{grid-template-columns:1.05fr .95fr}
+
+  /* Cards */
+  .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:24px 26px}
+  .card .ce{font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px}
+  .card h4{font-size:clamp(15px,1.4vw,19px); font-weight:600; line-height:1.35; margin-bottom:8px}
+  .card p{font-size:clamp(12.5px,1.15vw,15px); color:var(--ink-mid); line-height:1.55}
+  .card.t-teal{border-top:3px solid var(--teal)}
+  .card.t-purple{border-top:3px solid var(--purple)}
+  .card.t-red{border-top:3px solid var(--red)}
+  .card.t-orange{border-top:3px solid var(--orange)}
+  .card.soft-lav{background:var(--purple-light); border-color:var(--lav)}
+
+  /* Insight rows */
+  .insights{display:flex; flex-direction:column; gap:12px; margin-top:6px}
+  .ins{display:flex; gap:16px; align-items:flex-start; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:18px 22px}
+  .ins .dot{width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:7px}
+  .ins .it{font-size:clamp(14px,1.3vw,17px); font-weight:600; margin-bottom:4px}
+  .ins .ix{font-size:clamp(12.5px,1.1vw,14.5px); color:var(--ink-mid); line-height:1.5}
+
+  /* Pull quote */
+  .quote{border-left:3px solid var(--lav); background:var(--purple-light); border-radius:0 12px 12px 0; padding:24px 30px; margin-top:24px; max-width:70ch}
+  .quote p{font-family:'DM Serif Display',serif; font-style:italic; font-size:clamp(18px,2vw,28px); line-height:1.4; color:var(--ink)}
+  .quote cite{display:block; font-size:12px; font-style:normal; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); margin-top:14px}
+
+  /* chips */
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+  .chip{display:inline-flex; align-items:center; gap:5px; padding:5px 12px; border-radius:20px; font-size:clamp(11px,1vw,13px); font-weight:500; border:1px solid var(--border); background:var(--bg); color:var(--ink-mid)}
+  .chip::before{content:'✦'; font-size:9px; color:var(--teal)}
+  .chip.agent{border-color:var(--purple); color:var(--purple); background:var(--purple-light)}
+  .chip.agent::before{color:var(--purple)}
+  .chip.mcp{border-color:var(--teal); color:var(--teal); background:var(--teal-light)}
+
+  /* Big score */
+  .score-wrap{display:flex; align-items:center; gap:5vw; flex-wrap:wrap; margin-top:8px}
+  .big-score{text-align:center; flex-shrink:0}
+  .big-score .n{font-family:'DM Serif Display',serif; font-size:clamp(80px,11vw,150px); color:var(--teal); line-height:.9}
+  .big-score .l{font-size:clamp(12px,1.1vw,15px); color:var(--ink-soft); margin-top:6px}
+  .big-score .b{font-size:clamp(11px,1vw,13px); font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--teal); margin-top:8px}
+  .score-grid{flex:1; min-width:280px; display:grid; grid-template-columns:1fr 1fr; gap:22px}
+  .score-grid .sl{font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:6px}
+  .score-grid .sv{font-size:clamp(22px,2.4vw,32px); font-weight:500}
+  .score-grid .sv small{font-size:13px; color:var(--ink-soft); font-weight:400}
+
+  /* worked / issues lists */
+  .wi{display:flex; flex-direction:column; gap:11px; margin-top:4px}
+  .wi .row{display:flex; gap:12px; align-items:flex-start; font-size:clamp(12.5px,1.15vw,15px); color:var(--ink-mid); line-height:1.45}
+  .wi .k{font-weight:600; flex-shrink:0; white-space:nowrap}
+  .k-good{color:var(--teal)} .k-bad{color:var(--red)} .k-warn{color:var(--orange)}
+  .head-good{color:var(--teal)} .head-bad{color:var(--red)}
+  .list-head{font-size:11px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:14px}
+
+  /* comparison table */
+  table.cmp{width:100%; border-collapse:collapse; font-size:clamp(11px,1.05vw,14px)}
+  table.cmp th{text-align:left; padding:10px 14px; font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft)}
+  table.cmp th.old{background:var(--purple-light); color:#5a4a8a}
+  table.cmp th.new{background:var(--teal-light); color:#2f7a5e}
+  table.cmp tr{border-bottom:1px solid var(--border)}
+  table.cmp td{padding:12px 14px; vertical-align:top; line-height:1.45}
+  table.cmp td.lab{font-weight:600; color:var(--ink-mid)}
+  table.cmp td.old{background:#faf7f3; color:var(--ink-mid)}
+  table.cmp td.new{background:var(--teal-light); color:var(--ink-mid)}
+
+  /* reflection */
+  .refl{display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-top:6px}
+  .refl h4{font-size:clamp(12px,1.1vw,14px); font-weight:600; letter-spacing:.08em; text-transform:uppercase; margin-bottom:16px; display:flex; align-items:center; gap:8px}
+  .refl h4::before{content:''; width:22px; height:2px}
+  .refl .ai h4{color:var(--teal)} .refl .ai h4::before{background:var(--teal)}
+  .refl .me h4{color:var(--red)} .refl .me h4::before{background:var(--red)}
+  .refl .item{display:flex; gap:10px; align-items:flex-start; margin-bottom:12px; font-size:clamp(12.5px,1.15vw,15px); color:var(--ink-mid); line-height:1.5}
+  .refl .item::before{content:'→'; flex-shrink:0; margin-top:2px}
+  .refl .ai .item::before{color:var(--teal)} .refl .me .item::before{color:var(--red)}
+
+  /* HMW pills */
+  .hmw{display:flex; flex-direction:column; gap:8px; margin-top:4px}
+  .hmw div{font-size:clamp(12px,1.1vw,14.5px); color:var(--ink-mid); padding:9px 14px; background:var(--teal-light); border-radius:8px; border-left:2px solid var(--teal)}
+
+  /* approach diamond */
+  .phases{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:20px}
+  .phase{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:22px 20px; border-top:3px solid}
+  .phase.d1{border-top-color:var(--purple)} .phase.d2{border-top-color:var(--teal)}
+  .phase.d3{border-top-color:var(--red)} .phase.d4{border-top-color:var(--orange)}
+  .phase .pn{font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:8px}
+  .phase .pt{font-family:'DM Serif Display',serif; font-size:clamp(17px,1.7vw,22px); margin-bottom:8px}
+  .phase .px{font-size:clamp(11.5px,1.05vw,13.5px); color:var(--ink-mid); line-height:1.45}
+
+  .fill{flex:1}
+  .foot-note{font-size:clamp(11px,1vw,13px); color:var(--ink-soft); margin-top:18px}
+
+  /* closing */
+  .closing h1{font-size:clamp(34px,5vw,64px); max-width:18ch; margin-bottom:24px}
+  .closing h1 em{font-style:italic}
+  .closing .c-sub{font-size:clamp(15px,1.5vw,20px); color:var(--ink-mid); max-width:46ch; line-height:1.6}
+  .closing .c-contact{margin-top:40px; font-size:clamp(13px,1.2vw,16px); color:var(--ink)}
+  .closing .c-contact strong{font-weight:600}
+
+  /* CHROME: progress + counter + hint */
+  .hud{position:fixed; bottom:20px; left:0; right:0; z-index:50; display:flex; align-items:center; justify-content:space-between; padding:0 28px; pointer-events:none}
+  .counter{font-size:12px; font-weight:500; color:var(--ink-soft); background:rgba(255,255,255,.6); padding:5px 12px; border-radius:20px}
+  .navhint{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft)}
+  .progress{position:fixed; top:0; left:0; height:3px; background:var(--teal); z-index:60; transition:width .35s ease}
+  .arrows{pointer-events:auto; display:flex; gap:8px}
+  .arrows button{border:1px solid var(--border); background:rgba(255,255,255,.7); color:var(--ink); width:34px; height:34px; border-radius:50%; cursor:pointer; font-size:15px; line-height:1; transition:background .2s}
+  .arrows button:hover{background:#fff}
+
+  .slide-title-mini{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-soft)}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+<div class="deck" id="deck">
+
+  <!-- 1 · TITLE -->
+  <section class="slide title-slide gradient active">
+    <div class="fill" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="title-eyebrow">Case Study · 2025–2026 · Monetisation Bravo</div>
+      <h1>Pay-Per-Use — a <em>new billing model</em> designed with AI from brief to prototype</h1>
+      <p class="title-sub">A monetisation model for 5,882 high-volume sellers across PL, PT &amp; RO — taken through the full double diamond with an AI-accelerated design workflow.</p>
+      <div class="title-meta">
+        <div><div class="ml">Designer</div><div class="mv">Sylwia Giżanowska-Baran</div></div>
+        <div><div class="ml">Role</div><div class="mv">Lead Product Designer</div></div>
+        <div><div class="ml">Scope</div><div class="mv">Discovery → Delivery</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 · THE PROBLEM -->
+  <section class="slide">
+    <div class="eyebrow">The brief</div>
+    <h2>The package model was costing the business its <em>best sellers</em></h2>
+    <p class="lead">High-volume sellers had to predict monthly ad volume upfront — then got punished for guessing wrong. Meanwhile sellers migrating from the vertical platforms (Otomoto, Standvirtual, Autovit) expected pay-per-use as standard.</p>
+    <div class="metrics three" style="margin-top:34px">
+      <div class="metric"><div class="n">−24.4%</div><div class="l">Active listings from high-volume sellers, YoY</div></div>
+      <div class="metric"><div class="n">49%</div><div class="l">Cite cost / ROI as churn driver #1</div></div>
+      <div class="metric"><div class="n">$889k</div><div class="l">Monthly migration revenue at risk</div></div>
+    </div>
+  </section>
+
+  <!-- 3 · APPROACH -->
+  <section class="slide">
+    <div class="eyebrow">The approach</div>
+    <h2>Same double diamond — an <em>AI-accelerated</em> way of working it</h2>
+    <p class="lead">The phases didn't change. What changed was the depth of coverage inside each one — a system of specialist agents and reusable "recipes" (the Design Cookbook) handled the low-leverage work, freeing time for the judgment calls only a designer makes.</p>
+    <div class="phases">
+      <div class="phase d1"><div class="pn">① Discover</div><div class="pt">Diverge</div><div class="px">62 seller interviews, grounded hypothesis, sourced research report</div></div>
+      <div class="phase d2"><div class="pn">② Define</div><div class="pt">Converge</div><div class="px">14 ranked insights, problem statement, 3 archetypes, 5 HMWs</div></div>
+      <div class="phase d3"><div class="pn">③ Develop</div><div class="pt">Diverge</div><div class="px">7 working concepts, live React calculator, agent-squad review</div></div>
+      <div class="phase d4"><div class="pn">④ Deliver</div><div class="pt">Converge</div><div class="px">30-seller usability test, UMUX-Lite 85, prioritised handoff</div></div>
+    </div>
+  </section>
+
+  <!-- 4 · DISCOVER research -->
+  <section class="slide">
+    <div class="eyebrow"><span class="phase-tag p-discover">① Discover</span></div>
+    <h2>From a brief to a <em>grounded hypothesis</em> — in days, not weeks</h2>
+    <p class="lead">Gambit (UX strategy agent) turned the opportunity brief into a structured IF/THEN/BECAUSE hypothesis and a sprint plan. 62 seller interviews across PL, PT &amp; RO were processed immediately, each claim cited to transcript — no hallucination allowed.</p>
+    <div class="metrics three" style="margin-top:30px">
+      <div class="metric"><div class="n">62</div><div class="l">Seller interviews, source-grounded (Toqan + NotebookLM)</div></div>
+      <div class="metric"><div class="n">49%</div><div class="l">Costs / ROI — the #1 churn driver surfaced</div></div>
+      <div class="metric"><div class="n">30%</div><div class="l">Competitor pricing — churn driver #2</div></div>
+    </div>
+  </section>
+
+  <!-- 5 · DISCOVER insights -->
+  <section class="slide">
+    <div class="eyebrow"><span class="phase-tag p-discover">① Discover</span><span>Three insights that shaped everything after</span></div>
+    <div class="insights" style="margin-top:14px">
+      <div class="ins"><div class="dot" style="background:var(--red)"></div><div>
+        <div class="it">Self-imposed posting cap</div>
+        <div class="ix">Sellers stop posting when packages run out because spending more feels like a loss. PPU must make unlimited posting feel <em>safe</em>, not just fair.</div>
+      </div></div>
+      <div class="ins"><div class="dot" style="background:var(--red)"></div><div>
+        <div class="it">Vertical user muscle memory</div>
+        <div class="ix">Migrating sellers expect PPU as standard. Familiarity is a feature — over-engineering the flow is the real risk in the migration window.</div>
+      </div></div>
+      <div class="ins"><div class="dot" style="background:var(--orange)"></div><div>
+        <div class="it">Discount confusion destroys trust</div>
+        <div class="ix">All 10 participants noticed discount offers but couldn't explain what triggered them. Darko (ethics agent) flagged a potential dark pattern — discounts cut from MVP scope.</div>
+      </div></div>
+    </div>
+  </section>
+
+  <!-- 6 · DEFINE -->
+  <section class="slide">
+    <div class="eyebrow"><span class="phase-tag p-define">② Define</span></div>
+    <h2>Research baseline to <em>problem statement</em> — one structured afternoon</h2>
+    <div class="cols" style="margin-top:20px">
+      <div class="card t-teal">
+        <div class="ce">Problem statement</div>
+        <h4 style="font-family:'DM Serif Display',serif;font-weight:400;font-size:clamp(16px,1.55vw,21px);line-height:1.4">High-volume postpaid sellers need a monetisation model that accommodates unpredictable inventory volumes without financial waste or friction — because the current model forces them to predict the unpredictable.</h4>
+      </div>
+      <div class="card">
+        <div class="ce">5 HMW questions that drove Develop</div>
+        <div class="hmw">
+          <div>HMW let sellers post freely without committing to volume upfront?</div>
+          <div>HMW make bracket pricing transparent before the first ad?</div>
+          <div>HMW make sellers want to post more to unlock cheaper rates?</div>
+          <div>HMW build trust in accumulated cost before month-end?</div>
+          <div>HMW feel familiar to a seller migrating from Otomoto on day one?</div>
+        </div>
+      </div>
+    </div>
+    <p class="foot-note">14 design insights ranked by severity · 3 archetypes formalised · 5 crucial journey moments tiered P0/P1/P2 with the PM aligned before ideation.</p>
+  </section>
+
+  <!-- 7 · DEVELOP process -->
+  <section class="slide">
+    <div class="eyebrow"><span class="phase-tag p-develop">③ Develop</span></div>
+    <h2>A 4-hour ideation session — <em>7 working concepts</em> voted and stress-tested</h2>
+    <div class="cols" style="grid-template-columns:1fr 1fr 1fr;margin-top:18px">
+      <div class="card t-red">
+        <div class="ce">Ideation · 4 hours</div>
+        <h4>7 concepts built &amp; dot-voted</h4>
+        <p>Pricing page, posting flow, usage dashboard — prototyped live in Lovable with engineers as co-creators, not reviewers.</p>
+      </div>
+      <div class="card t-red">
+        <div class="ce">Prototyping · Claude Artifacts</div>
+        <h4>Working calculator in hours</h4>
+        <p>A functional React PPU calculator — bracket breakdown, tier selection, live cost comparison — used directly in user testing.</p>
+      </div>
+      <div class="card t-red">
+        <div class="ce">Review · Agent squad</div>
+        <h4>Feasibility + ethics + a11y</h4>
+        <p>Cody (feasibility), Darko (ethics), Ally (WCAG), Lexie (copy) reviewed in parallel — before anything reached testing.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 · DEVELOP concept + catch -->
+  <section class="slide">
+    <div class="eyebrow"><span class="phase-tag p-develop">③ Develop</span><span>The concept — and the catch that saved a sprint</span></div>
+    <div class="cols" style="margin-top:16px">
+      <div class="card t-teal">
+        <div class="ce">Concept selected</div>
+        <h4>Postpaid PPU · bracket pricing + benefit tiers</h4>
+        <p>Sellers pick a quality tier (Basic / Premium / Mega), post unlimited ads, and are billed at month-end on incremental brackets. A progress-to-next-bracket mechanic turns billing transparency into a posting incentive. No expiry, no upfront commitment.</p>
+      </div>
+      <div class="card soft-lav">
+        <div class="ce">Key ethical catch — Darko</div>
+        <h4>Auto-extend disclosure flagged before dev</h4>
+        <p>Darko identified that auto-extended ads under variable pricing required explicit labelling under B2B rules (GDPR / P2B). Added to scope before it became a launch blocker — an agent catch that saved a full sprint cycle.</p>
+        <div class="chips"><span class="chip agent">Darko</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 · DELIVER score -->
+  <section class="slide">
+    <div class="eyebrow"><span class="phase-tag p-deliver">④ Deliver</span></div>
+    <h2>Tested with 30 PL sellers — <em>UMUX-Lite 85</em> · Excellent</h2>
+    <div class="score-wrap" style="margin-top:20px">
+      <div class="big-score">
+        <div class="n">85</div>
+        <div class="l">UMUX-Lite score</div>
+        <div class="b">Excellent · best-in-class</div>
+      </div>
+      <div style="width:1px;height:120px;background:var(--border)"></div>
+      <div class="score-grid">
+        <div><div class="sl">Meets requirements</div><div class="sv">85% <small>avg 6.1/7</small></div></div>
+        <div><div class="sl">Easy to use</div><div class="sv">85% <small>avg 6.1/7</small></div></div>
+        <div><div class="sl">Cost-estimation task</div><div class="sv">93.3% <small>completed</small></div></div>
+        <div><div class="sl">Downgrade task</div><div class="sv">100% <small>completed</small></div></div>
+      </div>
+    </div>
+    <p class="foot-note">June 2026 · 30 Polish sellers across Car Parts, Vehicles-for-parts &amp; Agriculture · 3 tasks, 20 test blocks · UMUX-Lite structured by Pingaroo. Equivalent SUS ≈ 92.</p>
+  </section>
+
+  <!-- 10 · DELIVER findings -->
+  <section class="slide">
+    <div class="eyebrow"><span class="phase-tag p-deliver">④ Deliver</span><span>Findings shaped the design — not just validated it</span></div>
+    <div class="cols" style="margin-top:14px">
+      <div class="card">
+        <div class="list-head head-good">✓ What worked well</div>
+        <div class="wi">
+          <div class="row"><span class="k k-good">93.3%</span><span>Completed cost estimation — the calculator is highly effective</span></div>
+          <div class="row"><span class="k k-good">100%</span><span>Successfully downgraded package despite navigation variation</span></div>
+          <div class="row"><span class="k k-good">~87%</span><span>Knew listings needed for next bracket — progress mechanic working</span></div>
+          <div class="row"><span class="k k-good">83%</span><span>Correctly identified the plan-change effective date</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="list-head head-bad">✗ Issues found → fixed in spec</div>
+        <div class="wi">
+          <div class="row"><span class="k k-bad">P1 · 33%</span><span>Couldn't explain the 1700 vs 1900 PLN gap → inline tooltip added</span></div>
+          <div class="row"><span class="k k-bad">P2 · ~30%</span><span>Per-listing price hidden in dropdown → surfaced by default</span></div>
+          <div class="row"><span class="k k-bad">P2 · ~20%</span><span>Agriculture under "Parts" unexpected → category labelled</span></div>
+          <div class="row"><span class="k k-warn">P2 · ~25%</span><span>Density too high → colour-coding, fewer screens</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="foot-note">4 issues prioritised and 1 feature added to spec before handoff — Doccy drafted decision logs, Cody wrote the engineering spec with ARIA + edge cases, Figma MCP connected design tokens directly.</p>
+  </section>
+
+  <!-- 11 · COMPARISON -->
+  <section class="slide">
+    <div class="eyebrow">Traditional vs AI-accelerated</div>
+    <h2 style="margin-bottom:16px">The same diamond — <em>different coverage &amp; speed</em></h2>
+    <table class="cmp">
+      <thead><tr>
+        <th style="width:12%">Phase</th><th style="width:14%">Activity</th>
+        <th class="old" style="width:37%">Traditional</th><th class="new" style="width:37%">AI-accelerated</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="lab"><span class="phase-tag p-discover">① Discover</span></td><td class="lab">Interview processing</td>
+          <td class="old">Manual notes reviewed days later; cross-interview patterns hard to spot.</td>
+          <td class="new">Processed immediately, claims cited to transcript, contradictions flagged.</td></tr>
+        <tr><td class="lab"><span class="phase-tag p-define">② Define</span></td><td class="lab">Insight framing</td>
+          <td class="old">Written from memory over 1–2 days; format inconsistent.</td>
+          <td class="new">14 insights, severity-ranked with confidence levels, in ~45 min.</td></tr>
+        <tr><td class="lab"><span class="phase-tag p-develop">③ Develop</span></td><td class="lab">Prototyping</td>
+          <td class="old">Figma prototype; a live calculator would need a dev ticket weeks out.</td>
+          <td class="new">Working React calculator in Claude Artifacts in hours — tested same week.</td></tr>
+        <tr><td class="lab"><span class="phase-tag p-deliver">④ Deliver</span></td><td class="lab">Ethics + a11y</td>
+          <td class="old">Optional; accessibility often post-dev; dark patterns missed.</td>
+          <td class="new">Darko, Ally, Cody review before testing — legal risk caught early.</td></tr>
+      </tbody>
+    </table>
+    <div class="metrics three" style="margin-top:26px">
+      <div class="metric"><div class="n">3×</div><div class="l">More concept directions in the same time budget</div></div>
+      <div class="metric"><div class="n">~60%</div><div class="l">Faster research synthesis &amp; documentation</div></div>
+      <div class="metric"><div class="n">85</div><div class="l">UMUX-Lite — Excellent, best-in-class</div></div>
+    </div>
+  </section>
+
+  <!-- 12 · REFLECTION -->
+  <section class="slide">
+    <div class="eyebrow">Honest reflection</div>
+    <h2>What the Cookbook changed — <em>and what it didn't</em></h2>
+    <div class="refl" style="margin-top:14px">
+      <div class="ai">
+        <h4>Where AI had real leverage</h4>
+        <div class="item">Turned a vague brief into a structured sprint plan before the first conversation</div>
+        <div class="item">Made repeatable tasks — guides, reports, synthesis — fast and consistent</div>
+        <div class="item">Ran specialist reviews (ethics, a11y, feasibility) in parallel, not in sequence</div>
+        <div class="item">Brought engineers into ideation as builders — constraints surfaced in hours</div>
+      </div>
+      <div class="me">
+        <h4>What I owned as the designer</h4>
+        <div class="item">Deciding which insights were actually load-bearing</div>
+        <div class="item">Choosing the problem statement I'd defend with stakeholders</div>
+        <div class="item">Stakeholder alignment across product, commercial, legal &amp; engineering</div>
+        <div class="item">Knowing when a feasible concept was still wrong for the user</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 · CLOSING -->
+  <section class="slide closing gradient">
+    <div class="fill" style="display:flex;flex-direction:column;justify-content:center">
+      <div class="title-eyebrow">Thank you</div>
+      <h1>AI removed the busywork. The <em>design decisions</em> stayed mine.</h1>
+      <p class="c-sub">Happy to go deeper on any phase — the research protocol, the calculator prototype, or the agent-squad workflow.</p>
+      <div class="c-contact"><strong>Sylwia Giżanowska-Baran</strong> · Lead Product Designer · Monetisation Bravo</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="hud">
+  <div class="counter"><span id="cur">1</span> / <span id="total">13</span></div>
+  <div class="arrows">
+    <button id="prev" aria-label="Previous">‹</button>
+    <button id="next" aria-label="Next">›</button>
+  </div>
+  <div class="navhint">← → to navigate · F for fullscreen</div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const total = slides.length;
+  let i = 0;
+  document.getElementById('total').textContent = total;
+  const prog = document.getElementById('progress');
+  const cur = document.getElementById('cur');
+
+  function show(n){
+    i = Math.max(0, Math.min(total-1, n));
+    slides.forEach((s,idx)=>s.classList.toggle('active', idx===i));
+    prog.style.width = ((i+1)/total*100) + '%';
+    cur.textContent = i+1;
+  }
+  function next(){ show(i+1); }
+  function prev(){ show(i-1); }
+
+  document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){ e.preventDefault(); next(); }
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){ e.preventDefault(); prev(); }
+    else if(e.key==='Home'){ show(0); }
+    else if(e.key==='End'){ show(total-1); }
+    else if(e.key==='f'||e.key==='F'){
+      if(!document.fullscreenElement) document.documentElement.requestFullscreen();
+      else document.exitFullscreen();
+    }
+  });
+  document.getElementById('next').addEventListener('click', next);
+  document.getElementById('prev').addEventListener('click', prev);
+  // click right/left halves to advance
+  document.getElementById('deck').addEventListener('click', e=>{
+    if(e.target.closest('.arrows')) return;
+    (e.clientX > window.innerWidth/2) ? next() : prev();
+  });
+  show(0);
+</script>
+</body>
+</html>

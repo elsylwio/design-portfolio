@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Finance Experience Map Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1a2e; --sub:#5b5b6e; --line:#e6e6ec;
+    --accent:#2f7dc0; --accent2:#1c4d73; --bg:#fafafb; --card:#ffffff;
+    --good:#3ba24c; --warn:#e0a800; --bad:#d64545;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:0 32px 80px;}
+  header.hero{
+    background:var(--bg);
+    color:var(--ink); padding:72px 48px 64px;
+  }
+  header.hero .inner{
+    max-width:none; margin:0;
+    background:#e7f1fa; border-radius:20px;
+    padding:44px 48px;
+  }
+  header.hero .hero-eyebrow{
+    display:flex; align-items:center; gap:12px;
+    font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:rgba(26,26,46,.6); margin-bottom:22px;
+  }
+  header.hero .hero-eyebrow::before{content:""; width:40px; height:1.5px; background:rgba(26,26,46,.45);}
+  header.hero h1{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(36px,5vw,60px); line-height:1.08; letter-spacing:-.01em;
+    margin:0 0 22px; max-width:720px;
+  }
+  header.hero h1 em{font-style:italic; color:var(--accent2);}
+  header.hero p.dek{font-size:17px; color:rgba(26,26,46,.72); max-width:600px; line-height:1.7; margin:0;}
+  .meta-row{display:flex; gap:32px; margin-top:38px; flex-wrap:wrap;}
+  .meta-item{font-size:13px; color:rgba(26,26,46,.8);}
+  .meta-item b{display:block; color:rgba(26,26,46,.5); font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px;}
+
+  section{margin-top:56px; scroll-margin-top:60px;}
+
+  .diamond-nav{
+    background:var(--bg); border-bottom:1px solid var(--line);
+    padding:0 48px; display:flex; gap:0; overflow-x:auto;
+    position:sticky; top:0; z-index:10;
+  }
+  .diamond-nav a.dnav-item{
+    padding:14px 24px 14px 0; font-size:11px; font-weight:600;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--sub);
+    text-decoration:none; display:flex; align-items:center; gap:8px;
+    white-space:nowrap; border-bottom:2px solid transparent; cursor:pointer;
+  }
+  .diamond-nav a.d1{border-bottom-color:#7fb3e0; color:var(--ink);}
+  .diamond-nav a.d2{border-bottom-color:#4fa383; color:var(--ink);}
+  .diamond-nav a.d3{border-bottom-color:#e0a84f; color:var(--ink);}
+  .diamond-nav a.d4{border-bottom-color:var(--accent); color:var(--ink);}
+  .diamond-nav a.d5{border-bottom-color:var(--accent2); color:var(--ink);}
+  .diamond-nav a.d6{border-bottom-color:#b6849f; color:var(--ink);}
+  .diamond-nav .phase-dot{width:7px; height:7px; border-radius:50%; flex-shrink:0;}
+
+  .side-nav{
+    position:fixed; left:28px; top:50%; transform:translateY(-50%);
+    display:none; flex-direction:column; gap:4px; z-index:15;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .side-nav.visible{opacity:1; pointer-events:auto;}
+  .side-nav a{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px; font-size:12px; font-weight:500; letter-spacing:.02em;
+    color:var(--sub); text-decoration:none;
+    border-left:2px solid transparent; border-radius:0 8px 8px 0;
+    transition:color .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .side-nav a:hover{color:var(--ink); background:var(--card);}
+  .side-nav a.active{color:var(--ink); border-left-color:var(--accent); font-weight:600;}
+  @media (min-width:1420px){
+    .side-nav{display:flex;}
+    .diamond-nav{display:none;}
+  }
+  h2{
+    font-size:24px; color:var(--accent2); border-bottom:2px solid var(--line);
+    padding-bottom:10px; margin-bottom:20px;
+  }
+  h3{font-size:18px; color:var(--ink); margin:28px 0 10px;}
+  p{color:#33334a; margin:0 0 14px;}
+  ul{margin:0 0 14px; padding-left:20px; color:#33334a;}
+  li{margin-bottom:6px;}
+  .lead{font-size:17px; color:var(--sub);}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:20px 0;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px;
+  }
+  .card h4{margin:0 0 8px; font-size:14px; text-transform:uppercase; letter-spacing:.03em; color:var(--accent);}
+  .card p, .card ul{margin:0;}
+
+  .callout{
+    background:#e7f1fa; border-left:4px solid var(--accent); padding:16px 20px;
+    border-radius:6px; margin:20px 0; color:#1e3a52;
+  }
+  .callout b{color:var(--accent);}
+
+  .phase-badge{
+    display:inline-flex; align-items:center; gap:8px; font-weight:600; color:var(--accent2);
+    font-size:13px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;
+  }
+
+  .tag-pill{
+    display:inline-block; background:#e7f1fa; color:var(--accent2); font-size:12.5px;
+    padding:3px 10px; border-radius:20px; margin:2px 4px 2px 0;
+  }
+
+  footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font-size:13px; color:var(--sub);}
+
+  figure{margin:24px 0;}
+  figure img{width:100%; display:block; border-radius:10px; border:1px solid var(--line); box-shadow:0 2px 12px rgba(20,20,50,.06); cursor:zoom-in;}
+  figcaption{font-size:13px; color:var(--sub); margin-top:8px; text-align:center;}
+  .fig-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:24px 0;}
+  .fig-grid figure{margin:0;}
+
+  #lightbox{display:none; position:fixed; inset:0; background:rgba(20,20,20,.92); z-index:999; overflow:auto;}
+  #lightbox.open{display:flex; align-items:center; justify-content:center; min-height:100%; padding:60px 20px; box-sizing:border-box;}
+  #lightbox.open.zoomed{align-items:flex-start; justify-content:flex-start;}
+  #lightbox-inner{margin:auto; cursor:zoom-in;}
+  #lightbox img{display:block; max-width:calc(100vw - 40px); max-height:calc(100vh - 120px); width:auto; height:auto; cursor:zoom-in;}
+  #lightbox.zoomed img{max-width:none; max-height:none; cursor:zoom-out;}
+  #lightbox-close{position:fixed; top:20px; right:28px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.12); color:#fff; border:none; font-size:22px; cursor:pointer; z-index:1000;}
+
+  .site-nav{padding:24px 48px; display:flex; justify-content:space-between; align-items:center;}
+  .site-nav .brand-logo{height:38px; width:auto; display:block;}
+  .site-nav .nav-links{display:flex; gap:28px; font-size:14px; font-weight:500;}
+  .site-nav .nav-links a{color:var(--ink); text-decoration:none; opacity:.75; transition:opacity .2s;}
+  .site-nav .nav-links a:hover{opacity:1;}
+  @media(max-width:600px){.site-nav .nav-links{display:none;} .fig-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html"><img class="brand-logo" src="logo.png" alt="Strangefruit"></a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#work">Work</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="inner">
+    <div class="hero-eyebrow">Product Design Case Study</div>
+    <h1>Finance <em>Experience Map</em></h1>
+    <p class="dek">Turning a rarely used, unfriendly internal tool into a development resource people actually want to open.</p>
+    <div class="meta-row">
+      <div class="meta-item"><b>Client</b>Roche</div>
+      <div class="meta-item"><b>Role</b>Interaction Designer, UI Designer, Usability Test contributor</div>
+    </div>
+  </div>
+</header>
+
+<nav class="diamond-nav">
+  <a href="#background" class="dnav-item d1"><span class="phase-dot" style="background:#7fb3e0"></span>Background</a>
+  <a href="#research" class="dnav-item d2"><span class="phase-dot" style="background:#4fa383"></span>Research</a>
+  <a href="#role" class="dnav-item d3"><span class="phase-dot" style="background:#e0a84f"></span>Role &amp; deliverables</a>
+  <a href="#design" class="dnav-item d4"><span class="phase-dot" style="background:var(--accent)"></span>Design</a>
+  <a href="#usability" class="dnav-item d5"><span class="phase-dot" style="background:var(--accent2)"></span>Usability test</a>
+  <a href="#final" class="dnav-item d6"><span class="phase-dot" style="background:#b6849f"></span>Final UI</a>
+</nav>
+
+<nav class="side-nav" aria-label="Chapters">
+  <a href="#background">Background</a>
+  <a href="#research">Research</a>
+  <a href="#role">Role &amp; deliverables</a>
+  <a href="#design">Site map &amp; wireframes</a>
+  <a href="#usability">Usability test</a>
+  <a href="#final">Final UI &amp; style guide</a>
+</nav>
+
+<div class="wrap">
+
+<section id="background" style="margin-top:56px">
+  <h2>Overview</h2>
+  <p class="lead">The Finance Experience Map is a resource aimed at helping employees in Finance create a more meaningful and useful Individual Development Plan. The tool provides an overview of different competencies and respective development actions that can help as you check-in with your manager on your personal development needs.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Current solution</h4>
+      <p>Currently users have access to an outdated web app which does not reach their expectations. Finance Experience Map is used very rarely, the app is not user friendly and the user experience is on a very low level.</p>
+    </div>
+    <div class="card">
+      <h4>Challenge</h4>
+      <p>Create a more engaging tool for users, which follows the corporate brand style guide, is more intuitive, and has a user experience on a very high level that encourages users to use the tool more often.</p>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <h2>The Research</h2>
+  <p>The design process was followed by user research. To understand user needs and the tool's pain points, UX Researchers facilitated a co-creation workshop for the key users and stakeholders.</p>
+
+  <div class="grid2">
+    <div class="card">
+      <h4>Pain points</h4>
+      <ul>
+        <li>Not engaging, not simple, not user friendly</li>
+        <li>No clear message on what the purpose of the tool is</li>
+        <li>No clarity on how to use it, no introduction</li>
+        <li>Content outdated, no maintenance</li>
+        <li>No interaction, no collaboration, no personalization</li>
+        <li>No real-life examples or stories to relate to</li>
+        <li>No clear information on career next steps</li>
+        <li>Lack of focus &mdash; what's actually relevant to me?</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Top ideas from the workshop</h4>
+      <ul>
+        <li>Introduction on the first page</li>
+        <li>Intuitive navigation with fewer layers</li>
+        <li>Consistent, on-brand, better looking design</li>
+        <li>Review and update content</li>
+        <li>Gamification</li>
+        <li>A "what's next" feature to track progress, with reminders</li>
+        <li>Link to TPP (HR tool) to connect with people and real stories</li>
+        <li>Identify a FEM owner</li>
+      </ul>
+    </div>
+  </div>
+
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-finance-02.jpg" alt="Workshop sticky-note board capturing pain points and ideas from the co-creation session">
+    <figcaption>The co-creation workshop board: pain points and ideas gathered from key users and stakeholders.</figcaption>
+  </figure>
+
+  <p>Key users: people from the financial area who want to create their individual development plan and frame their development by creating an experience map. After the workshop, interviews with 10 participants were conducted. The results were similar to the findings already collected.</p>
+</section>
+
+<section id="role">
+  <h2>Role &amp; Deliverables</h2>
+  <div class="phase-badge">My role</div>
+  <p>Interaction Designer, UI Designer, Usability Test contributor.</p>
+  <h3>Deliverables</h3>
+  <div style="margin:16px 0">
+    <span class="tag-pill">Site Map</span>
+    <span class="tag-pill">User Flows</span>
+    <span class="tag-pill">Wireframes (Sketch)</span>
+    <span class="tag-pill">Interactive prototype (InVision)</span>
+    <span class="tag-pill">High fidelity mockup (Sketch)</span>
+    <span class="tag-pill">Assets + Basic style guide</span>
+    <span class="tag-pill">InVision Inspect for developers</span>
+  </div>
+</section>
+
+<section id="design">
+  <h2>Site Map &amp; Wireframes</h2>
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-finance-03.jpg" alt="Site map showing navigation from login through competencies, development plan and experience map">
+    <figcaption>Site map: navigation from login through competencies, development plan and experience map.</figcaption>
+  </figure>
+
+  <h3>Wireframes &amp; Interactive Prototype</h3>
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-finance-04.jpg" alt="Wireframe of the development plan overview screen with competency progress cards">
+    <figcaption>Development plan overview wireframe, built as a clickable InVision prototype.</figcaption>
+  </figure>
+</section>
+
+<section id="usability">
+  <h2>Usability Test</h2>
+  <p>Users in general have very positive opinions about the new Finance Experience Map prototype. They think it's a helpful solution and are glad it's being redesigned. Using the tool is easy; tasks were performed without serious problems and no critical errors happened, though in some cases there's still room for improvement.</p>
+  <ul>
+    <li>Personalization is not welcomed by all users, as some worry it may limit their development possibilities and aren't sure how to complete personalization steps.</li>
+    <li>Development overview and progress timeline are easy to use, understandable and helpful.</li>
+    <li>"Learn from others" is confusing for some users &mdash; needs clearer explanation of its purpose and benefits.</li>
+    <li>"My career map" is the most praised feature in the application, though it's recommended to add some elements to it.</li>
+  </ul>
+  <p>Taking into account the usability test report and UX Researcher recommendations, the wireframes were fixed and improved.</p>
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-finance-05.jpg" alt="Annotated wireframes with usability test findings and recommendations for the competencies and development actions screens">
+    <figcaption>Usability test annotations on the competencies and development-actions screens.</figcaption>
+  </figure>
+</section>
+
+<section id="final">
+  <h2>Final UI Design</h2>
+  <div class="fig-grid">
+    <figure>
+      <img src="images/carbonmade/web/carbonmade-finance-06.jpg" alt="Final competencies screen showing Finance Core and Roche Core competency groups">
+      <figcaption>Competencies screen, grouped by Finance Core and Roche Core.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/carbonmade/web/carbonmade-finance-07.jpg" alt="Final development actions screen for the Feedback and Coaching competency">
+      <figcaption>Development actions for a selected competency.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/carbonmade/web/carbonmade-finance-08.jpg" alt="Final My Experience Map timeline screen showing roles, achievements and competencies over time">
+      <figcaption>My Experience Map &mdash; the most praised feature, a personal development timeline.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/carbonmade/web/carbonmade-finance-10.jpg" alt="Basic style guide showing buttons, navigation, dropdowns, labels and filters">
+      <figcaption>Basic style guide: buttons, navigation, dropdowns and labels.</figcaption>
+    </figure>
+  </div>
+
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-finance-09.jpg" alt="Grid overview of all final Finance Experience Map screens">
+    <figcaption>The full set of final screens, from onboarding through competencies, reporting and the experience map.</figcaption>
+  </figure>
+</section>
+
+<footer>
+  Case study compiled from original Finance Experience Map project documentation. Prepared for portfolio use.
+</footer>
+
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true">
+  <button id="lightbox-close" aria-label="Close">&times;</button>
+  <div id="lightbox-inner"><img src="" alt=""></div>
+</div>
+
+<script>
+(function() {
+  var lightbox = document.getElementById('lightbox');
+  var inner = document.getElementById('lightbox-inner');
+  var lbImg = lightbox.querySelector('img');
+  var closeBtn = document.getElementById('lightbox-close');
+  if (!lightbox || !lbImg) return;
+
+  document.querySelectorAll('figure img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt || '';
+      lightbox.classList.add('open');
+      lightbox.classList.remove('zoomed');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  inner.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var wasZoomed = lightbox.classList.contains('zoomed');
+    if (wasZoomed) {
+      lightbox.classList.remove('zoomed');
+    } else {
+      var rect = lbImg.getBoundingClientRect();
+      var relX = (e.clientX - rect.left) / rect.width;
+      var relY = (e.clientY - rect.top) / rect.height;
+      lightbox.classList.add('zoomed');
+      var natW = lbImg.naturalWidth;
+      var natH = lbImg.naturalHeight;
+      lightbox.scrollLeft = natW * relX - lightbox.clientWidth / 2;
+      lightbox.scrollTop = natH * relY - lightbox.clientHeight / 2;
+    }
+  });
+
+  function close() {
+    lightbox.classList.remove('open');
+    lightbox.classList.remove('zoomed');
+    document.body.style.overflow = '';
+  }
+  lightbox.addEventListener('click', close);
+  closeBtn.addEventListener('click', function(e) { e.stopPropagation(); close(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+
+(function() {
+  var nav = document.querySelector('.side-nav');
+  var links = document.querySelectorAll('.side-nav a');
+  if (!nav || !links.length) return;
+  var hero = document.querySelector('.hero');
+  var sections = [];
+  links.forEach(function(link) {
+    var target = document.querySelector(link.getAttribute('href'));
+    if (target) sections.push({ link: link, el: target });
+  });
+
+  function setActive() {
+    var probe = window.scrollY + window.innerHeight * 0.35;
+    var current = sections[0];
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= probe) current = s;
+    });
+    sections.forEach(function(s) {
+      s.link.classList.toggle('active', s === current);
+    });
+    var heroBottom = hero ? hero.offsetTop + hero.offsetHeight : 0;
+    nav.classList.toggle('visible', window.scrollY > heroBottom - 80);
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() { setActive(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', setActive);
+  setActive();
+})();
+</script>
+
+</body>
+</html>

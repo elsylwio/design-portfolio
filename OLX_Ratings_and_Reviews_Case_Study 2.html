@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ratings & Reviews 2.0 Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1a2e; --sub:#5b5b6e; --line:#e6e6ec;
+    --accent:#d24f80; --accent2:#2e2e6e; --bg:#fafafb; --card:#ffffff;
+    --good:#3ba24c; --warn:#e0a800; --bad:#d64545;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:0 32px 80px;}
+  header.hero{
+    background:var(--bg);
+    color:var(--ink); padding:72px 48px 64px;
+  }
+  header.hero .inner{
+    max-width:none; margin:0;
+    background:#fdeef4; border-radius:20px;
+    padding:44px 48px;
+  }
+  header.hero .hero-eyebrow{
+    display:flex; align-items:center; gap:12px;
+    font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:rgba(26,26,46,.6); margin-bottom:22px;
+  }
+  header.hero .hero-eyebrow::before{content:""; width:40px; height:1.5px; background:rgba(26,26,46,.45);}
+  header.hero h1{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(36px,5vw,60px); line-height:1.08; letter-spacing:-.01em;
+    margin:0 0 22px; max-width:720px;
+  }
+  header.hero h1 em{font-style:italic; color:var(--accent2);}
+  header.hero .hero-title{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(36px,5vw,60px); line-height:1.08; letter-spacing:-.01em; color:var(--ink);
+    max-width:720px; margin:0 0 20px;
+  }
+  header.hero .hero-title em{
+    font-style:italic; color:transparent; -webkit-text-stroke:1.4px var(--ink);
+  }
+  header.hero p.dek{font-size:17px; color:rgba(26,26,46,.72); max-width:600px; line-height:1.7; margin:0;}
+  .meta-row{display:flex; gap:32px; margin-top:38px; flex-wrap:wrap;}
+  .meta-item{font-size:13px; color:rgba(26,26,46,.8);}
+  .meta-item b{display:block; color:rgba(26,26,46,.5); font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px;}
+
+  section{margin-top:56px; scroll-margin-top:60px;}
+
+  .diamond-nav{
+    background:var(--bg); border-bottom:1px solid var(--line);
+    padding:0 48px; display:flex; gap:0; overflow-x:auto;
+    position:sticky; top:0; z-index:10;
+  }
+  .diamond-nav a.dnav-item{
+    padding:14px 24px 14px 0; font-size:11px; font-weight:600;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--sub);
+    text-decoration:none; display:flex; align-items:center; gap:8px;
+    white-space:nowrap; border-bottom:2px solid transparent; cursor:pointer;
+  }
+  .diamond-nav a.d1{border-bottom-color:#a99bd6; color:var(--ink);}
+  .diamond-nav a.d2{border-bottom-color:#4fa383; color:var(--ink);}
+  .diamond-nav a.d3{border-bottom-color:#b6849f; color:var(--ink);}
+  .diamond-nav a.d4{border-bottom-color:var(--accent); color:var(--ink);}
+  .diamond-nav a.d5{border-bottom-color:var(--accent2); color:var(--ink);}
+  .diamond-nav a.d6{border-bottom-color:var(--good); color:var(--ink);}
+  .diamond-nav a.d7{border-bottom-color:var(--warn); color:var(--ink);}
+  .diamond-nav .phase-dot{width:7px; height:7px; border-radius:50%; flex-shrink:0;}
+
+  /* SIDE NAV (desktop) */
+  .side-nav{
+    position:fixed; left:28px; top:50%; transform:translateY(-50%);
+    display:none; flex-direction:column; gap:4px; z-index:15;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .side-nav.visible{opacity:1; pointer-events:auto;}
+  .side-nav a{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px; font-size:12px; font-weight:500; letter-spacing:.02em;
+    color:var(--sub); text-decoration:none;
+    border-left:2px solid transparent; border-radius:0 8px 8px 0;
+    transition:color .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .side-nav a:hover{color:var(--ink); background:var(--card);}
+  .side-nav a.active{color:var(--ink); border-left-color:var(--accent); font-weight:600;}
+  @media (min-width:1420px){
+    .side-nav{display:flex;}
+    .diamond-nav{display:none;}
+  }
+  h2{
+    font-size:24px; color:var(--accent2); border-bottom:2px solid var(--line);
+    padding-bottom:10px; margin-bottom:20px;
+  }
+  h3{font-size:18px; color:var(--ink); margin:28px 0 10px;}
+  p{color:#33334a; margin:0 0 14px;}
+  ul{margin:0 0 14px; padding-left:20px; color:#33334a;}
+  li{margin-bottom:6px;}
+  .lead{font-size:17px; color:var(--sub);}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:20px 0;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px;
+  }
+  .card h4{margin:0 0 8px; font-size:14px; text-transform:uppercase; letter-spacing:.03em; color:var(--accent);}
+  .card p, .card ul{margin:0;}
+
+  .callout{
+    background:#fdeef4; border-left:4px solid var(--accent); padding:16px 20px;
+    border-radius:6px; margin:20px 0; color:#4a2333;
+  }
+  .callout b{color:var(--accent);}
+
+  table{width:100%; border-collapse:collapse; margin:16px 0; font-size:14.5px;}
+  th,td{border:1px solid var(--line); padding:10px 12px; text-align:left; vertical-align:top;}
+  th{background:#f1f0fa; color:var(--accent2);}
+
+  .phase-badge{
+    display:inline-flex; align-items:center; gap:8px; font-weight:600; color:var(--accent2);
+    font-size:13px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;
+  }
+  .num{
+    width:26px; height:26px; border-radius:50%; background:var(--accent2); color:#fff;
+    display:inline-flex; align-items:center; justify-content:center; font-size:13px;
+  }
+
+  .timeline{border-left:3px solid var(--line); padding-left:24px; margin:24px 0;}
+  .timeline .step{margin-bottom:28px; position:relative;}
+  .timeline .step::before{
+    content:""; position:absolute; left:-30.5px; top:4px; width:12px; height:12px;
+    border-radius:50%; background:var(--accent);
+  }
+  .timeline .step h4{margin:0 0 6px; font-size:16px; color:var(--ink);}
+
+  .quote{font-style:italic; color:var(--sub); border-left:3px solid var(--line); padding-left:16px; margin:16px 0;}
+
+  .outcome-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin:20px 0;}
+  .outcome-grid .card{text-align:center;}
+  .outcome-grid .stat{font-size:26px; font-weight:700; color:var(--accent2);}
+  .outcome-grid .label{font-size:13px; color:var(--sub); margin-top:4px;}
+
+  .tag-pill{
+    display:inline-block; background:#eceafc; color:var(--accent2); font-size:12.5px;
+    padding:3px 10px; border-radius:20px; margin:2px 4px 2px 0;
+  }
+
+  footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font-size:13px; color:var(--sub);}
+
+  figure{margin:24px 0;}
+  figure img{width:100%; display:block; border-radius:10px; border:1px solid var(--line); box-shadow:0 2px 12px rgba(20,20,50,.06);}
+  figcaption{font-size:13px; color:var(--sub); margin-top:8px; text-align:center;}
+
+  /* PHONE MOCKUPS */
+  .phone-panel{background:#fdeef4; border-radius:16px; padding:48px 40px; margin:24px 0;}
+  .phone-panel + .phone-panel{margin-top:32px;}
+  .phone-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:40px; align-items:start;}
+  .phone{
+    position:relative; background:#1c1c1e; border-radius:42px;
+    padding:10px; box-shadow:0 12px 32px rgba(70,30,50,.18);
+  }
+  .phone-screen{
+    position:relative; border-radius:33px; overflow:hidden;
+    background:#fff; display:block;
+    aspect-ratio:1170 / 2532; container-type:size;
+  }
+  .phone-screen img{display:block; width:100%; height:auto; cursor:zoom-in;}
+  .phone-screen.scrolling img{animation:phone-scroll 24s ease-in-out infinite;}
+  .phone:nth-child(2) .phone-screen.scrolling img{animation-duration:20s; animation-delay:-5s;}
+  .phone:nth-child(3) .phone-screen.scrolling img{animation-duration:16s; animation-delay:-9s;}
+  .phone:hover .phone-screen.scrolling img{animation-play-state:paused;}
+  @keyframes phone-scroll{
+    0%, 10% {transform:translateY(0);}
+    55%, 65% {transform:translateY(calc(100cqh - 100%));}
+    100% {transform:translateY(0);}
+  }
+  @media (prefers-reduced-motion: reduce){.phone-screen.scrolling img{animation:none;}}
+  .phone-notch{
+    position:absolute; top:10px; left:50%; transform:translateX(-50%);
+    width:34%; height:22px; background:#1c1c1e;
+    border-radius:0 0 16px 16px; z-index:2; pointer-events:none;
+  }
+  @media(max-width:700px){.phone-grid{grid-template-columns:1fr;}}
+
+  /* ANIMATED RATING FLOW DEMO */
+  .flow-demo-wrap{max-width:300px; margin:0 auto;}
+  .flow-state{
+    position:absolute; top:0; left:0; width:100%; height:100%;
+    opacity:0; animation:12s linear infinite;
+  }
+  .flow-state:nth-child(1), .flow-state:nth-child(2){background:#f2f4f5;}
+  .flow-state img{cursor:default;}
+  .flow-bar{position:absolute; bottom:0; left:0; width:100%;}
+  .flow-state:nth-child(1){animation-name:fs1;}
+  .flow-state:nth-child(2){animation-name:fs2;}
+  .flow-state:nth-child(3){animation-name:fs3;}
+  @keyframes fs1{0%,31%{opacity:1}35%,100%{opacity:0}}
+  @keyframes fs2{0%,31%{opacity:0}35%,64%{opacity:1}68%,100%{opacity:0}}
+  @keyframes fs3{0%,64%{opacity:0}68%,100%{opacity:1}}
+  .tap{
+    position:absolute; width:13%; aspect-ratio:1; border-radius:50%;
+    background:rgba(210,79,128,.35); border:2px solid rgba(210,79,128,.85);
+    translate:-50% -50%; opacity:0; pointer-events:none;
+    animation:12s linear infinite;
+  }
+  .tap.t1{animation-name:tap1;}
+  .tap.t2{animation-name:tap2;}
+  @keyframes tap1{0%,24%{opacity:0;transform:scale(.4)}27%{opacity:1;transform:scale(1)}31%{opacity:0;transform:scale(1.7)}32%,100%{opacity:0;transform:scale(.4)}}
+  @keyframes tap2{0%,57%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1)}64%{opacity:0;transform:scale(1.7)}65%,100%{opacity:0;transform:scale(.4)}}
+  .phone:hover .flow-state, .phone:hover .tap{animation-play-state:paused;}
+  @media (prefers-reduced-motion: reduce){
+    .flow-state, .tap{animation:none;}
+    .flow-state:nth-child(1){opacity:1;}
+  }
+
+  /* LIGHTBOX */
+  #lightbox{display:none; position:fixed; inset:0; background:rgba(20,20,20,.92); z-index:999; overflow:auto;}
+  #lightbox.open{display:flex; align-items:center; justify-content:center; min-height:100%; padding:60px 20px; box-sizing:border-box;}
+  #lightbox.open.zoomed{align-items:flex-start; justify-content:flex-start;}
+  #lightbox-inner{margin:auto; cursor:zoom-in;}
+  #lightbox img{display:block; max-width:calc(100vw - 40px); max-height:calc(100vh - 120px); width:auto; height:auto; cursor:zoom-in;}
+  #lightbox.zoomed img{max-width:none; max-height:none; cursor:zoom-out;}
+  #lightbox-close{position:fixed; top:20px; right:28px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.12); color:#fff; border:none; font-size:22px; cursor:pointer; z-index:1000;}
+
+  .site-nav{padding:24px 48px; display:flex; justify-content:space-between; align-items:center;}
+  .site-nav .brand-logo{height:38px; width:auto; display:block;}
+  .site-nav .nav-links{display:flex; gap:28px; font-size:14px; font-weight:500;}
+  .site-nav .nav-links a{color:var(--ink); text-decoration:none; opacity:.75; transition:opacity .2s;}
+  .site-nav .nav-links a:hover{opacity:1;}
+  @media(max-width:600px){.site-nav .nav-links{display:none;}}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html"><img class="brand-logo" src="logo.png" alt="Strangefruit"></a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#work">Work</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="inner">
+    <div class="hero-eyebrow">Product Design Case Study</div>
+    <h1>Ratings &amp; <em>Reviews</em> 2.0</h1>
+    <p class="hero-title"><em>Rebuilding OLX's trust</em> layer between buyers and sellers.</p>
+    <p class="dek">The old rating system was broken and barely used; the new one is transparent and gamified, and it raises both seller trust and buyer confidence.</p>
+    <div class="meta-row">
+      <div class="meta-item"><b>Role</b>Product Designer</div>
+    </div>
+  </div>
+</header>
+
+<nav class="diamond-nav">
+  <a href="#discover" class="dnav-item d1"><span class="phase-dot" style="background:#a99bd6"></span>Discovery</a>
+  <a href="#define" class="dnav-item d2"><span class="phase-dot" style="background:#4fa383"></span>Defining the model</a>
+  <a href="#develop" class="dnav-item d3"><span class="phase-dot" style="background:#b6849f"></span>Building the flows</a>
+  <a href="#test" class="dnav-item d4"><span class="phase-dot" style="background:var(--accent)"></span>Testing &amp; choosing stars</a>
+  <a href="#deliver" class="dnav-item d5"><span class="phase-dot" style="background:var(--accent2)"></span>Delivery &amp; rollout</a>
+  <a href="#outcomes" class="dnav-item d6"><span class="phase-dot" style="background:var(--good)"></span>Outcomes</a>
+  <a href="#learn" class="dnav-item d7"><span class="phase-dot" style="background:var(--warn)"></span>Ongoing iteration</a>
+</nav>
+
+<nav class="side-nav" aria-label="Chapters">
+  <a href="#overview">Overview</a>
+  <a href="#discover">Discovery</a>
+  <a href="#define">Defining the model</a>
+  <a href="#develop">Building the flows</a>
+  <a href="#test">Testing &amp; choosing stars</a>
+  <a href="#deliver">Delivery &amp; rollout</a>
+  <a href="#outcomes">Outcomes</a>
+  <a href="#learn">Ongoing iteration</a>
+  <a href="#reflection">Reflection</a>
+</nav>
+
+<div class="wrap">
+
+<section id="overview">
+  <h2>Overview</h2>
+  <p class="lead">OLX's peer-to-peer marketplace depends on buyers and sellers trusting each other enough to complete a transaction. The existing ratings system was under-used, easy to game, and gave users little confidence in what a rating actually meant. Ratings & Reviews 2.0 set out to fix the underlying trust problem, not just redesign a star widget.</p>
+  <p>The project moved through a full design process: extensive discovery research with buyers, sellers, CS agents and moderators; hypothesis-driven definition of the new rating model; iterative development of flows for rating, viewing and moderating reviews; multiple rounds of stakeholder and usability testing; and a phased delivery with internal training and post-launch monitoring.</p>
+</section>
+
+<section id="discover">
+  <h2>1. Discovery</h2>
+
+  <div class="phase-badge"><span class="num">1</span>Understanding the problem space</div>
+  <p>The project started from feedback gathered internally (legal, marketing, CS teams) and externally (customer reviews) that flagged the current rating and review system as a source of friction and mistrust. The team also audited how the current trigger and confirmation screens worked, and reviewed which qualifier scores (Bad / Good / Excellent, mapped to numerical ranges of 1–3 to 7–8+) were actually driving user behavior.</p>
+
+  <h3>Who we talked to</h3>
+  <div class="grid2">
+    <div class="card">
+      <h4>Users</h4>
+      <ul>
+        <li>Buyers and sellers across the transaction journey</li>
+        <li>In-depth interviews with both sides of a rating (1st and 2nd phase)</li>
+        <li>Usability testing on the new rating flow</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Business & stakeholders</h4>
+      <ul>
+        <li>Deputy Director, Head of Regulation, Reviewer, RCP, Legal, Marketing</li>
+        <li>Aligning on business expectations and what each stakeholder needed the ratings system to deliver on</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>The core problems, from both sides</h3>
+  <p>Research surfaced parallel frustrations for buyers and sellers, and mapped what each stage of the flow felt like, plus what the new system needed to fix.</p>
+  <table>
+    <tr><th>Pain point</th><th>As a buyer</th><th>As a seller</th><th>Fix in the new system</th></tr>
+    <tr>
+      <td>Understanding what a rating means</td>
+      <td>Couldn't tell what "good" vs "excellent" actually represented</td>
+      <td>Same confusion; hard to explain the scoring logic to a buyer</td>
+      <td>Simplify the rating calculation and make it transparent on both profiles</td>
+    </tr>
+    <tr>
+      <td>Trust in the number</td>
+      <td>Didn't trust old/removed ratings still influencing a score</td>
+      <td>Wanted a fair chance to be re-evaluated, without legacy scores dragging them down</td>
+      <td>Clear separation of legacy ratings vs. new transactional ratings</td>
+    </tr>
+    <tr>
+      <td>Ability to act on a bad experience</td>
+      <td>No easy way to flag or dispute an unfair review</td>
+      <td>No visibility into why a rating was low, or a route to contest it</td>
+      <td>Moderation flow with CS review, rejection reasoning, and audit trail</td>
+    </tr>
+    <tr>
+      <td>Effort to leave feedback</td>
+      <td>Rating felt like an extra, unrewarded step</td>
+      <td>Wanted more, higher-quality ratings, not just more friction</td>
+      <td>Lightweight flow (thumbs + optional tags) triggered right after a confirmed transaction</td>
+    </tr>
+  </table>
+
+  <h3>CS agent & moderator perspective</h3>
+  <table>
+    <tr><th></th><th>As a CS agent / moderator</th><th>The fix in the new system</th></tr>
+    <tr><td>Reviewing disputes</td><td>Manual and time-consuming; no clear moderation flag</td><td>Ratings flagged automatically before reaching a moderator's queue</td></tr>
+    <tr><td>Deleting a rating</td><td>No standardized process; unclear rules on when a rating should come down</td><td>Defined moderation rules, statistics, and a clear rejection-reason workflow</td></tr>
+    <tr><td>Understanding rating history</td><td>Hard to see a transaction's full context</td><td>Background info shown alongside every rating pending review</td></tr>
+  </table>
+
+  <h3>Business scope and quality signals</h3>
+  <p>The team assessed key aspects of a "quality" rating system: whether ratings were reasonably frequent, whether the timing between transaction and rating request made sense, whether the language and comments were transparent and non-abusive, and whether outcomes (edits, disputes) were handled consistently.</p>
+  <div class="callout"><b>Key insight:</b> old ratings carried outsized weight even when they no longer reflected a seller's current behavior. Buyers didn't understand which ratings were "old" vs. current, and this was one of the biggest drivers of mistrust in the score.</div>
+
+  <p>The qualitative findings were then quantified in a large-scale survey. A buyer problem-quantification survey (May–Jun 2023) reached 416K users, with 3,465 completing it. The top-ranked pain point (<i>"I can't decide which transaction I want to rate and when"</i>) directly validated the move to a fully transactional rating tied to a specific, confirmed transaction.</p>
+
+  <h3>Competitive benchmarking</h3>
+  <p>To ground the new design in proven patterns, the team benchmarked rating and review systems across marketplaces and services with similar trust dynamics: Allegro, eBay, Vinted, Avito, Gumtree, and several booking/rental platforms (including Airbnb-style review flows). This shaped decisions on rating summary displays, distribution breakdowns, filtering, and how competitors handle low ratings and moderation.</p>
+  <figure>
+    <img src="images/benchmarks.png" alt="Competitive benchmarking of rating and review systems across Allegro, eBay, Vinted, Avito and Gumtree">
+    <figcaption>Competitive audit: rating summaries, distribution breakdowns, and review displays across Allegro, eBay, Vinted, Avito and Gumtree.</figcaption>
+  </figure>
+</section>
+
+<section id="define">
+  <h2>2. Defining the model</h2>
+
+  <h3>Hypotheses</h3>
+  <p>The team framed hypotheses in an if/then/because structure for both sides of the transaction:</p>
+  <div class="grid2">
+    <div class="card">
+      <h4>Seller hypothesis</h4>
+      <p>If we introduce Buyer Rating Management, then sellers' trust in the rating will be higher, because the rating will become an established, stable entry point for providing feedback.</p>
+    </div>
+    <div class="card">
+      <h4>Buyer hypothesis</h4>
+      <p>If we simplify the rating grading (starting from a low-effort binary model as one candidate), then user understanding of the rating will be higher, because the flow requires less effort to complete.</p>
+    </div>
+  </div>
+  <p>Underlying belief: gathering valuable, quality ratings increases sellers' trust, measured by a change in the share of valid ratings and by higher CX survey scores. Transparency of the rating choice empowers users to make informed decisions and drives higher satisfaction.</p>
+  <div class="callout"><b>Where this landed:</b> the "less effort = better understanding" belief pointed toward a binary thumbs model early on, but live user sessions showed the opposite trade-off: users valued the <b>granularity and familiarity of stars</b> more than the marginal effort saved by thumbs. Stars became the final grading system (see Testing and choosing stars over thumbs).</div>
+
+  <h3>Risks considered</h3>
+  <ul>
+    <li><b>Backlash on removing old ratings</b>: sellers with long, positive histories could see their visible score reset or drop.</li>
+    <li><b>Under-collection</b>: users might not re-rate as many transactions as before if the new flow felt like it required more effort.</li>
+  </ul>
+  <p>An impact analysis of removing old ratings found: 49% of users had no active rating left after removal, and 17% had fewer than 5 ratings. This shaped a phased approach rather than a hard cutover.</p>
+  <div class="callout"><b>The collection problem, quantified:</b> in the legacy system, 60% of buyers (1.85M) had given only <b>one</b> valid rating, and only 2.2% (68K) had given more than 10. Rating activity was highly concentrated and thin overall, evidence that the old flow wasn't generating enough signal to build trustworthy scores.</div>
+
+  <h3>Brainstorming & ideation</h3>
+  <p>Using HMW prompts, Crazy 8s, and a mini design sprint (Moscow prioritization), the team explored a wide concept space before converging:</p>
+  <div style="margin:16px 0;">
+    <span class="tag-pill">Star ratings</span>
+    <span class="tag-pill">Thumbs up/down</span>
+    <span class="tag-pill">Positive/negative tags</span>
+    <span class="tag-pill">Badges</span>
+    <span class="tag-pill">Number of ratings shown</span>
+    <span class="tag-pill">Delivery-confirmed badge</span>
+    <span class="tag-pill">Gamified profile score</span>
+  </div>
+
+  <h3>Goal & scope</h3>
+  <p>The team's job to be done: bring value and start gathering quality ratings as fast as possible, addressing users' trust and transaction-growth needs, while acknowledging that with the strongest trigger already in place, they'd refine interaction triggers in a later phase.</p>
+  <p><b>Priority 1:</b> cover legal requirements and make ratings fully transactional. <b>Priority 2:</b> respond to user needs (ratings display, ad page integration, mini-sites, private profiles, MyOLX).</p>
+
+  <h3>Success metrics</h3>
+  <p>Metrics spanned health/UX indicators (positive impact on successful interactions, impact on retention, decision events, ratings vs. VAS) and RRs-specific data: collection data (time to rate, share of eligible users who rate, drop-off during collection) and conversion-funnel data (number of users who view ratings before purchase, correlation between ratings and purchase decisions, repeat-buyer behavior).</p>
+  <div class="callout"><b>Early signal:</b> buyers who give ratings show significantly bigger engagement with the product: more sessions, more replies, more ad views from rated sellers, and more events per session.</div>
+</section>
+
+<section id="develop">
+  <h2>3. Building the flows</h2>
+  <p>With the model defined, the team mapped detailed user flows for every actor in the system and moved into wireframing and prototyping.</p>
+
+  <h3>Core user flows</h3>
+  <div class="timeline">
+    <div class="step">
+      <h4>Buyer rates seller (transactional)</h4>
+      <p>Triggered after a Safe Deal transaction or claim resolution. Eligibility is checked; if eligible, the buyer is prompted to rate via My Account, a push notification, or the Delivery tab. The buyer chooses "I do not recommend" or "I recommend," optionally adds tags, and submits, landing on a confirmation screen. The rating can later be edited or removed from My Account.</p>
+    </div>
+    <div class="step">
+      <h4>Buyer checks a seller's ratings</h4>
+      <p>From the ad page, a buyer can open the seller's ratings, see the distribution, and filter or sort ratings before deciding whether to transact.</p>
+    </div>
+    <div class="step">
+      <h4>Seller receives a rating</h4>
+      <p>The seller is notified by email and sees the rating across My Account, the active ads list, and their public profile. If they disagree with a rating, they can raise a support ticket.</p>
+    </div>
+    <div class="step">
+      <h4>CS moderation</h4>
+      <p>CS reviews a flagged case for moderation, decides whether the rating should be deleted, and if so, provides a rejection reason. Both buyer and seller are notified by email of the outcome, and the rating (and its history) is updated across all surfaces.</p>
+    </div>
+  </div>
+
+  <h3>Front-end structure</h3>
+  <p>The design covered the full surface area: rating triggers via email/push, a "button to rate" pattern, rating management screens for both buyer and seller, and rating display on the ad page (score, number of ratings, help page) as well as on public and business profiles (score, distribution, filters & sorting, detailed ratings, deleted-ratings history).</p>
+  <figure>
+    <img src="images/flow-diagram.png" alt="Front-end structure diagram mapping buyer and seller rating flows, triggers, and profile surfaces">
+    <figcaption>Front-end structure: rating triggers, buyer/seller rating management, and where scores surface across the ad page and profiles.</figcaption>
+  </figure>
+
+  <h3>Iterating through wireframe versions</h3>
+  <p>Three wireframe versions were designed and tested against each other, moving from a simple thumbs-based model toward a richer star-plus-tags model as legal and product constraints were clarified (see Testing and choosing stars over thumbs, below).</p>
+
+  <figure>
+    <img src="images/version1.png" alt="Version 1 wireframes: thumbs up/down rating flow with optional tags, and profile rating display">
+    <figcaption>V1, thumbs up/down + tags: lightweight recommend/don't-recommend flow with optional descriptive tags.</figcaption>
+  </figure>
+  <figure>
+    <img src="images/version2.png" alt="Version 2 wireframes: thumbs up/down combined with star ratings for communication and delivery">
+    <figcaption>V2, thumbs up/down + stars: adds star sub-ratings for communication and delivery on top of the binary recommendation.</figcaption>
+  </figure>
+  <figure>
+    <img src="images/version3.png" alt="Version 3 wireframes: star rating scale with tags, and rating-detail breakdown on the seller profile">
+    <figcaption>V3, stars + tags: a full star scale paired with tags, and a dedicated ratings breakdown on the seller profile (the most-liked concept overall).</figcaption>
+  </figure>
+</section>
+
+<section id="test">
+  <h2>4. Testing and choosing stars over thumbs</h2>
+
+  <h3>Design jams with stakeholders</h3>
+  <p>Three concept versions were reviewed in parallel by the RM Strategic Team (Kate, Ema, Armin, Sylwia) and the Product Design Team, in a design jam with ~10 participants (designers, Design Lead, Design Manager).</p>
+  <table>
+    <tr><th>Version</th><th>RM Strategic Team feedback</th><th>Product Design Team feedback</th></tr>
+    <tr>
+      <td><b>V1, Thumbs up/down + tags</b></td>
+      <td>Most-liked solution; tags should be optional; concerned about how ratings are represented on the profile; profile IA needs rework; show a summary of tags on the ratings-detail page</td>
+      <td>Second-most-liked; few comments; keep tags optional and mandatory only for negative ratings; liked the simplicity</td>
+    </tr>
+    <tr>
+      <td><b>V2, Thumbs up/down + stars</b></td>
+      <td>Second-most-liked; stars could be a good replacement for open-text ratings</td>
+      <td>Confusing to mix stars with thumbs; hard to describe how it adds value; concern about the amount of grading shown</td>
+    </tr>
+    <tr>
+      <td><b>V3, Stars + tags</b></td>
+      <td>Too many grades to choose from; added complexity; stars felt more "product" than the rest of the model</td>
+      <td>Most-liked overall despite complexity; calculation logic still needs simplifying; profile felt information-overloaded; breakdown score should live in the ratings tab, matching a familiar, well-known rating pattern users adjust to quickly</td>
+    </tr>
+  </table>
+  <p><b>Outcome:</b> V1 and V3 were carried forward into another iteration round.</p>
+
+  <h3>Usability testing</h3>
+  <p>Following design critiques and moderated usability tests, key learnings from both stakeholders and users converged on a clearer set of decisions:</p>
+  <ul>
+    <li>Tags were seen by some as "rude" or "too infantile" when phrased as simple labels; needed better wording</li>
+    <li>Too many tags overwhelmed users; too few felt limiting; settled on a curated set plus optional open text</li>
+    <li>~90% of users wanted an open-text option as an add-on, with tags optional</li>
+    <li>Most sellers wanted the ability to reply to a rating</li>
+    <li>Users wanted a way to verify ratings, plus an info icon explaining the system</li>
+    <li>Two entry points to rating should be supported: post-delivery and post-transaction (roughly 50/50 usage split)</li>
+    <li>Old ratings should remain visible as additional context, not be hard-deleted</li>
+    <li>Ratings should be editable after submission</li>
+    <li>Filters needed improvement, and more tag "packaging" was requested</li>
+    <li>Users were unsure whether a tag referred to the seller, the item, or the transaction; needed clearer grouping</li>
+  </ul>
+  <div class="callout">Between the two tested concepts, <b>V3 (stars + tags)</b> was the more preferred solution; users found it more accurate, more understandable, and visually "eye-catching," despite the added complexity flagged by the design team. The team iterated further after legal review.</div>
+
+  <h3>The final call: stars over thumbs</h3>
+  <p>The grading model came down to a direct comparison between a <b>binary thumbs up/down</b> and a <b>star scale</b>, both paired with tags and (later) open-text comments. After weighing the pros and cons against live user sessions, the team chose <b>stars</b> as the final grading system for four reasons:</p>
+  <ul>
+    <li><b>Granularity & transparency</b>: stars let buyers express a nuanced opinion and give sellers a clearer view of what drove their score.</li>
+    <li><b>Familiarity & simplicity</b>: the star pattern is instantly recognizable, so users adopted it with little friction despite the added granularity.</li>
+    <li><b>Objective & quantifiable</b>: a numeric scale is easier to interpret and aggregate into a score.</li>
+    <li><b>Impactful & fair</b>: each rating meaningfully moves the score, keeping the signal honest for both sides.</li>
+  </ul>
+  <p>This was the turning point of the project. The low-effort binary model looked attractive on paper, but the evidence showed users would trade a little extra effort for a rating they found more accurate and easier to trust.</p>
+</section>
+
+<section id="deliver">
+  <h2>5. Delivery and rollout</h2>
+  <p>The final designs were handed off via Figma with defined acceptance criteria, user-flow checklists, and edge cases prepared for QA and design QA before development.</p>
+
+  <h3>The shipped screens</h3>
+  <p>The buyer rating flow, played out: select a star grade, add optional tags, one tap to submit.</p>
+  <div class="phone-panel">
+    <div class="flow-demo-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen flow-demo">
+          <div class="flow-state">
+            <img src="images/flow-unselected-content.png" alt="Mobile screen: rate your seller with an unselected five-star scale" loading="lazy">
+            <img class="flow-bar" src="images/flow-unselected-bar.png" alt="" loading="lazy">
+            <span class="tap t1" style="left:68%;top:48.5%"></span>
+          </div>
+          <div class="flow-state">
+            <img src="images/flow-excellent-content.png" alt="Mobile screen: five stars selected, Excellent, with optional tags asking what influenced this rating" loading="lazy">
+            <img class="flow-bar" src="images/flow-excellent-bar.png" alt="" loading="lazy">
+            <span class="tap t2" style="left:50%;top:96%"></span>
+          </div>
+          <div class="flow-state">
+            <img src="images/flow-success-fullframe.png" alt="Mobile screen: confirmation after submitting a positive rating, with Rate next seller and Finish actions" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>Rating management for the buyer: rate a seller, review provided ratings, and open a rating's details.</p>
+  <div class="phone-panel">
+    <div class="phone-grid">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <img src="images/Buyer-Rate%20seller-fullframe.png" alt="Mobile screen: list of sellers eligible to be rated by the buyer" loading="lazy">
+        </div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <img src="images/Buyer-Rate%20seller-Provided%20ratings-fullframe.png" alt="Mobile screen: buyer's list of already provided ratings" loading="lazy">
+        </div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <img src="images/Buyer-Rate%20seller-Rated-details-fullframe.png" alt="Mobile screen: detail view of a rating the buyer has given" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>Where ratings surface across the product: the seller box on the ad page, the seller's received ratings, and the MyOLX menu.</p>
+  <div class="phone-panel">
+    <div class="phone-grid">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen scrolling">
+          <img src="images/Ratings-Ad%20page-Seller%20box.png" alt="Mobile screen: ad page with the seller box showing the seller's score and number of ratings" loading="lazy">
+        </div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen scrolling">
+          <img src="images/Seller-Received%20ratings.png" alt="Mobile screen: seller's received ratings with score summary and distribution" loading="lazy">
+        </div>
+      </div>
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen scrolling">
+          <img src="images/MyOlx-Menu-Ratings.png" alt="Mobile screen: MyOLX menu with the ratings entry point" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+  <p>To support a smooth rollout, the team ran an internal training session, <i>"Ratings 2.0 Internal Training"</i> (22 Feb 2024), walking Customer Support and other internal stakeholders through the new rating model, moderation rules, and edge-case handling, with a recorded session and a follow-up Q&A log.</p>
+  <figure>
+    <img src="images/training-graphic.png" alt="Ratings 2.0 internal training session cover graphic, 22.02.2024">
+    <figcaption>Internal training deck used to onboard Customer Support and stakeholders ahead of launch.</figcaption>
+  </figure>
+</section>
+
+<section id="outcomes">
+  <h2>6. Outcomes</h2>
+  <p>Ratings &amp; Reviews 2.0 shipped market by market: <b>Poland (3 Jun 2024)</b>, <b>Romania (12 Aug 2024)</b>, and <b>Ukraine (16 Dec 2024)</b>. The phased rollout let the team monitor and adjust before widening coverage.</p>
+
+  <div class="outcome-grid">
+    <div class="card">
+      <div class="stat">2.29M</div>
+      <div class="label">ratings collected across PL &amp; RO by late Oct 2024</div>
+    </div>
+    <div class="card">
+      <div class="stat">94.6%</div>
+      <div class="label">of ratings were 5-star, signalling mostly positive transactions</div>
+    </div>
+    <div class="card">
+      <div class="stat">3 markets</div>
+      <div class="label">live on the new transactional system within ~6 months</div>
+    </div>
+  </div>
+
+  <p>Early behavioural data also revealed a useful pattern: <b>5-star ratings were submitted faster</b> (≈7.6 days from delivery on average) than lower grades (≈9.5–10.4 days). Satisfied buyers seem to rate quickly and near-effortlessly, while a slower rating is a soft signal of a more considered, often more negative, experience. This fed directly into how the team thought about timing triggers and follow-ups.</p>
+  <div class="callout"><b>Read with care:</b> the heavy skew toward 5 stars is partly genuine satisfaction and partly a known property of marketplace rating systems (positivity bias, reluctance to leave negative feedback). The team treated the distribution as a starting baseline to improve on, not a finished success metric, which is exactly what the next phase addressed.</div>
+</section>
+
+<section id="learn">
+  <h2>7. Ongoing iteration</h2>
+  <p>Post-launch, the team tracked qualitative user feedback (app reviews, social media, support tickets) alongside quantitative data.</p>
+
+  <h3>What users told us</h3>
+  <p>Feedback was mixed in the early weeks after launch. Some users pushed back on the new scoring model and the reset of visible history, questioning why prior ratings weren't fully carried over and asking for more transparency on how the new score was calculated. This fed directly into a backlog of trust and clarity improvements (better explanation copy, clearer legacy-rating labeling).</p>
+
+  <h3>Quantitative tracking</h3>
+  <ul>
+    <li><b>Success metrics results</b>: tracked against the collection and conversion-funnel metrics defined in Discovery</li>
+    <li><b>Health metrics results</b>: impact on core product health indicators</li>
+    <li><b>A/B test results</b>: validating specific flow and copy variants</li>
+    <li><b>HEART metrics</b>: via surveys, app reviews, and social listening</li>
+    <li><b>Behavioral tracking</b>: Smartlook, Hotjar and UXCam session recordings, used to see exactly how users interacted with the rate-your-seller flow and where drop-off happened</li>
+  </ul>
+
+  <div class="callout">The feedback loop closed back into the design backlog: clearer explanation of "revalued" ratings, more transparent legacy-score handling, and continued refinement of the moderation and tag system based on real usage patterns.</div>
+</section>
+
+<section id="reflection">
+  <h2>Reflection</h2>
+  <p>The project shows trust design done end to end. It wasn't solved by picking a rating widget. It came from mapping every actor in the ecosystem (buyer, seller, CS agent, moderator), stress-testing multiple concepts against both business and legal constraints and real user behavior, and building in the moderation and transparency mechanics that make a rating trustworthy rather than just visible. Testing three genuinely different concepts (thumbs, thumbs+stars, stars+tags) with both stakeholders and users, rather than converging early, is what surfaced the real trade-off between simplicity and perceived accuracy, and it let the team make that call with evidence instead of opinion.</p>
+</section>
+
+<footer>
+  Case study compiled from internal project documentation ("[Problem Solving] Ratings & Reviews"). Prepared for portfolio use.
+</footer>
+
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true">
+  <button id="lightbox-close" aria-label="Close">×</button>
+  <div id="lightbox-inner"><img src="" alt=""></div>
+</div>
+
+<script>
+(function() {
+  var lightbox = document.getElementById('lightbox');
+  var inner = document.getElementById('lightbox-inner');
+  var lbImg = lightbox.querySelector('img');
+  var closeBtn = document.getElementById('lightbox-close');
+  if (!lightbox || !lbImg) return;
+
+  document.querySelectorAll('figure img, .phone-screen:not(.flow-demo) img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt || '';
+      lightbox.classList.add('open');
+      lightbox.classList.remove('zoomed');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  inner.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var wasZoomed = lightbox.classList.contains('zoomed');
+    if (wasZoomed) {
+      lightbox.classList.remove('zoomed');
+    } else {
+      var rect = lbImg.getBoundingClientRect();
+      var relX = (e.clientX - rect.left) / rect.width;
+      var relY = (e.clientY - rect.top) / rect.height;
+      lightbox.classList.add('zoomed');
+      var natW = lbImg.naturalWidth;
+      var natH = lbImg.naturalHeight;
+      lightbox.scrollLeft = natW * relX - lightbox.clientWidth / 2;
+      lightbox.scrollTop = natH * relY - lightbox.clientHeight / 2;
+    }
+  });
+
+  function close() {
+    lightbox.classList.remove('open');
+    lightbox.classList.remove('zoomed');
+    document.body.style.overflow = '';
+  }
+  lightbox.addEventListener('click', close);
+  closeBtn.addEventListener('click', function(e) { e.stopPropagation(); close(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+
+(function() {
+  var nav = document.querySelector('.side-nav');
+  var links = document.querySelectorAll('.side-nav a');
+  if (!nav || !links.length) return;
+  var hero = document.querySelector('.hero');
+  var sections = [];
+  links.forEach(function(link) {
+    var target = document.querySelector(link.getAttribute('href'));
+    if (target) sections.push({ link: link, el: target });
+  });
+
+  function setActive() {
+    var probe = window.scrollY + window.innerHeight * 0.35;
+    var current = sections[0];
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= probe) current = s;
+    });
+    sections.forEach(function(s) {
+      s.link.classList.toggle('active', s === current);
+    });
+    var heroBottom = hero ? hero.offsetTop + hero.offsetHeight : 0;
+    nav.classList.toggle('visible', window.scrollY > heroBottom - 80);
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() { setActive(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', setActive);
+  setActive();
+})();
+</script>
+
+</body>
+</html>

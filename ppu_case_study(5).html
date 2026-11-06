@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay-Per-Use · Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1A1A1A;
+    --ink-mid: #5c5049;
+    --ink-soft: #8a7d74;
+    --bg: #fbf6f0;
+    --bg-card: #FFFFFF;
+    --border: #e4d8cc;
+    /* hero gradient stops */
+    --hero-teal: #b7e4d3;
+    --hero-mauve: #d9c9d6;
+    --hero-purple: #c7bce8;
+    /* accent families, matched to the teal / mauve / lavender-purple hero gradient */
+    --teal: #4fa383;        /* teal-green — "Define" + "AI-accelerated" */
+    --teal-light: #e3f5ec;
+    --yellow: #c7bce8;      /* lavender — pull-quote accent */
+    --yellow-light: #f1eefb;
+    --red: #b6849f;         /* dusty mauve — "Develop" */
+    --orange: #7d8fd4;      /* periwinkle/indigo — "Deliver" */
+    --purple: #a99bd6;      /* lavender-purple — "Discover" */
+  }
+
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HERO */
+  .hero {
+    background: #edeaf5;
+    color: var(--ink);
+    padding: 48px;
+    margin: 24px 48px 48px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(199,188,232,.35) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-soft);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block;
+    width: 28px; height: 1.5px; background: var(--ink-soft);
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(36px, 5vw, 62px);
+    line-height: 1.08; font-weight: 400;
+    max-width: 700px; margin-bottom: 24px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: transparent;
+    -webkit-text-stroke: 1.4px var(--ink);
+  }
+  .hero-sub {
+    font-size: 16px; color: var(--ink-mid);
+    max-width: 540px; line-height: 1.7; margin-bottom: 40px;
+  }
+  .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
+  .meta-label {
+    font-size: 10px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 3px;
+  }
+  .meta-value { font-size: 13px; color: var(--ink); }
+
+  /* PHASE NAV */
+  .diamond-nav {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex; gap: 0; overflow-x: auto;
+    position: sticky; top: 0; z-index: 10;
+  }
+  .dnav-item { cursor: pointer; }
+  .dnav-item {
+    padding: 14px 24px 14px 0;
+    font-size: 11px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--ink-soft);
+    text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    white-space: nowrap; border-bottom: 2px solid transparent;
+  }
+  .dnav-item.d1 { border-bottom-color: var(--purple); color: var(--ink); }
+  .dnav-item.d2 { border-bottom-color: var(--teal); color: var(--ink); }
+  .dnav-item.d3 { border-bottom-color: var(--red); color: var(--ink); }
+  .dnav-item.d4 { border-bottom-color: var(--orange); color: var(--ink); }
+  .phase-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  /* SIDE NAV (desktop) */
+  .side-nav {
+    position: fixed; left: 28px; top: 50%; transform: translateY(-50%);
+    display: none; flex-direction: column; gap: 4px; z-index: 15;
+    opacity: 0; pointer-events: none; transition: opacity .25s ease;
+  }
+  .side-nav.visible { opacity: 1; pointer-events: auto; }
+  .side-nav a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px; border-radius: 8px;
+    font-size: 12px; font-weight: 500; letter-spacing: .02em;
+    color: var(--ink-soft); text-decoration: none;
+    border-left: 2px solid transparent; border-radius: 0 8px 8px 0;
+    transition: color .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .side-nav a:hover { color: var(--ink); background: var(--bg-card); }
+  .side-nav a.active { color: var(--ink); border-left-color: var(--teal); font-weight: 600; }
+  @media (min-width: 1420px) {
+    .side-nav { display: flex; }
+    .diamond-nav { display: none; }
+  }
+
+  /* LAYOUT */
+  .body-wrap { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+
+  /* SECTIONS */
+  .section { padding: 72px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 60px; }
+  .section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 10px; font-weight: 600; letter-spacing: .12em;
+    text-transform: uppercase; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .phase-tag {
+    padding: 3px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 600; letter-spacing: .06em;
+  }
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(26px, 3.5vw, 40px);
+    font-weight: 400; line-height: 1.15;
+    margin-bottom: 16px; max-width: 680px;
+  }
+  .section-intro {
+    font-size: 16px; color: var(--ink-mid);
+    line-height: 1.75; max-width: 620px; margin-bottom: 40px;
+  }
+
+  /* CARDS */
+  .card-grid { display: grid; gap: 16px; }
+  .card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 24px;
+  }
+  .card-eyebrow {
+    font-size: 10px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px;
+  }
+  .card h4 { font-size: 15px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
+  .card p { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
+  .card.accent-purple { border-top: 3px solid var(--purple); }
+  .card.accent-teal   { border-top: 3px solid var(--teal); }
+  .card.accent-red    { border-top: 3px solid var(--red); }
+  .card.accent-orange { border-top: 3px solid var(--orange); }
+
+  /* AGENT / TOOL CHIPS */
+  .ai-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .ai-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 500;
+    border: 1px solid var(--border); background: var(--bg); color: var(--ink-mid);
+  }
+  .ai-chip::before { content: '✦'; font-size: 9px; color: var(--teal); }
+  .team-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .team-tag {
+    font-size: 12px; font-weight: 500; padding: 5px 12px; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--ink-mid);
+  }
+  .ai-chip.agent { border-color: var(--purple); color: var(--purple); background: #f1eefb; }
+  .ai-chip.agent::before { color: var(--purple); }
+  .ai-chip.mcp { border-color: var(--teal); color: var(--teal); background: var(--teal-light); }
+  .ai-chip.mcp::before { color: var(--teal); }
+
+  /* RECIPE ROW */
+  .recipe-list { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .recipe-row {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 18px 20px; border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+  .recipe-row:last-child { border-bottom: none; }
+  .recipe-phase {
+    width: 90px; flex-shrink: 0;
+    font-size: 10px; font-weight: 600; letter-spacing: .07em;
+    text-transform: uppercase; padding: 3px 8px;
+    border-radius: 4px; text-align: center; margin-top: 2px;
+  }
+  .recipe-body { flex: 1; min-width: 0; }
+  .recipe-name { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .recipe-desc { font-size: 13px; color: var(--ink-mid); line-height: 1.55; }
+
+  /* INSIGHT LIST */
+  .insight-list { display: flex; flex-direction: column; gap: 10px; }
+  .insight-item {
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 14px 18px; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 10px;
+  }
+  .insight-sev { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+  .insight-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .insight-text { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+  /* PULL QUOTE */
+  .pull-quote {
+    border-left: 3px solid var(--yellow);
+    padding: 20px 24px; margin: 32px 0;
+    background: var(--yellow-light); border-radius: 0 10px 10px 0;
+  }
+  .pull-quote p {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; line-height: 1.5; color: var(--ink); font-style: italic;
+  }
+  .pull-quote cite {
+    display: block; font-size: 12px; font-style: normal;
+    font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+    color: var(--ink-soft); margin-top: 10px;
+  }
+
+  /* METRICS */
+  .metrics-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden; margin-bottom: 40px;
+  }
+  .metric-cell { background: var(--bg-card); padding: 28px 24px; text-align: center; }
+  .metric-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 42px; line-height: 1; color: var(--teal); margin-bottom: 6px;
+  }
+  .metric-label { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+
+  /* COMPARISON TABLE */
+  .comp-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 640px; }
+  .comp-table thead th {
+    text-align: left; padding: 12px 16px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft);
+  }
+  .comp-table thead th.old { background: #f1eefb; color: #5a4a8a; }
+  .comp-table thead th.new { background: #e3f5ec; color: #2f7a5e; }
+  .comp-table tbody tr { border-bottom: 1px solid var(--border); }
+  .comp-table tbody tr:last-child { border-bottom: none; }
+  .comp-table td { padding: 14px 16px; vertical-align: top; }
+  .comp-table td.label { font-weight: 500; color: var(--ink-mid); }
+  .comp-table td.phase-cell { white-space: nowrap; }
+  .comp-table td.old-cell { background: #faf7f3; color: var(--ink-mid); }
+  .comp-table td.new-cell { background: #e3f5ec; color: var(--ink-mid); }
+
+  /* REFLECTION */
+  .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .reflection-col h4 {
+    font-size: 12px; font-weight: 600; letter-spacing: .08em;
+    text-transform: uppercase; margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .reflection-col h4::before { content: ''; display: block; width: 20px; height: 2px; }
+  .reflection-col.ai h4 { color: var(--teal); }
+  .reflection-col.ai h4::before { background: var(--teal); }
+  .reflection-col.designer h4 { color: var(--red); }
+  .reflection-col.designer h4::before { background: var(--red); }
+  .reflection-item {
+    display: flex; gap: 10px; align-items: flex-start;
+    margin-bottom: 10px; font-size: 13px; color: var(--ink-mid); line-height: 1.6;
+  }
+  .reflection-item::before { content: '→'; font-size: 12px; flex-shrink: 0; margin-top: 2px; }
+  .reflection-col.ai .reflection-item::before { color: var(--teal); }
+  .reflection-col.designer .reflection-item::before { color: var(--red); }
+
+  /* FOOTER */
+  .case-footer {
+    background: linear-gradient(135deg, var(--hero-teal) 0%, var(--hero-mauve) 55%, var(--hero-purple) 100%);
+    border-top: 1px solid var(--border); padding: 48px;
+    color: var(--ink-soft); font-size: 12px;
+    display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 16px;
+  }
+  .case-footer strong { color: var(--ink); }
+
+  /* SITE HEADER */
+  .site-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 48px;
+  }
+  .site-nav .brand-logo { height: 42px; width: auto; display: block; }
+  .nav-links { display: flex; gap: 34px; font-size: 14px; font-weight: 500; }
+  .nav-links a {
+    color: var(--ink); text-decoration: none;
+    position: relative; opacity: .75; transition: opacity .25s;
+  }
+  .nav-links a::after {
+    content: ""; position: absolute; left: 0; bottom: -4px;
+    width: 100%; height: 1px; background: var(--ink);
+    transform: scaleX(0); transform-origin: right; transition: transform .3s ease;
+  }
+  .nav-links a:hover { opacity: 1; }
+  .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+  @media (max-width: 720px) { .nav-links { display: none; } }
+
+  /* FIGURES */
+  .figure { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .figure img { display: block; width: 100%; height: auto; cursor: zoom-in; }
+  #lightbox { display: none; position: fixed; inset: 0; background: rgba(20,20,20,.92); z-index: 999; overflow: auto; }
+  #lightbox.open { display: flex; align-items: center; justify-content: center; min-height: 100%; padding: 60px 20px; box-sizing: border-box; }
+  #lightbox.open.zoomed { align-items: flex-start; justify-content: flex-start; }
+  #lightbox-inner { margin: auto; cursor: zoom-in; }
+  #lightbox img { display: block; max-width: calc(100vw - 40px); max-height: calc(100vh - 120px); width: auto; height: auto; cursor: zoom-in; }
+  #lightbox.zoomed img { max-width: none; max-height: none; cursor: zoom-out; }
+  #lightbox-close { position: fixed; top: 20px; right: 28px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.12); color: #fff; border: none; font-size: 22px; line-height: 1; cursor: pointer; z-index: 1000; }
+  #lightbox-close:hover { background: rgba(255,255,255,.22); }
+  .figure.tall img { max-height: 560px; object-fit: contain; background: #fff; }
+  .figcap { font-size: 12px; color: var(--ink-soft); line-height: 1.5; padding: 12px 16px; border-top: 1px solid var(--border); }
+  .phone {
+    position: relative; background: #1c1c1e; border-radius: 42px;
+    padding: 10px; box-shadow: 0 12px 32px rgba(40,30,70,.18);
+  }
+  .phone-screen {
+    position: relative; border-radius: 33px; overflow: hidden;
+    background: #fff; display: block; aspect-ratio: 1170 / 2532;
+    container-type: size;
+  }
+  .phone-screen img {
+    display: block; width: 100%; height: auto; cursor: zoom-in;
+    animation: phone-scroll 24s ease-in-out infinite;
+  }
+  .phone:nth-child(2) .phone-screen img { animation-duration: 20s; animation-delay: -5s; }
+  .phone:nth-child(3) .phone-screen img { animation-duration: 16s; animation-delay: -9s; }
+  .phone:hover .phone-screen img { animation-play-state: paused; }
+  @keyframes phone-scroll {
+    0%, 10% { transform: translateY(0); }
+    55%, 65% { transform: translateY(calc(100cqh - 100%)); }
+    100% { transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .phone-screen img { animation: none; }
+  }
+  .phone-notch {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 34%; height: 22px; background: #1c1c1e;
+    border-radius: 0 0 16px 16px; z-index: 2; pointer-events: none;
+  }
+  .fig-grid { display: grid; gap: 16px; margin: 32px 0; }
+  .fig-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .fig-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+
+  @media (max-width: 680px) {
+    .fig-grid.cols-2, .fig-grid.cols-3 { grid-template-columns: 1fr; }
+    .site-nav { padding: 24px; }
+    .hero { padding: 48px 24px; margin: 16px 24px 32px; }
+    .diamond-nav { padding: 0 24px; }
+    .body-wrap { padding: 0 24px; }
+    .card-grid.cols-2, .card-grid.cols-3 { grid-template-columns: 1fr; }
+    .metrics-row { grid-template-columns: 1fr; }
+    .reflection-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html"><img class="brand-logo" src="logo.png" alt="Strangefruit"></a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#work">Work</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">Case Study · 2025–2026</div>
+  <h1>Pay-Per-Use: leading the design of a <em>new billing model</em>, with AI in every phase</h1>
+  <p class="hero-sub">One designer, a set of AI agents, and a complete design process: research, a workshop with engineers, and testing with 30 real sellers. AI did the heavy lifting and I made the calls. This case study shows both sides of that arrangement.</p>
+  <div class="hero-meta">
+    <div><div class="meta-label">Role</div><div class="meta-value">Product Designer</div></div>
+    <div><div class="meta-label">Scale</div><div class="meta-value">5,882 sellers · Poland and Romania</div></div>
+    <div><div class="meta-label">Team</div><div class="meta-value">Product manager · Engineering · Product analytics · Sales team · GTM team · AMP team</div></div>
+  </div>
+</header>
+
+<!-- PHASE NAV -->
+<nav class="diamond-nav">
+  <a href="#problem" class="dnav-item d1">The problem</a>
+  <a href="#direction" class="dnav-item d2">The direction</a>
+  <a href="#build" class="dnav-item d3">Building it</a>
+  <a href="#next" class="dnav-item d4">What's next</a>
+</nav>
+
+<nav class="side-nav" aria-label="Chapters">
+  <a href="#problem">The problem</a>
+  <a href="#process">Process at a glance</a>
+  <a href="#direction">The direction</a>
+  <a href="#build">Building it</a>
+  <a href="#next">What's next</a>
+  <a href="#comparison">Traditional vs AI</a>
+  <a href="#reflection">Reflection</a>
+</nav>
+
+<main>
+<div class="body-wrap">
+
+<!-- PROBLEM SPACE -->
+<section class="section" id="problem">
+  <div class="section-label"><span style="color:var(--ink-soft)">The problem space</span></div>
+  <h2 class="section-title">The package model made our best sellers pay to guess, and they were leaving because of it</h2>
+  <p class="section-intro">OLX's biggest sellers (car dealers, parts traders, seasonal listers) were leaving the platform, faster every month. What they need is simple: their money's worth and no unnecessary hassle. The package model gave them neither. It made them guess how many ads they'd need next month and pay upfront for a fixed number that expired after about 30 days. Guessing wrong cost them either way. And there was a third, less obvious problem.</p>
+
+  <div class="card-grid cols-3" style="margin-bottom:32px">
+    <div class="card accent-red">
+      <div class="card-eyebrow">Guess too high</div>
+      <h4>Money wasted</h4>
+      <p>A seller who bought 100 ads but only posted 70 lost the other 30 when the month ended. They paid for ads they never got to use.</p>
+    </div>
+    <div class="card accent-orange">
+      <div class="card-eyebrow">Guess too low</div>
+      <h4>Lost sales or pricier top-ups</h4>
+      <p>Running out mid-month left two bad options: hold the inventory back and miss sales, or buy another package at a worse rate than the first one.</p>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-eyebrow">The hidden problem</div>
+      <h4>Sellers capped themselves</h4>
+      <p>Sellers with inventory ready to go would simply stop posting once their package ran out, because buying more felt like overspending. Nobody designed a limit, but the package worked like one.</p>
+    </div>
+  </div>
+
+  <div class="metrics-row">
+    <div class="metric-cell"><div class="metric-num">−24.4%</div><div class="metric-label">Active listings from<br>high-volume sellers YoY</div></div>
+    <div class="metric-cell"><div class="metric-num">49%</div><div class="metric-label">of sellers say cost is their<br>#1 reason for leaving</div></div>
+    <div class="metric-cell"><div class="metric-num">$889k</div><div class="metric-label">Monthly migration revenue<br>at risk (Otomoto · Autovit)</div></div>
+  </div>
+
+  <p class="section-intro" style="margin-top:32px">Timing made it worse. Car parts sellers moving to OLX from automotive vertical platforms like Otomoto and Autovit were used to paying per ad. For them, packages felt like a step backwards, at the exact moment we needed them to stay. On top of that, the buy-package flow had to be repeated every 30 days.</p>
+
+  <div class="fig-grid" style="grid-template-columns:1fr;max-width:760px;margin:32px auto">
+    <div class="figure">
+      <img src="images/payperuse/Rico-wants-one-thing.png" alt="Slide from the stakeholder presentation: Rico the seller persona surrounded by dozens of ad package boxes, thinking 'Let me pay for what I actually use'" loading="lazy">
+      <div class="figcap"><strong>How I told this story to stakeholders.</strong> Rico, our seller persona, buried in package options when all he wants is to pay for what he actually uses. This slide, from the presentation I gave internally, did more for alignment than any chart.</div>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <p>"All of these problems come from one thing: asking sellers to predict the future. So the job wasn't to design a better package. It was to remove the guessing, so sellers can post freely and pay for what they actually use."</p>
+    <cite>Root cause</cite>
+  </div>
+</section>
+
+<!-- PROCESS AT A GLANCE -->
+<section class="section" id="process">
+  <div class="section-label"><span style="color:var(--ink-soft)">Process at a glance</span></div>
+  <h2 class="section-title">Two sections, not four: what I knew and decided, then what I built and proved</h2>
+  <p class="section-intro">The thinking still moved from problem to direction to build to proof, that part never changes. But splitting it into four textbook phases made a lean four-month project look more staged than it was. What actually happened was two connected efforts, and AI shows up differently in each.</p>
+
+  <div class="card-grid cols-2" style="margin-bottom:32px">
+    <div class="card" style="border-top:3px solid var(--purple)">
+      <div class="card-eyebrow" style="color:#5a4a8a">The problem and the direction</div>
+      <h4>Why are sellers leaving, and what should we build instead?</h4>
+      <p><strong>Design work:</strong> forming a hypothesis, digging into the seller interview archive, weekly stakeholder meetings, building personas, writing the problem statement and HMWs.<br><strong>Where AI helped:</strong> drafting the hypothesis, analysing the archive to confirm we were solving the right problem, and grounding both personas in that same research instead of a generic template.</p>
+    </div>
+    <div class="card" style="border-top:3px solid var(--red)">
+      <div class="card-eyebrow" style="color:#7a4a63">Building and proving it</div>
+      <h4>What could the model look like, and does it actually work?</h4>
+      <p><strong>Design work:</strong> a workshop with engineers, picking the winning concept, designing straight in code, running a live usability study, deciding what to fix, handing off.<br><strong>Where AI helped:</strong> 7 working concepts in a 4-hour workshop, a fully working prototype built in Claude Code that doubled as the test stimulus and the handoff artifact, pushed into Figma through MCP for design-system documentation.</p>
+    </div>
+  </div>
+
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:28px 32px">
+    <div class="card-eyebrow" style="margin-bottom:14px">The AI toolkit used throughout</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 24px;font-size:13px;color:var(--ink-mid);line-height:1.6">
+      <div><strong style="color:var(--ink)">Claude + skills</strong> · the main workhorse: analysis, structuring, drafting across every phase</div>
+      <div><strong style="color:var(--ink)">NotebookLM</strong> · source-grounded analysis of the research archive</div>
+      <div><strong style="color:var(--ink)">Toqan</strong> · research analysis and synthesis</div>
+      <div><strong style="color:var(--ink)">Lovable</strong> · fast, throwaway prototyping in the ideation workshop</div>
+      <div><strong style="color:var(--ink)">Claude Design</strong> · on-brand design explorations for inspiration</div>
+      <div><strong style="color:var(--ink)">Claude Code</strong> · the fully working prototype used for testing and handoff</div>
+      <div><strong style="color:var(--ink)">Figma via MCP</strong> · the prototype pushed into our design system for documentation</div>
+    </div>
+  </div>
+</section>
+
+<!-- THE PROBLEM AND THE DIRECTION -->
+<section class="section" id="direction">
+  <div class="section-label"><span style="color:var(--ink-soft)">The problem and the direction</span></div>
+  <h2 class="section-title">Four months to deliver, so this stayed lean: confirm the problem, then sharpen it</h2>
+  <div style="font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px">The question: are we solving the right problem?</div>
+  <p class="section-intro">With only four months to deliver, we couldn't afford a long research phase, and we didn't need one. The archived seller research already told us we were solving the right problem. So discovery focused on two things: benchmarking how other platforms handle pay-per-use pricing, and building a hypothesis grounded in the research and data we already had. Then we moved into ideation as fast as we could.</p>
+
+  <div class="recipe-list" style="margin-bottom:32px">
+    <div class="recipe-row">
+      <div class="recipe-body">
+        <div class="recipe-name">Draft a project hypothesis</div>
+        <div class="recipe-desc">A working IF/THEN/BECAUSE hypothesis built with Claude from the opportunity brief, the archive analysis, and the data: if we offer pay-per-use to postpaid sellers, then friction and complaints drop and inventory grows, because it removes the upfront commitment.</div>
+        <div class="ai-chips">
+          <span class="ai-chip">Claude · Toqan</span>
+        </div>
+      </div>
+    </div>
+    <div class="recipe-row">
+      <div class="recipe-body">
+        <div class="recipe-name">Analyse the existing research archive</div>
+        <div class="recipe-desc">We loaded the existing seller interview archive (Poland, Romania) into NotebookLM and analysed it with Toqan, to double-check we were solving the right problem before spending on new research. The rules were strict: every claim cited to a transcript, open questions marked as open, nothing made up. The top 3 churn drivers turned out to be Costs/ROI (49%), competitor pricing (30%), and platform usability (10–16%).</div>
+        <div class="ai-chips">
+          <span class="ai-chip">NotebookLM</span>
+          <span class="ai-chip">Toqan · Claude</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">What the earlier research already told us</div>
+  <div class="card-grid cols-3" style="margin-bottom:32px">
+    <div class="card accent-purple">
+      <div class="card-eyebrow">Benchmarking</div>
+      <h4>How Allegro and eBay charge sellers</h4>
+      <p>Both competitors work on store subscriptions plus per-listing fees. Neither asks sellers to guess an ad count upfront. That set the bar for what migrating sellers would consider normal.</p>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-eyebrow">Tested and rejected</div>
+      <h4>The hybrid model had already failed</h4>
+      <p>An earlier project tested a hybrid model (listing fee plus sales commission) in three hypotheses. In-depth interviews assessed all three as not true: sellers saw the hybrid as unfair. And with most car parts sold offline, there's no reliable event to charge a commission on.</p>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-eyebrow">Category economics</div>
+      <h4>Car parts sell slowly</h4>
+      <p>Only 14% of active ads had been posted in the last 28 days. The average ad was 421 days old, and 75% of listings stayed active for 76 days or more. Slow-moving inventory fits 30-day ad packages especially badly.</p>
+    </div>
+  </div>
+
+  <div class="insight-list">
+    <div class="insight-item">
+      <div class="insight-sev" style="background:var(--red)"></div>
+      <div>
+        <div class="insight-title">Self-imposed posting cap</div>
+        <div class="insight-text">Sellers stop posting when packages run out because spending more feels like a loss. PPU has to make unlimited posting feel safe as well as fair.</div>
+      </div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-sev" style="background:var(--red)"></div>
+      <div>
+        <div class="insight-title">Vertical user muscle memory</div>
+        <div class="insight-text">Sellers coming over from Otomoto and Autovit already expect pay-per-use, it's just how those platforms work. If OLX's version feels unfamiliar or overcomplicated, we risk losing them right in the migration window, and with it $889k a month. The safer move is to keep the model close to what they already know, not reinvent it.</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--yellow-light);border:1px solid var(--yellow);border-radius:12px;padding:24px 28px;margin-top:32px;margin-bottom:48px">
+    <div class="card-eyebrow">Designer decision</div>
+    <p style="font-size:14px;color:var(--ink-mid);line-height:1.7">The AI tools found plenty of patterns in the archive and the earlier research. My job was deciding which ones set the direction: with hybrid commission models already tested and rejected as unfair, and no reliable way to charge on offline sales, I focused the project on pure usage-based pricing. Charge for ads actually posted, nothing else.</p>
+  </div>
+
+  <div style="border-top:1px solid var(--border);padding-top:40px">
+  <h3 class="section-title" style="font-size:clamp(22px,3vw,32px)">Two personas and a problem statement, built to move fast</h3>
+  <div style="font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px">The question: how do we turn a known problem into something the team can act on?</div>
+  <p class="section-intro">The opportunity brief had already named the problem, so this stayed lean. I built two personas, a high-volume lister and a mid-volume lister, straight from the NotebookLM research we'd already analysed, and used them to sharpen the opportunity brief into a problem statement and a set of HMWs the team could design against.</p>
+
+  <div class="recipe-list" style="margin-bottom:32px">
+    <div class="recipe-row">
+      <div class="recipe-body">
+        <div class="recipe-name">Build personas from the research archive</div>
+        <div class="recipe-desc">Two personas built directly from the NotebookLM analysis: a high-volume lister and a mid-volume lister. Each one grounded in what the archive actually said about that seller's needs, pain points, and goals, not a generic template.</div>
+        <div class="ai-chips">
+          <span class="ai-chip">NotebookLM</span>
+          <span class="ai-chip">Claude</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fig-grid" style="grid-template-columns:1fr;max-width:760px;margin:32px auto">
+    <div class="figure">
+      <img src="images/payperuse/Persona.png" alt="Persona card for Rico, the High Volume Lister: owner of a vehicle dismantling station selling thousands of used auto parts, with goals, needs, pain points and desired solutions" loading="lazy">
+      <div class="figcap"><strong>Rico, the High Volume Lister.</strong> Owner of a vehicle dismantling station with thousands of listings and tight margins. His pain points read like a brief for this project: prepaid packages that don't match fluctuating inventory, rigid listing limits, and being forced to upgrade mid-month.</div>
+    </div>
+  </div>
+
+  <div class="card-grid cols-2">
+    <div class="card accent-teal">
+      <div class="card-eyebrow">Problem statement</div>
+      <h4 style="font-family:'DM Serif Display',serif;font-size:17px;font-weight:400;line-height:1.45">High-volume postpaid sellers need a monetisation model that accommodates unpredictable inventory volumes without financial waste or operational friction, because the current package model forces them to predict and commit to the unpredictable.</h4>
+    </div>
+    <div class="card">
+      <div class="card-eyebrow">HMW questions: 5 that drove Develop</div>
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px">
+        <div style="font-size:12px;color:var(--ink-mid);padding:7px 10px;background:var(--teal-light);border-radius:6px;border-left:2px solid var(--teal)">HMW let sellers post freely without committing to volume upfront?</div>
+        <div style="font-size:12px;color:var(--ink-mid);padding:7px 10px;background:var(--teal-light);border-radius:6px;border-left:2px solid var(--teal)">HMW make bracket pricing transparent before the first ad is posted?</div>
+        <div style="font-size:12px;color:var(--ink-mid);padding:7px 10px;background:var(--teal-light);border-radius:6px;border-left:2px solid var(--teal)">HMW make sellers want to post more to unlock cheaper rates?</div>
+        <div style="font-size:12px;color:var(--ink-mid);padding:7px 10px;background:var(--teal-light);border-radius:6px;border-left:2px solid var(--teal)">HMW show accumulated costs clearly enough to build trust before month-end?</div>
+        <div style="font-size:12px;color:var(--ink-mid);padding:7px 10px;background:var(--teal-light);border-radius:6px;border-left:2px solid var(--teal)">HMW feel familiar to a seller migrating from Otomoto on day one?</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:var(--yellow-light);border:1px solid var(--yellow);border-radius:12px;padding:24px 28px;margin-top:32px">
+    <div class="card-eyebrow">Designer decision</div>
+    <p style="font-size:14px;color:var(--ink-mid);line-height:1.7">Claude drafted 5 versions of the problem statement. I picked the one that named the guessing itself as the problem. That version steered the team away from "let's build better packages" and toward getting rid of the forecast altogether.</p>
+  </div>
+  </div>
+</section>
+
+<!-- BUILDING AND PROVING IT -->
+<section class="section" id="build">
+  <div class="section-label"><span style="color:var(--ink-soft)">Building and proving it</span></div>
+  <h2 class="section-title">A 4-hour engineering ideation session that produced 7 working concepts, voted and stress-tested</h2>
+  <div style="font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px">The question: what could the new model look like, and which idea is worth testing?</div>
+  <p class="section-intro">Instead of a traditional design sprint, we ran a workshop in Lovable with engineers building alongside designers, then a second ideation round with product, commercial, and engineering stakeholders. 7 interactive prototypes were made and voted on in a single session. Claude Design gave us design-system-consistent explorations to draw inspiration from, and Cody (UX engineering agent) checked what was technically realistic before anything went further.</p>
+
+  <div class="fig-grid" style="grid-template-columns:1fr;margin:0 0 32px">
+    <div class="figure">
+      <img src="images/payperuse/Workshop-input-board.png" alt="Workshop input board with the problem statement, current user journey, IF/THEN/BECAUSE hypothesis, supporting data, and success metrics" loading="lazy">
+      <div class="figcap"><strong>What went into the workshop.</strong> Everything from the problem and direction work so far, condensed onto one board: the problem, the current user journey, the supporting data, the hypothesis (if we offer pay-per-use, then friction and complaints drop and inventory grows, because it removes the upfront commitment), and the success metrics: stable or growing ARPU and net new listings, plus UMUX-Lite above 70. Nobody ideated blind.</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:32px">
+    <div class="card-eyebrow">How the team stayed aligned</div>
+    <h4>A weekly rhythm, born out of that first workshop</h4>
+    <p>After the ideation session, I started sitting down every week with product, commercial, and engineering. That's where product decisions got made, designs got reviewed, and go-to-market plans, engineering updates, and the roadmap got discussed, along with any blockers and concerns, all the way through to delivery.</p>
+  </div>
+
+  <div class="card-grid cols-2" style="margin-bottom:32px">
+    <div class="card accent-red">
+      <div class="card-eyebrow">Ideation workshop · 4 hours</div>
+      <h4>7 concepts built and voted in one session</h4>
+      <p>Pricing page, posting flow, usage dashboard, and single-improvement concepts prototyped live in Lovable. Engineers contributed as co-creators. Dot voting picked the bracket-progress dashboard and the interactive calculator as the top directions.</p>
+      <div class="ai-chips">
+        <span class="ai-chip">Lovable</span>
+      </div>
+    </div>
+    <div class="card accent-red">
+      <div class="card-eyebrow">Prototyping · three tools, three jobs</div>
+      <h4>Ideate, get inspired, then build it for real</h4>
+      <p>Lovable built the fast, throwaway ideation prototypes in the workshop. Claude Design generated on-brand design explorations to draw from. Claude Code then built the final, fully working prototype used in testing and handoff.</p>
+      <div class="ai-chips">
+        <span class="ai-chip">Lovable</span>
+        <span class="ai-chip">Claude Design</span>
+        <span class="ai-chip">Claude Code</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="fig-grid cols-2">
+    <div class="figure tall">
+      <img src="images/payperuse/Pay%20per%20use%20-%20ideation%20-%20Pay%20per%20use%20-%20user%20flows.jpg" alt="User flow diagrams for buy package, post an ad, SLF activation and bulk activate, including rejected alternatives marked as worse UX" loading="lazy">
+      <div class="figcap"><strong>User flows from the workshop board.</strong> Every core flow mapped next to its alternative, with the rejected paths labelled "worse UX". Anyone reading the board later can see what we chose and why.</div>
+    </div>
+    <div class="figure tall">
+      <img src="images/payperuse/Pay%20per%20use%20-%20ideation%20-%20Outcome.jpg" alt="Ideation outcome board with screen explorations across buy package, plans, monthly usage and billing" loading="lazy">
+      <div class="figcap"><strong>Ideation outcome.</strong> Screen explorations for the three areas that make up the concept (Buy Package, My Plans, and Monthly Usage), annotated and narrowed down after dot voting.</div>
+    </div>
+  </div>
+
+  <div class="card-grid cols-2">
+    <div class="card" style="grid-column:1/-1">
+      <div class="card-eyebrow">Concept selected</div>
+      <h4>Postpaid PPU with bracket pricing + benefit tiers</h4>
+      <p>Sellers choose Basic, Premium, or Mega tier (listing quality). Post unlimited ads. Billed at month-end on incremental brackets. Showing sellers how close they are to a cheaper rate turns transparent billing into a reason to post more. No expiry, no upfront commitment.</p>
+    </div>
+  </div>
+
+  <div class="fig-grid cols-2" style="margin-top:32px">
+    <div class="figure">
+      <img src="images/payperuse/Journey-before.png" alt="Slide: the current user journey where Rico buys a package, runs out of ads, and has to restart his business every month" loading="lazy">
+      <div class="figcap"><strong>Before: the monthly reset.</strong> Rico buys a package, runs out or lets ads expire, and starts over every 30 days. 10% of ads in Parts packages went unused, money sellers paid for nothing.</div>
+    </div>
+    <div class="figure">
+      <img src="images/payperuse/Journey-after.png" alt="Slide: the redesigned journey where Rico sets a flexible package once, activates ads as needed, and gets one monthly invoice based on actual usage" loading="lazy">
+      <div class="figcap"><strong>After: set it once, keep running.</strong> The same journey, redesigned. Rico picks a flexible package once, posts as needed with bracket pricing applied automatically, and gets one monthly invoice for what he actually used.</div>
+    </div>
+  </div>
+
+  <div style="background:var(--yellow-light);border:1px solid var(--yellow);border-radius:12px;padding:24px 28px;margin-top:32px">
+    <div class="card-eyebrow">Designer decision</div>
+    <p style="font-size:14px;color:var(--ink-mid);line-height:1.7">Dot voting showed the favourites, but the final pick was mine: bracket pricing with benefit tiers. Showing sellers how close they are to a cheaper rate gives them a reason to post more, which answered the "sellers cap themselves" insight from earlier directly.</p>
+  </div>
+
+  <div class="card" style="margin-top:16px;margin-bottom:48px">
+    <div class="card-eyebrow">The pivot: volume discounts to incremental brackets</div>
+    <p style="font-size:14px;color:var(--ink-mid);line-height:1.7">The team's first instinct was a simple volume discount: post more, get a lower rate on everything. Together with engineering and stakeholders, we decided to walk that back. It had technical obstacles that would have slowed delivery, and a bigger problem: it was easy to game, a seller could inflate volume just to unlock a lower rate, then coast, which put real revenue at risk. Incremental bracket pricing (a fixed rate per tier of ads, not one rate applied retroactively to everything) closed that loophole while keeping the part sellers actually wanted: a visible reason to post more.</p>
+  </div>
+
+  <div style="border-top:1px solid var(--border);padding-top:40px">
+  <h3 class="section-title" style="font-size:clamp(22px,3vw,32px)">Tested with 30 PL sellers: UMUX-Lite 85 (Excellent), 4 issues prioritised for iteration</h3>
+  <div style="font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:12px">The question: does it actually work for real sellers?</div>
+  <p class="section-intro">In June 2026 we ran an unmoderated Maze study with 30 Polish sellers from the Car Parts, Vehicles for Parts, and Agriculture categories: 3 tasks, 20 test blocks, scored with UMUX-Lite. Sellers tested against a fully working prototype, built in Claude Code and published as a public website, so what they clicked through felt like the real product rather than a mockup. What we found went straight into the final design.</p>
+
+  <!-- UMUX score banner -->
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:14px;padding:32px 36px;margin-bottom:32px;display:flex;align-items:center;gap:40px;flex-wrap:wrap">
+    <div style="text-align:center;flex-shrink:0">
+      <div style="font-family:'DM Serif Display',serif;font-size:72px;line-height:1;color:var(--teal)">85</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-top:4px">UMUX-Lite score</div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin-top:6px">Excellent usability</div>
+    </div>
+    <div style="width:1px;height:80px;background:var(--border);flex-shrink:0"></div>
+    <div style="flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px">Meets requirements</div>
+        <div style="font-size:28px;font-weight:500;color:var(--ink)">85% <span style="font-size:13px;color:var(--ink-soft);font-weight:400">avg 6.1/7</span></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px">Easy to use</div>
+        <div style="font-size:28px;font-weight:500;color:var(--ink)">85% <span style="font-size:13px;color:var(--ink-soft);font-weight:400">avg 6.1/7</span></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px">Participants</div>
+        <div style="font-size:28px;font-weight:500;color:var(--ink)">30 <span style="font-size:13px;color:var(--ink-soft);font-weight:400">PL sellers</span></div>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:6px">Benchmark</div>
+        <div style="font-size:13px;color:var(--ink-soft);margin-top:4px">&gt;80 = Excellent<br>equiv. SUS ~92</div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- What worked / what didn't -->
+  <div class="card-grid cols-2" style="margin-bottom:32px">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:14px">✓ What worked well</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--teal);font-weight:600;flex-shrink:0">93.3%</span>Completed cost estimation. Pricing calculator highly effective (avg understanding 4.3/5)</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--teal);font-weight:600;flex-shrink:0">100%</span>Successfully downgraded package. Flow fully usable despite navigation variation</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--teal);font-weight:600;flex-shrink:0">~90%</span>Recalled per-listing rate in Vehicles (2.88 PLN). Price breakdown legible</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--teal);font-weight:600;flex-shrink:0">~87%</span>Knew listings needed for next bracket (101). Progress mechanic working</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--teal);font-weight:600;flex-shrink:0">100%</span>Understood remaining budget in billing cycle</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--teal);font-weight:600;flex-shrink:0">83%</span>Correctly identified effective date of plan change (July 1)</div>
+      </div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px">
+      <div style="font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:14px">✗ Issues found</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--red);font-weight:600;flex-shrink:0;white-space:nowrap">P1 · 33%</span>Couldn't explain the 1700 vs 1900 PLN difference. The 200 PLN "other services" component isn't clearly labelled</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--red);font-weight:600;flex-shrink:0;white-space:nowrap">P2 · ~30%</span>Per-listing price not visible upfront. It requires dropdown expansion and should be surfaced by default</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--red);font-weight:600;flex-shrink:0;white-space:nowrap">P2 · ~20%</span>Agriculture grouped under "Parts" was unexpected. Category logic needs a label or tooltip</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--red);font-weight:600;flex-shrink:0;white-space:nowrap">P2 · ~25%</span>Information density too high. Users requested colour-coding, fewer screens, better grouping</div>
+        <div style="display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--ink-mid)"><span style="color:var(--orange);font-weight:600;flex-shrink:0;white-space:nowrap">P3 · ~15%</span>Active package label subtle during downgrade. 5/30 couldn't recall the new start date post-task</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- User quotes -->
+  <div class="section-label">What sellers said</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px">
+      <p style="font-family:'DM Serif Display',serif;font-size:15px;font-style:italic;color:var(--ink);line-height:1.55;margin-bottom:8px">"Everything is clear and transparent. Still not sure why the 1700 vs 1900 difference — worth showing more clearly."</p>
+      <span style="font-size:11px;color:var(--ink-soft);font-weight:500">Participant · PL seller · Jun 2026</span>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px">
+      <p style="font-family:'DM Serif Display',serif;font-size:15px;font-style:italic;color:var(--ink);line-height:1.55;margin-bottom:8px">"I would need to post 101 more listings to get a lower price per listing."</p>
+      <span style="font-size:11px;color:var(--ink-soft);font-weight:500">Participant · PL seller · Jun 2026 (progress mechanic working)</span>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px">
+      <p style="font-family:'DM Serif Display',serif;font-size:15px;font-style:italic;color:var(--ink);line-height:1.55;margin-bottom:8px">"Per-listing price details should be visible straight away, not buried in a dropdown."</p>
+      <span style="font-size:11px;color:var(--ink-soft);font-weight:500">Participant · PL seller · Jun 2026 (P2 issue confirmed)</span>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px 20px">
+      <p style="font-family:'DM Serif Display',serif;font-size:15px;font-style:italic;color:var(--ink);line-height:1.55;margin-bottom:8px">"New package will be effective from 1 July — the start of a new billing period."</p>
+      <span style="font-size:11px;color:var(--ink-soft);font-weight:500">Participant · PL seller · Jun 2026 (billing cycle communicated clearly)</span>
+    </div>
+  </div>
+
+  <!-- Handoff -->
+  <div class="card-grid cols-2">
+    <div class="card accent-orange" style="background:var(--yellow-light);border-color:var(--yellow)">
+      <div class="card-eyebrow">Designer decision</div>
+      <h4>4 issues ranked fix-before-handoff</h4>
+      <p>UMUX-Lite gave us the overall score, but deciding what to fix was mine. Out of everything the 30 sessions turned up, I marked 4 issues as must-fix before handoff. Each one became a real design change: a tooltip explaining the confusing 200 PLN charge, the price per listing shown right away instead of hidden in a dropdown, a label explaining why Agriculture sits under "Parts", and simpler, colour-coded pricing screens. The test shaped the final design instead of just approving it.</p>
+    </div>
+    <div class="card accent-orange">
+      <div class="card-eyebrow">Handoff, code-to-design</div>
+      <h4>The prototype was the spec</h4>
+      <p>I designed in code from the start, so there was never a separate mockup to keep in sync. Every screen from Claude Code went into Figma through MCP, which kept it consistent with our design system, the way we're required to document every project. Engineering didn't need a written interaction spec: they built from the same working prototype sellers had just tested.</p>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ITERATION & WHAT'S NEXT -->
+<section class="section" id="next">
+  <div class="section-label"><span style="color:var(--ink-soft)">Iteration & what's next</span></div>
+  <h2 class="section-title">Tested, improved, and heading into a real-world pilot</h2>
+  <p class="section-intro">All 4 issues from testing were fixed in the final design before handoff. The model isn't live yet. We're rolling it out in steps, each with its own way of collecting feedback, because $889k a month in migration revenue is riding on getting it right.</p>
+
+  <div style="background:#edeaf5;border-radius:16px;padding:48px 40px">
+  <div class="fig-grid cols-3" style="gap:40px">
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <img src="images/payperuse/Mobile-Choose%20package.png" alt="Mobile screen: choose your package with Standard, Premium and Ultra tiers and a monthly cost estimator" loading="lazy">
+      </div>
+    </div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <img src="images/payperuse/Mobile-See%20billing-tiers%20expanded-lot%20of%20brackets.png" alt="Mobile screen: your ads this month with per-category costs and expanded volume bracket pricing" loading="lazy">
+      </div>
+    </div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <img src="images/payperuse/Mobile-Summary.png" alt="Mobile screen: package summary explaining how pay-per-use works with no limits or upfront commitments and a monthly invoice" loading="lazy">
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="card-grid cols-3" style="margin-top:48px">
+    <div class="card accent-teal">
+      <div class="card-eyebrow">Done · Usability testing</div>
+      <h4>UMUX-Lite 85 · Excellent</h4>
+      <p>30 Polish sellers tested it. 93–100% completed the core tasks, before a single sprint of development. Handoff is complete: the prototype is documented in Figma, and engineering is building from what sellers actually used.</p>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-eyebrow">Next · Pilot</div>
+      <h4>50 real sellers on the live model</h4>
+      <p>50 sellers will use pay-per-use with real inventory and real bills. The sales team collects their feedback directly. That's the kind of signal a usability test can't give you.</p>
+    </div>
+    <div class="card accent-teal">
+      <div class="card-eyebrow">Then · Full rollout</div>
+      <h4>Checking everyone understands it</h4>
+      <p>When pay-per-use reaches all 5,882 sellers, an in-product survey will check whether brackets, tiers, and billing actually make sense to people. That closes the loop on the transparency goal we set early on.</p>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="section" id="comparison">
+  <div class="section-label"><span style="color:var(--ink-soft)">Traditional vs AI-accelerated process</span></div>
+  <h2 class="section-title">Same two efforts, very different coverage and speed</h2>
+  <p class="section-intro">The work itself didn't change: confirm the problem, sharpen the direction, build the solution, prove it works. What changed was the depth of coverage inside that work, and how much time freed up for the judgment calls only a designer can make.</p>
+
+  <div style="overflow-x:auto;margin-bottom:40px">
+    <table class="comp-table">
+      <thead>
+        <tr style="border-bottom:2px solid var(--border)">
+          <th style="width:14%">Stage</th>
+          <th style="width:15%">Activity</th>
+          <th class="old" style="width:35%">Traditional approach</th>
+          <th class="new" style="width:36%">AI-accelerated approach</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="phase-cell"><span style="display:inline-block;padding:3px 8px;background:#f1eefb;color:#5a4a8a;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase">Problem and direction</span></td>
+          <td class="label">Research analysis</td>
+          <td class="old-cell">Re-reading old interview transcripts one by one. Days of work, so in practice it rarely happens and teams build on assumptions.</td>
+          <td class="new-cell">The full interview archive analysed with NotebookLM + Toqan in hours. Claims cited to transcript. Contradictions flagged. Recipe: Analyse the existing research archive.</td>
+        </tr>
+        <tr>
+          <td class="phase-cell"></td>
+          <td class="label">Personas</td>
+          <td class="old-cell">Built from memory, old documents, or generic templates. Rarely checked against real research.</td>
+          <td class="new-cell">Two personas built directly from the NotebookLM analysis of the research archive. Recipe: Build personas from the research archive.</td>
+        </tr>
+        <tr>
+          <td class="phase-cell"><span style="display:inline-block;padding:3px 8px;background:#f5e9f0;color:#7a4a63;border-radius:4px;font-size:10px;font-weight:600;text-transform:uppercase">Building and proving it</span></td>
+          <td class="label">Ideation</td>
+          <td class="old-cell">2-day design sprint or solo sketching. 3–5 concepts. Engineers not involved until handoff.</td>
+          <td class="new-cell">4-hour Lovable workshop. 7 working interactive concepts built and dot-voted. Engineers as co-creators, so constraints surfaced in ideation rather than after.</td>
+        </tr>
+        <tr>
+          <td class="phase-cell"></td>
+          <td class="label">Prototyping</td>
+          <td class="old-cell">Figma prototype. 1–3 days. Interactive calculator would require a developer ticket weeks away.</td>
+          <td class="new-cell">Working pricing calculator built in Claude Code in hours, used directly as the test stimulus. Claude Design contributed on-brand explorations earlier in the workshop.</td>
+        </tr>
+        <tr>
+          <td class="phase-cell"></td>
+          <td class="label">Usability testing</td>
+          <td class="old-cell">Test plan written manually. UMUX Lite scoring done in a spreadsheet. Patterns identified days later from memory.</td>
+          <td class="new-cell">An unmoderated Maze study (30 PL sellers, 20 blocks) run on a fully working Claude Code prototype, not a static mockup. Score 85 (Excellent). 93.3% task completion on cost estimation, 100% on downgrade. 4 issues surfaced and prioritised before handoff, not after.</td>
+        </tr>
+        <tr>
+          <td class="phase-cell"></td>
+          <td class="label">Handoff documentation</td>
+          <td class="old-cell">Mockups redrawn in Figma after the fact, then annotated by hand. A separate interaction spec written to explain what the static screens couldn't show.</td>
+          <td class="new-cell">Designed straight in code with Claude Code, then pushed into Figma through MCP, already matching the design system. No separate spec: engineering built from the same working prototype sellers had tested.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:38px;color:var(--teal);line-height:1;margin-bottom:8px">3×</div>
+      <div style="font-size:12px;color:var(--ink-soft);line-height:1.5">More concept directions explored in the same time budget</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:38px;color:var(--teal);line-height:1;margin-bottom:8px">~60%</div>
+      <div style="font-size:12px;color:var(--ink-soft);line-height:1.5">Faster research synthesis and documentation across all phases</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:38px;color:var(--teal);line-height:1;margin-bottom:8px">85</div>
+      <div style="font-size:12px;color:var(--ink-soft);line-height:1.5">UMUX-Lite score from 30 PL seller sessions. Excellent usability.</div>
+    </div>
+  </div>
+</section>
+
+<!-- REFLECTION -->
+<section class="section" id="reflection">
+  <div class="section-label"><span style="color:var(--ink-soft)">Honest reflection</span></div>
+  <h2 class="section-title">What the AI workflow changed, and what it didn't</h2>
+  <p class="section-intro">AI didn't replace the design thinking. It took away the busywork around it, so more of my time went to the decisions only a designer can make.</p>
+
+  <div class="reflection-grid">
+    <div class="reflection-col ai">
+      <h4>Where AI actually helped</h4>
+      <div class="reflection-item">Claude turned research and data I already had into a usable hypothesis fast, so I could spend the saved time on benchmarking and framing instead of formatting</div>
+      <div class="reflection-item">Recipes turned repeatable tasks (archive analysis, insight extraction, synthesis) into fast, consistent outputs rather than blank-slate efforts each time</div>
+      <div class="reflection-item">Designing straight in Claude Code and pushing it into Figma through MCP meant the design system stayed documented without me redrawing anything after the fact</div>
+      <div class="reflection-item">Lovable brought engineers into ideation as builders rather than reviewers, so constraints surfaced in hours instead of sprint cycles</div>
+      <div class="reflection-item">Engineering built from the same working prototype sellers had just tested, so there was no separate interaction spec to keep in sync or lose fidelity to</div>
+    </div>
+    <div class="reflection-col designer">
+      <h4>What I owned as the designer</h4>
+      <div class="reflection-item">Deciding which insights actually mattered. The agents find patterns; the designer decides which ones can carry a project (see the "Designer decision" blocks in each phase)</div>
+      <div class="reflection-item">Keeping product, commercial, legal, and engineering aligned. No agent does that</div>
+      <div class="reflection-item">Keeping the research honest: every claim had to trace back to a transcript, open questions were marked as open, and nothing got made up</div>
+      <div class="reflection-item">Choosing what to fix and in what order. AI organised the findings; the ranking and the design changes were my calls</div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<footer class="case-footer">
+  <div><strong>Sylwia Giżanowska-Baran</strong> · Product Designer</div>
+  <div>Pay-Per-Use · 2025–2026</div>
+</footer>
+
+<div id="lightbox">
+  <button id="lightbox-close" aria-label="Close">&times;</button>
+  <div id="lightbox-inner">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+</div>
+
+<script>
+(function() {
+  var lightbox = document.getElementById('lightbox');
+  var inner = document.getElementById('lightbox-inner');
+  var lightboxImg = document.getElementById('lightbox-img');
+  var closeBtn = document.getElementById('lightbox-close');
+  var zoomed = false;
+
+  document.querySelectorAll('.figure img, .phone-screen img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      zoomed = false;
+      lightbox.classList.remove('zoomed');
+      lightbox.classList.add('open');
+    });
+  });
+
+  inner.addEventListener('click', function(e) {
+    e.stopPropagation();
+    zoomed = !zoomed;
+    lightbox.classList.toggle('zoomed', zoomed);
+    if (zoomed) {
+      // scroll to where the user clicked, roughly centering it
+      var rect = lightboxImg.getBoundingClientRect();
+      var xPct = (e.clientX - rect.left) / rect.width;
+      var yPct = (e.clientY - rect.top) / rect.height;
+      requestAnimationFrame(function() {
+        var full = lightboxImg.getBoundingClientRect();
+        lightbox.scrollLeft = full.width * xPct - lightbox.clientWidth / 2;
+        lightbox.scrollTop = full.height * yPct - lightbox.clientHeight / 2;
+      });
+    } else {
+      lightbox.scrollLeft = 0;
+      lightbox.scrollTop = 0;
+    }
+  });
+
+  function close() {
+    lightbox.classList.remove('open', 'zoomed');
+    zoomed = false;
+    lightbox.scrollLeft = 0;
+    lightbox.scrollTop = 0;
+  }
+
+  lightbox.addEventListener('click', close);
+  closeBtn.addEventListener('click', function(e) { e.stopPropagation(); close(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+
+(function() {
+  var nav = document.querySelector('.side-nav');
+  var links = document.querySelectorAll('.side-nav a');
+  if (!nav || !links.length) return;
+  var hero = document.querySelector('.hero');
+  var sections = [];
+  links.forEach(function(link) {
+    var target = document.querySelector(link.getAttribute('href'));
+    if (target) sections.push({ link: link, el: target });
+  });
+
+  function setActive() {
+    var probe = window.scrollY + window.innerHeight * 0.35;
+    var current = sections[0];
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= probe) current = s;
+    });
+    sections.forEach(function(s) {
+      s.link.classList.toggle('active', s === current);
+    });
+    var heroBottom = hero ? hero.offsetTop + hero.offsetHeight : 0;
+    nav.classList.toggle('visible', window.scrollY > heroBottom - 80);
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() { setActive(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', setActive);
+  setActive();
+})();
+</script>
+
+</body>
+</html>

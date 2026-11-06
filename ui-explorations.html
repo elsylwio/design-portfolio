@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>UI Explorations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1a2e; --sub:#5b5b6e; --line:#e6e6ec;
+    --accent:#7a5cc9; --accent2:#3d2e6b; --bg:#fafafb; --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:1100px; margin:0 auto; padding:0 32px 80px;}
+  header.hero{ background:var(--bg); color:var(--ink); padding:72px 48px 64px; }
+  header.hero .inner{ max-width:none; margin:0; background:#f5c9ad; border-radius:20px; padding:44px 48px; }
+  header.hero .hero-eyebrow{
+    display:flex; align-items:center; gap:12px;
+    font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:rgba(26,26,46,.6); margin-bottom:22px;
+  }
+  header.hero .hero-eyebrow::before{content:""; width:40px; height:1.5px; background:rgba(26,26,46,.45);}
+  header.hero h1{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(36px,5vw,60px); line-height:1.08; letter-spacing:-.01em;
+    margin:0 0 22px; max-width:720px;
+  }
+  header.hero h1 em{font-style:italic; color:#c1590c;}
+  header.hero p.dek{font-size:17px; color:rgba(26,26,46,.72); max-width:620px; line-height:1.7; margin:0;}
+
+  section{margin-top:56px;}
+  h2{font-size:22px; color:var(--accent2); margin-bottom:20px;}
+
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  @media(max-width:900px){.grid3{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:600px){.grid3{grid-template-columns:1fr;}}
+
+  .tile{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .tile-img{aspect-ratio:4/3; overflow:hidden; background:var(--line); cursor:zoom-in;}
+  .tile-img img{width:100%; height:100%; object-fit:cover; object-position:top; display:block; transition:transform .5s ease;}
+  .tile:hover .tile-img img{transform:scale(1.05);}
+  .tile-meta{padding:16px 18px;}
+  .tile-meta .tile-title{font-weight:600; font-size:14.5px; margin-bottom:4px;}
+  .tile-meta .tile-desc{font-size:13px; color:var(--sub); line-height:1.5; margin-bottom:6px;}
+  .tile-meta .tile-role{font-size:11px; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
+
+  footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font-size:13px; color:var(--sub);}
+
+  #lightbox{display:none; position:fixed; inset:0; background:rgba(20,20,20,.92); z-index:999; overflow:auto;}
+  #lightbox.open{display:flex; align-items:center; justify-content:center; min-height:100%; padding:60px 20px; box-sizing:border-box;}
+  #lightbox.open.zoomed{align-items:flex-start; justify-content:flex-start;}
+  #lightbox-inner{margin:auto; cursor:zoom-in;}
+  #lightbox img{display:block; max-width:calc(100vw - 40px); max-height:calc(100vh - 120px); width:auto; height:auto; cursor:zoom-in;}
+  #lightbox.zoomed img{max-width:none; max-height:none; cursor:zoom-out;}
+  #lightbox-close{position:fixed; top:20px; right:28px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.12); color:#fff; border:none; font-size:22px; cursor:pointer; z-index:1000;}
+
+  .site-nav{padding:24px 48px; display:flex; justify-content:space-between; align-items:center;}
+  .site-nav .brand-logo{height:38px; width:auto; display:block;}
+  .site-nav .nav-links{display:flex; gap:28px; font-size:14px; font-weight:500;}
+  .site-nav .nav-links a{color:var(--ink); text-decoration:none; opacity:.75; transition:opacity .2s;}
+  .site-nav .nav-links a:hover{opacity:1;}
+  @media(max-width:600px){.site-nav .nav-links{display:none;}}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html"><img class="brand-logo" src="logo.png" alt="Strangefruit"></a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#work">Work</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="inner">
+    <div class="hero-eyebrow">UI Design</div>
+    <h1>UI <em>Explorations</em></h1>
+    <p class="dek">A set of smaller UI projects &mdash; mobile apps, dashboards and websites &mdash; designed as standalone visual pieces rather than full case studies.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<section>
+  <h2>Mobile</h2>
+  <div class="grid3">
+    <div class="tile">
+      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-mobile-01.jpg" alt="Disease Symptoms Tracker native iOS app screens"></div>
+      <div class="tile-meta">
+        <div class="tile-title">Symptoms Tracker</div>
+        <div class="tile-desc">Native iOS app to track different disease symptoms.</div>
+        <div class="tile-role">UI Designer</div>
+      </div>
+    </div>
+    <div class="tile">
+      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-mobile-02.jpg" alt="herb. web app for marijuana order and delivery"></div>
+      <div class="tile-meta">
+        <div class="tile-title">herb.</div>
+        <div class="tile-desc">Web app for simple and fast marijuana order &amp; delivery.</div>
+        <div class="tile-role">UI Designer</div>
+      </div>
+    </div>
+    <div class="tile">
+      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-mobile-03.jpg" alt="Weight Tracker native iOS app screens"></div>
+      <div class="tile-meta">
+        <div class="tile-title">Weight Tracker</div>
+        <div class="tile-desc">Native iOS app to track weight and progress over time.</div>
+        <div class="tile-role">UI Designer</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Dashboards</h2>
+  <div class="grid3">
+    <div class="tile">
+      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-dashboard-01.jpg" alt="Pathogen Sequence Database web app screens"></div>
+      <div class="tile-meta">
+        <div class="tile-title">Pathogen Sequence Database</div>
+        <div class="tile-desc">Web app used by scientists for analysis of patient sample sequences from clinical studies.</div>
+        <div class="tile-role">UI Designer</div>
+      </div>
+    </div>
+    <div class="tile">
+      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-dashboard-02.jpg" alt="Ordino dashboard for managing internal business permits"></div>
+      <div class="tile-meta">
+        <div class="tile-title">Ordino</div>
+        <div class="tile-desc">Dashboard to manage internal business with issue permits.</div>
+        <div class="tile-role">UI Designer</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Web</h2>
+  <div class="grid3">
+    <div class="tile">
+      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-web-01.jpg" alt="728 Project fashion crowdfunding website"></div>
+      <div class="tile-meta">
+        <div class="tile-title">728 Project</div>
+        <div class="tile-desc">Fashion crowdfunding website.</div>
+        <div class="tile-role">UI Designer</div>
+      </div>
+    </div>
+    <div class="tile">
+      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-web-02.jpg" alt="Automotive engineering website"></div>
+      <div class="tile-meta">
+        <div class="tile-title">Automotive Engineering</div>
+        <div class="tile-desc">Website bridging Silicon Valley ideas with traditional automotive development.</div>
+        <div class="tile-role">UX Designer</div>
+      </div>
+    </div>
+    <div class="tile">
+      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-web-03.jpg" alt="Food addict travel and food blog website"></div>
+      <div class="tile-meta">
+        <div class="tile-title">Food Addict</div>
+        <div class="tile-desc">Food and travel blog / website.</div>
+        <div class="tile-role">UI Designer</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  A collection of earlier UI projects, compiled for portfolio use.
+</footer>
+
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true">
+  <button id="lightbox-close" aria-label="Close">&times;</button>
+  <div id="lightbox-inner"><img src="" alt=""></div>
+</div>
+
+<script>
+(function() {
+  var lightbox = document.getElementById('lightbox');
+  var inner = document.getElementById('lightbox-inner');
+  var lbImg = lightbox.querySelector('img');
+  var closeBtn = document.getElementById('lightbox-close');
+  if (!lightbox || !lbImg) return;
+
+  document.querySelectorAll('.tile-img img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt || '';
+      lightbox.classList.add('open');
+      lightbox.classList.remove('zoomed');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  inner.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var wasZoomed = lightbox.classList.contains('zoomed');
+    if (wasZoomed) {
+      lightbox.classList.remove('zoomed');
+    } else {
+      var rect = lbImg.getBoundingClientRect();
+      var relX = (e.clientX - rect.left) / rect.width;
+      var relY = (e.clientY - rect.top) / rect.height;
+      lightbox.classList.add('zoomed');
+      var natW = lbImg.naturalWidth;
+      var natH = lbImg.naturalHeight;
+      lightbox.scrollLeft = natW * relX - lightbox.clientWidth / 2;
+      lightbox.scrollTop = natH * relY - lightbox.clientHeight / 2;
+    }
+  });
+
+  function close() {
+    lightbox.classList.remove('open');
+    lightbox.classList.remove('zoomed');
+    document.body.style.overflow = '';
+  }
+  lightbox.addEventListener('click', close);
+  closeBtn.addEventListener('click', function(e) { e.stopPropagation(); close(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+</script>
+
+</body>
+</html>

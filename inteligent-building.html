@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inteligent Building Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a1a2e; --sub:#5b5b6e; --line:#e6e6ec;
+    --accent:#2f8f5c; --accent2:#1c5238; --bg:#fafafb; --card:#ffffff;
+    --good:#3ba24c; --warn:#e0a800; --bad:#d64545;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.6;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding:0 32px 80px;}
+  header.hero{
+    background:var(--bg);
+    color:var(--ink); padding:72px 48px 64px;
+  }
+  header.hero .inner{
+    max-width:none; margin:0;
+    background:#e7f5ed; border-radius:20px;
+    padding:44px 48px;
+  }
+  header.hero .hero-eyebrow{
+    display:flex; align-items:center; gap:12px;
+    font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+    color:rgba(26,26,46,.6); margin-bottom:22px;
+  }
+  header.hero .hero-eyebrow::before{content:""; width:40px; height:1.5px; background:rgba(26,26,46,.45);}
+  header.hero h1{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(36px,5vw,60px); line-height:1.08; letter-spacing:-.01em;
+    margin:0 0 22px; max-width:720px;
+  }
+  header.hero h1 em{font-style:italic; color:var(--accent2);}
+  header.hero p.dek{font-size:17px; color:rgba(26,26,46,.72); max-width:600px; line-height:1.7; margin:0;}
+  .meta-row{display:flex; gap:32px; margin-top:38px; flex-wrap:wrap;}
+  .meta-item{font-size:13px; color:rgba(26,26,46,.8);}
+  .meta-item b{display:block; color:rgba(26,26,46,.5); font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px;}
+
+  section{margin-top:56px; scroll-margin-top:60px;}
+
+  .diamond-nav{
+    background:var(--bg); border-bottom:1px solid var(--line);
+    padding:0 48px; display:flex; gap:0; overflow-x:auto;
+    position:sticky; top:0; z-index:10;
+  }
+  .diamond-nav a.dnav-item{
+    padding:14px 24px 14px 0; font-size:11px; font-weight:600;
+    letter-spacing:.08em; text-transform:uppercase; color:var(--sub);
+    text-decoration:none; display:flex; align-items:center; gap:8px;
+    white-space:nowrap; border-bottom:2px solid transparent; cursor:pointer;
+  }
+  .diamond-nav a.d1{border-bottom-color:#7fcda2; color:var(--ink);}
+  .diamond-nav a.d2{border-bottom-color:#4f95a3; color:var(--ink);}
+  .diamond-nav a.d3{border-bottom-color:#e0a84f; color:var(--ink);}
+  .diamond-nav a.d4{border-bottom-color:var(--accent); color:var(--ink);}
+  .diamond-nav a.d5{border-bottom-color:var(--accent2); color:var(--ink);}
+  .diamond-nav .phase-dot{width:7px; height:7px; border-radius:50%; flex-shrink:0;}
+
+  .side-nav{
+    position:fixed; left:28px; top:50%; transform:translateY(-50%);
+    display:none; flex-direction:column; gap:4px; z-index:15;
+    opacity:0; pointer-events:none; transition:opacity .25s ease;
+  }
+  .side-nav.visible{opacity:1; pointer-events:auto;}
+  .side-nav a{
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px; font-size:12px; font-weight:500; letter-spacing:.02em;
+    color:var(--sub); text-decoration:none;
+    border-left:2px solid transparent; border-radius:0 8px 8px 0;
+    transition:color .2s ease, border-color .2s ease, background .2s ease;
+  }
+  .side-nav a:hover{color:var(--ink); background:var(--card);}
+  .side-nav a.active{color:var(--ink); border-left-color:var(--accent); font-weight:600;}
+  @media (min-width:1420px){
+    .side-nav{display:flex;}
+    .diamond-nav{display:none;}
+  }
+  h2{
+    font-size:24px; color:var(--accent2); border-bottom:2px solid var(--line);
+    padding-bottom:10px; margin-bottom:20px;
+  }
+  h3{font-size:18px; color:var(--ink); margin:28px 0 10px;}
+  p{color:#33334a; margin:0 0 14px;}
+  ul{margin:0 0 14px; padding-left:20px; color:#33334a;}
+  li{margin-bottom:6px;}
+  .lead{font-size:17px; color:var(--sub);}
+
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:20px 0;}
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:12px;
+    padding:20px 22px;
+  }
+  .card h4{margin:0 0 8px; font-size:14px; text-transform:uppercase; letter-spacing:.03em; color:var(--accent);}
+  .card p, .card ul{margin:0;}
+
+  .callout{
+    background:#e7f5ed; border-left:4px solid var(--accent); padding:16px 20px;
+    border-radius:6px; margin:20px 0; color:#1e3a2c;
+  }
+  .callout b{color:var(--accent);}
+
+  .phase-badge{
+    display:inline-flex; align-items:center; gap:8px; font-weight:600; color:var(--accent2);
+    font-size:13px; text-transform:uppercase; letter-spacing:.04em; margin-bottom:6px;
+  }
+
+  footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font-size:13px; color:var(--sub);}
+
+  figure{margin:24px 0;}
+  figure img{width:100%; display:block; border-radius:10px; border:1px solid var(--line); box-shadow:0 2px 12px rgba(20,20,50,.06); cursor:zoom-in;}
+  figcaption{font-size:13px; color:var(--sub); margin-top:8px; text-align:center;}
+  .fig-grid{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:24px 0;}
+  .fig-grid figure{margin:0;}
+
+  #lightbox{display:none; position:fixed; inset:0; background:rgba(20,20,20,.92); z-index:999; overflow:auto;}
+  #lightbox.open{display:flex; align-items:center; justify-content:center; min-height:100%; padding:60px 20px; box-sizing:border-box;}
+  #lightbox.open.zoomed{align-items:flex-start; justify-content:flex-start;}
+  #lightbox-inner{margin:auto; cursor:zoom-in;}
+  #lightbox img{display:block; max-width:calc(100vw - 40px); max-height:calc(100vh - 120px); width:auto; height:auto; cursor:zoom-in;}
+  #lightbox.zoomed img{max-width:none; max-height:none; cursor:zoom-out;}
+  #lightbox-close{position:fixed; top:20px; right:28px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.12); color:#fff; border:none; font-size:22px; cursor:pointer; z-index:1000;}
+
+  .site-nav{padding:24px 48px; display:flex; justify-content:space-between; align-items:center;}
+  .site-nav .brand-logo{height:38px; width:auto; display:block;}
+  .site-nav .nav-links{display:flex; gap:28px; font-size:14px; font-weight:500;}
+  .site-nav .nav-links a{color:var(--ink); text-decoration:none; opacity:.75; transition:opacity .2s;}
+  .site-nav .nav-links a:hover{opacity:1;}
+  @media(max-width:600px){.site-nav .nav-links{display:none;} .fig-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="index.html"><img class="brand-logo" src="logo.png" alt="Strangefruit"></a>
+  <div class="nav-links">
+    <a href="index.html#about">About</a>
+    <a href="index.html#work">Work</a>
+    <a href="index.html#contact">Contact</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="inner">
+    <div class="hero-eyebrow">Product Design Case Study</div>
+    <h1>Inteligent <em>Building</em></h1>
+    <p class="dek">Designing a touchscreen system that brought a fully paper-based research facility onto one automated, intuitive interface.</p>
+    <div class="meta-row">
+      <div class="meta-item"><b>Client</b>Roche</div>
+      <div class="meta-item"><b>Role</b>Business Analyst, UX Designer / UI Designer</div>
+    </div>
+  </div>
+</header>
+
+<nav class="diamond-nav">
+  <a href="#problem" class="dnav-item d1"><span class="phase-dot" style="background:#7fcda2"></span>Problem &amp; users</a>
+  <a href="#process" class="dnav-item d2"><span class="phase-dot" style="background:#4f95a3"></span>Design process</a>
+  <a href="#ui" class="dnav-item d3"><span class="phase-dot" style="background:#e0a84f"></span>UI &amp; interaction</a>
+  <a href="#final" class="dnav-item d4"><span class="phase-dot" style="background:var(--accent)"></span>Final product</a>
+  <a href="#next" class="dnav-item d5"><span class="phase-dot" style="background:var(--accent2)"></span>Next steps</a>
+</nav>
+
+<nav class="side-nav" aria-label="Chapters">
+  <a href="#problem">Problem &amp; users</a>
+  <a href="#team">Team &amp; role</a>
+  <a href="#process">Design process</a>
+  <a href="#ui">UI &amp; interaction design</a>
+  <a href="#final">Final product</a>
+  <a href="#next">Next steps</a>
+</nav>
+
+<div class="wrap">
+
+<section id="problem" style="margin-top:56px">
+  <h2>Problem to Solve</h2>
+  <p class="lead">Create a fully integrated and automated intelligent building system that allows users to manage the building, modules and rooms. The previous building had no automated solution and didn't use any other systems &mdash; all activities related to research were performed on paper, tracked manually.</p>
+
+  <h3>Users</h3>
+  <p>People not related to IT &mdash; scientists, animal care takers, building managers, husbandry supervisors &mdash; who are familiar only with regular IT software like Word, Excel, Google Drive and email. Often people in older age.</p>
+
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-intel-01.jpg" alt="Annotated requirements documentation with handwritten review notes">
+    <figcaption>Detailed requirements documentation provided by the business side, reviewed and annotated with the team.</figcaption>
+  </figure>
+</section>
+
+<section id="team">
+  <h2>Team &amp; Role</h2>
+  <p>I started the project as the main contact to the business, in a hybrid role of Business Analyst, UX Designer / UI Designer. As the project entered a more advanced phase, I was supported by an additional Business Analyst, Interaction Designer and UX Researcher.</p>
+  <p>The design team worked in Kanban, while the developer team worked in Scrum. One design representative was always part of the Scrum meetings, participating in daily standups, planning, demos and retrospectives.</p>
+</section>
+
+<section id="process">
+  <h2>Design Process</h2>
+  <p>We started working closely with Business Analysts on the business side. At the very beginning they provided very detailed documentation with requirements. Our main goal was to understand the current solution, its constraints and issues &mdash; so we conducted many interviews with business BAs and regular users, and did some shadowing on site: observing scientists' daily work, the tools they used, and the issues they ran into. We needed to match the business needs with these findings.</p>
+
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-intel-02.jpg" alt="Application map showing navigation between home, alarms, history, animals, status and operation modules">
+    <figcaption>Initial application map, mapping out the core navigation and modules.</figcaption>
+  </figure>
+
+  <p>Next, we created the initial application map, user flow and sketches. The goal was an MVP that met core user needs: quick, efficient, intuitive and easy to follow. Due to technical constraints we chose a web-based solution over a native app, inspired by Material Design. The touchscreen app needed to follow the brand style guide and stay minimalistic and elegant.</p>
+
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-intel-03.jpg" alt="Hand-drawn sketches of the room control module with temperature, humidity and lighting controls">
+    <figcaption>Early hand sketches of the room control module.</figcaption>
+  </figure>
+</section>
+
+<section id="ui">
+  <h2>UI &amp; Interaction Design</h2>
+  <p>User interface design was based on Material Design, with some exceptions. Initial interaction design was created in InVision as a fully clickable mockup. When developers decided to go with the Vuetify.js framework, the UX/UI and interaction designers made the most of the components and patterns it already defined.</p>
+
+  <div class="fig-grid">
+    <figure>
+      <img src="images/carbonmade/web/carbonmade-intel-04.jpg" alt="Wireframes of the husbandry module showing charts, room status and alerts">
+      <figcaption>Wireframes for the husbandry module.</figcaption>
+    </figure>
+    <figure>
+      <img src="images/carbonmade/web/carbonmade-intel-05.jpg" alt="Clickable InVision prototype of the room panel shown on a tablet">
+      <figcaption>Clickable InVision prototype, tested on tablet.</figcaption>
+    </figure>
+  </div>
+
+  <div class="callout"><b>Usability testing:</b> following the UCD approach, we tested the solution regularly with users. The results were satisfactory &mdash; the app had positive feedback and was easy to follow and intuitive for users.</div>
+
+  <p>We collaborated closely with developers throughout, making sure high usability of the final solution remained a goal shared by every stakeholder. A design representative participated in every Scrum meeting.</p>
+</section>
+
+<section id="final">
+  <h2>Final Product</h2>
+  <p>Here is the final product design. The mockup was improved with feedback from usability tests applied, along with some minor changes to the user interface.</p>
+
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-intel-06.jpg" alt="Final tablet UI showing room temperature, humidity, pressure and airflow trends over time">
+    <figcaption>Final tablet UI: room module trend view.</figcaption>
+  </figure>
+
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-intel-07.jpg" alt="Grid of four final tablet screens showing module overview, room detail, event log and lighting controls">
+    <figcaption>Final screens: module overview, room detail, event log and lighting controls.</figcaption>
+  </figure>
+</section>
+
+<section id="next">
+  <h2>Next Steps</h2>
+  <p>Our next step was to create a dashboard (web app) that allows you to control, manage and administrate the building settings &mdash; a separate, longer story.</p>
+
+  <figure>
+    <img src="images/carbonmade/web/carbonmade-intel-08.jpg" alt="Grid of dashboard web app screens for managing building tasks, room plans and notification settings">
+    <figcaption>Early screens of the management dashboard: tasks, room plans and notification settings.</figcaption>
+  </figure>
+</section>
+
+<footer>
+  Case study compiled from original Inteligent Building project documentation. Prepared for portfolio use.
+</footer>
+
+</div>
+
+<div id="lightbox" role="dialog" aria-modal="true">
+  <button id="lightbox-close" aria-label="Close">&times;</button>
+  <div id="lightbox-inner"><img src="" alt=""></div>
+</div>
+
+<script>
+(function() {
+  var lightbox = document.getElementById('lightbox');
+  var inner = document.getElementById('lightbox-inner');
+  var lbImg = lightbox.querySelector('img');
+  var closeBtn = document.getElementById('lightbox-close');
+  if (!lightbox || !lbImg) return;
+
+  document.querySelectorAll('figure img').forEach(function(img) {
+    img.addEventListener('click', function() {
+      lbImg.src = img.src;
+      lbImg.alt = img.alt || '';
+      lightbox.classList.add('open');
+      lightbox.classList.remove('zoomed');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  inner.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var wasZoomed = lightbox.classList.contains('zoomed');
+    if (wasZoomed) {
+      lightbox.classList.remove('zoomed');
+    } else {
+      var rect = lbImg.getBoundingClientRect();
+      var relX = (e.clientX - rect.left) / rect.width;
+      var relY = (e.clientY - rect.top) / rect.height;
+      lightbox.classList.add('zoomed');
+      var natW = lbImg.naturalWidth;
+      var natH = lbImg.naturalHeight;
+      lightbox.scrollLeft = natW * relX - lightbox.clientWidth / 2;
+      lightbox.scrollTop = natH * relY - lightbox.clientHeight / 2;
+    }
+  });
+
+  function close() {
+    lightbox.classList.remove('open');
+    lightbox.classList.remove('zoomed');
+    document.body.style.overflow = '';
+  }
+  lightbox.addEventListener('click', close);
+  closeBtn.addEventListener('click', function(e) { e.stopPropagation(); close(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') close();
+  });
+})();
+
+(function() {
+  var nav = document.querySelector('.side-nav');
+  var links = document.querySelectorAll('.side-nav a');
+  if (!nav || !links.length) return;
+  var hero = document.querySelector('.hero');
+  var sections = [];
+  links.forEach(function(link) {
+    var target = document.querySelector(link.getAttribute('href'));
+    if (target) sections.push({ link: link, el: target });
+  });
+
+  function setActive() {
+    var probe = window.scrollY + window.innerHeight * 0.35;
+    var current = sections[0];
+    sections.forEach(function(s) {
+      if (s.el.offsetTop <= probe) current = s;
+    });
+    sections.forEach(function(s) {
+      s.link.classList.toggle('active', s === current);
+    });
+    var heroBottom = hero ? hero.offsetTop + hero.offsetHeight : 0;
+    nav.classList.toggle('visible', window.scrollY > heroBottom - 80);
+  }
+
+  var ticking = false;
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(function() { setActive(); ticking = false; });
+      ticking = true;
+    }
+  }, { passive: true });
+  window.addEventListener('resize', setActive);
+  setActive();
+})();
+</script>
+
+</body>
+</html>

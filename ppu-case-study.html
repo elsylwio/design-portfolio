@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pay-Per-Use · OLX · Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1A1A1A;
+    --ink-mid: #5c5049;
+    --ink-soft: #8a7d74;
+    --bg: #fbf6f0;
+    --bg-card: #FFFFFF;
+    --border: #e4d8cc;
+    --peach: #c7bce8;
+    --coral: #f6b0a8;
+    --rose: #a99bd6;
+    --muted: #8a7d74;
+    --hero-teal: #b7e4d3;
+    --hero-mauve: #d9c9d6;
+    --hero-purple: #c7bce8;
+    /* accent families, repainted to match the teal / mauve / lavender-purple hero gradient */
+    --teal: #4fa383;        /* teal-green, used for "Define" + "AI-accelerated" */
+    --teal-light: #e3f5ec;
+    --yellow: #c7bce8;      /* lavender, used for the pull-quote accent */
+    --yellow-light: #f1eefb;
+    --red: #b6849f;         /* dusty mauve, used for "Develop" */
+    --orange: #7d8fd4;      /* periwinkle/indigo, used for "Deliver" */
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Instrument Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── BACK LINK ── */
+  .back-nav {
+    padding: 24px 48px 0;
+  }
+  .back-nav a {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: opacity .25s;
+  }
+  .back-nav a:hover { opacity: .7; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--hero-teal) 0%, var(--hero-mauve) 55%, var(--hero-purple) 100%);
+    color: var(--ink);
+    padding: 40px 48px 64px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-eyebrow {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: .28em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 46px;
+    height: 1px;
+    background: var(--ink-soft);
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 340;
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.08;
+    letter-spacing: -.02em;
+    max-width: 700px;
+    margin-bottom: 24px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    font-weight: 400;
+    color: transparent;
+    -webkit-text-stroke: 1.4px var(--ink);
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--ink-mid);
+    max-width: 520px;
+    line-height: 1.7;
+    margin-bottom: 40px;
+  }
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .meta-item { }
+  .meta-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 3px;
+  }
+  .meta-value {
+    font-size: 13px;
+    color: var(--ink);
+  }
+
+  /* ── DIAMOND NAV ── */
+  .diamond-nav {
+    background: var(--bg);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .dnav-item {
+    padding: 14px 24px 14px 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: color .2s, border-color .2s;
+  }
+  .dnav-item:hover { color: var(--ink); }
+  .dnav-item .phase-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dnav-item.d1 { border-bottom-color: #a99bd6; color: var(--ink); }
+  .dnav-item.d2 { border-bottom-color: #4fa383; color: var(--ink); }
+  .dnav-item.d3 { border-bottom-color: #b6849f; color: var(--ink); }
+  .dnav-item.d4 { border-bottom-color: #7d8fd4; color: var(--ink); }
+
+  /* ── LAYOUT ── */
+  .body-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+  @media (max-width: 680px) {
+    .hero { padding: 48px 24px; }
+    .diamond-nav { padding: 0 24px; }
+    .body-wrap { padding: 0 24px; }
+  }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 72px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-label .phase-tag {
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .06em;
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(26px, 3.5vw, 40px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    max-width: 680px;
+  }
+  .section-intro {
+    font-size: 16px;
+    color: var(--ink-mid);
+    line-height: 1.75;
+    max-width: 620px;
+    margin-bottom: 40px;
+  }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .card-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .card-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  @media (max-width: 680px) {
+    .card-grid.cols-2,
+    .card-grid.cols-3 { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+  }
+  .card-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+  .card p {
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.65;
+  }
+  .card.accent-teal { border-top: 3px solid var(--teal); }
+  .card.accent-purple { border-top: 3px solid #a99bd6; }
+  .card.accent-red { border-top: 3px solid var(--red); }
+  .card.accent-orange { border-top: 3px solid var(--orange); }
+
+  /* ── AI TOOL CHIPS ── */
+  .ai-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .ai-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--ink-mid);
+  }
+  .ai-chip::before {
+    content: '✦';
+    font-size: 9px;
+    color: var(--teal);
+  }
+
+  /* ── INSIGHT ROW ── */
+  .insight-list { display: flex; flex-direction: column; gap: 12px; }
+  .insight-item {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .insight-sev {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 6px;
+  }
+  .insight-body {}
+  .insight-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .insight-text { font-size: 13px; color: var(--ink-mid); line-height: 1.6; }
+
+  /* ── QUOTE ── */
+  .pull-quote {
+    border-left: 3px solid var(--yellow);
+    padding: 20px 24px;
+    margin: 32px 0;
+    background: var(--yellow-light);
+    border-radius: 0 10px 10px 0;
+  }
+  .pull-quote p {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    line-height: 1.5;
+    color: var(--ink);
+    font-style: italic;
+  }
+  .pull-quote cite {
+    display: block;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 10px;
+  }
+
+  /* ── METRICS ── */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  @media (max-width: 680px) {
+    .metrics-row { grid-template-columns: 1fr; }
+  }
+  .metric-cell {
+    background: var(--bg-card);
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .metric-num {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    line-height: 1;
+    color: var(--teal);
+    margin-bottom: 6px;
+  }
+  .metric-label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+
+  /* ── TOOL STACK ── */
+  .tool-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .tool-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+  .tool-row:last-child { border-bottom: none; }
+  .tool-phase {
+    width: 80px;
+    flex-shrink: 0;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-align: center;
+    margin-top: 2px;
+  }
+  .tool-name {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 3px;
+  }
+  .tool-desc {
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.55;
+  }
+
+  /* ── REFLECTION ── */
+  .reflection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 680px) {
+    .reflection-grid { grid-template-columns: 1fr; }
+  }
+  .reflection-col { }
+  .reflection-col h4 {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .reflection-col h4::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 2px;
+  }
+  .reflection-col.ai h4 { color: var(--teal); }
+  .reflection-col.ai h4::before { background: var(--teal); }
+  .reflection-col.designer h4 { color: var(--red); }
+  .reflection-col.designer h4::before { background: var(--red); }
+  .reflection-item {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    font-size: 13px;
+    color: var(--ink-mid);
+    line-height: 1.6;
+  }
+  .reflection-item::before {
+    content: '→';
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .reflection-col.ai .reflection-item::before { color: var(--teal); }
+  .reflection-col.designer .reflection-item::before { color: var(--red); }
+
+  /* ── FOOTER ── */
+  .case-footer {
+    background: linear-gradient(135deg, var(--hero-teal) 0%, var(--hero-mauve) 55%, var(--hero-purple) 100%);
+    border-top: 1px solid var(--border);
+    padding: 48px;
+    color: var(--ink-soft);
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .case-footer strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<nav class="back-nav">
+  <a href="portfolio.html">&larr; Sylwia <em style="font-style:italic">K.</em></a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">Case Study · OLX Group · 2025–2026</div>
+  <h1>Pay-Per-Use — a <em>new billing model</em> designed with AI from brief to prototype</h1>
+  <p class="hero-sub">How AI tools accelerated every phase of the double diamond — from synthesising 62 seller interviews to building a working pricing calculator in hours — for a monetisation model serving 5,882 sellers across PL, PT, and RO.</p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <div class="meta-label">Role</div>
+      <div class="meta-value">Lead Product Designer</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Team</div>
+      <div class="meta-value">Monetisation Bravo · OLX Group</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Timeline</div>
+      <div class="meta-value">Q4 FY26 → Q2 FY27</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Markets</div>
+      <div class="meta-value">Poland · Romania · Portugal</div>
+    </div>
+    <div class="meta-item">
+      <div class="meta-label">Revenue at risk</div>
+      <div class="meta-value">$889k / month</div>
+    </div>
+  </div>
+</header>
+
+<!-- PHASE NAV -->
+<nav class="diamond-nav">
+  <a href="#discover" class="dnav-item d1"><span class="phase-dot" style="background:#a99bd6"></span>① Discover</a>
+  <a href="#define" class="dnav-item d2"><span class="phase-dot" style="background:#4fa383"></span>② Define</a>
+  <a href="#develop" class="dnav-item d3"><span class="phase-dot" style="background:#b6849f"></span>③ Develop</a>
+  <a href="#deliver" class="dnav-item d4"><span class="phase-dot" style="background:#7d8fd4"></span>④ Deliver</a>
+</nav>
+
+<main>
+
+<!-- CONTEXT -->
+<div class="body-wrap">
+<section class="section" id="context">
+  <div class="section-label">
+    <span style="color:var(--ink-soft)">The brief</span>
+  </div>
+  <h2 class="section-title">OLX's package model was costing the business its best sellers</h2>
+  <p class="section-intro">High-volume sellers on OLX — car dealers, parts traders, seasonal listers — were churning at an accelerating rate. The cause: a billing model that forced them to predict monthly ad volume upfront, then punished them for being wrong. Simultaneously, users migrating from OLX's vertical platforms (Otomoto in PL, Standvirtual in PT, Autovit in RO) expected pay-per-use billing as standard. Forcing them into packages risked losing $889k/month in migration revenue at the exact moment of transition.</p>
+
+  <div class="metrics-row">
+    <div class="metric-cell">
+      <div class="metric-num">−24.4%</div>
+      <div class="metric-label">Active listings from<br>high-volume sellers YoY</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-num">49%</div>
+      <div class="metric-label">Of sellers cite cost /<br>ROI as churn driver #1</div>
+    </div>
+    <div class="metric-cell">
+      <div class="metric-num">5,882</div>
+      <div class="metric-label">Target sellers across<br>PL · PT · RO</div>
+    </div>
+  </div>
+
+  <div class="pull-quote">
+    <p>"The upfront commitment becomes a self-imposed limit — sellers stop posting after their package runs out, artificially capping their activity even when they have inventory to list."</p>
+    <cite>Opportunity Brief · OLX Monetisation Bravo</cite>
+  </div>
+</section>
+
+<!-- DISCOVER -->
+<section class="section" id="discover">
+  <div class="section-label">
+    <span class="phase-tag" style="background:#f1eefb;color:#5a4a8a">① Discover</span>
+    <span style="color:var(--ink-soft)">Diverge — understand the full problem space</span>
+  </div>
+  <h2 class="section-title">Research that would take days — done in hours</h2>
+  <p class="section-intro">Discovery spanned qualitative seller research, quantitative churn data, competitive analysis across five platforms, and stakeholder interviews. AI was used to compress the mechanical work — synthesis, clustering, competitive scanning — so design energy went to the judgment calls.</p>
+
+  <div class="card-grid cols-3" style="margin-bottom:32px">
+    <div class="card accent-purple">
+      <div class="card-eyebrow">Research base</div>
+      <h4>62 seller interviews synthesised</h4>
+      <p>Raw transcripts from high-volume dealers, seasonal listers, and migrating vertical users across three markets uploaded and processed with NotebookLM for source-grounded qualitative analysis.</p>
+      <div class="ai-chips">
+        <span class="ai-chip">NotebookLM</span>
+        <span class="ai-chip">Qualitative analysis</span>
+      </div>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-eyebrow">Competitive landscape</div>
+      <h4>5 platforms mapped in one session</h4>
+      <p>Claude used web search to pull current pricing mechanics from Otomoto, Standvirtual, Autovit, Allegro, and eBay. The incremental bracket pricing pattern common across vertical platforms was surfaced in under 30 minutes.</p>
+      <div class="ai-chips">
+        <span class="ai-chip">Claude web search</span>
+        <span class="ai-chip">Synthesis</span>
+      </div>
+    </div>
+    <div class="card accent-purple">
+      <div class="card-eyebrow">Assumption mapping</div>
+      <h4>Riskiest assumptions surfaced before fieldwork</h4>
+      <p>The full product brief was fed to Claude to extract implicit assumptions and rank by failure risk — turning brief review into a structured pre-research checklist rather than a passive read.</p>
+      <div class="ai-chips">
+        <span class="ai-chip">Claude analysis</span>
+        <span class="ai-chip">Risk ranking</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="insight-list">
+    <div class="insight-item">
+      <div class="insight-sev" style="background:#b6849f"></div>
+      <div class="insight-body">
+        <div class="insight-title">Self-imposed posting cap</div>
+        <div class="insight-text">Sellers stop posting when packages run out because spending more feels like a loss — which means PPU must make unlimited posting feel safe, not just fair. Backed by −24.4% listings data.</div>
+      </div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-sev" style="background:#b6849f"></div>
+      <div class="insight-body">
+        <div class="insight-title">Vertical user muscle memory</div>
+        <div class="insight-text">Migrating sellers expect PPU as standard. Any OLX-specific UX friction risks $889k/month in the critical migration window. Familiarity is a feature — over-engineering is a risk.</div>
+      </div>
+    </div>
+    <div class="insight-item">
+      <div class="insight-sev" style="background:#7d8fd4"></div>
+      <div class="insight-body">
+        <div class="insight-title">Discount confusion destroys trust</div>
+        <div class="insight-text">All 10 research participants noticed discount offers but could not explain what activated them or what period they covered. Discount mechanics excluded from MVP scope as a result.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DEFINE -->
+<section class="section" id="define">
+  <div class="section-label">
+    <span class="phase-tag" style="background:#e3f5ec;color:#2f7a5e">② Define</span>
+    <span style="color:var(--ink-soft)">Converge — frame the right problem</span>
+  </div>
+  <h2 class="section-title">From 62 interviews to a problem statement in one afternoon</h2>
+  <p class="section-intro">NotebookLM outputs were fed into Claude for insight structuring. 80+ raw research notes were clustered into themes, upgraded into design insights using a structured format, and ranked by business severity. HMW questions were generated, categorised, and stress-tested before any solution work began.</p>
+
+  <div class="card-grid cols-2" style="margin-bottom:32px">
+    <div class="card accent-teal">
+      <div class="card-eyebrow">Problem statement</div>
+      <h4 style="font-family:'DM Serif Display',serif;font-size:17px;font-weight:400;line-height:1.4">High-volume postpaid sellers need a monetisation model that accommodates unpredictable inventory volumes without financial waste or operational friction — because the current package model forces them to predict and commit to the unpredictable.</h4>
+    </div>
+    <div class="card">
+      <div class="card-eyebrow">How Might We questions</div>
+      <h4>5 HMWs drove the entire Develop phase</h4>
+      <p style="margin-bottom:12px">Generated from insights, grouped by theme, and stress-tested by asking Claude to argue against each one before adopting them.</p>
+      <div style="display:flex;flex-direction:column;gap:7px">
+        <div style="font-size:12px;color:var(--ink-mid);padding:6px 10px;background:var(--teal-light);border-radius:6px;border-left:2px solid var(--teal)">HMW let sellers post freely without committing to volume upfront?</div>
+        <div style="font-size:12px;color:var(--ink-mid);padding:6px 10px;background:var(--teal-light);border-radius:6px;border-left:2px solid var(--teal)">HMW make bracket pricing transparent before the first ad is posted?</div>
+        <div style="font-size:12px;color:var(--ink-mid);padding:6px 10px;background:var(--teal-light);border-radius:6px;border-left:2px solid var(--teal)">HMW make sellers want to post more to unlock cheaper rates?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="background:var(--yellow-light);border-color:var(--yellow)">
+    <div class="card-eyebrow" style="color:var(--ink-soft)">AI process note</div>
+    <h4>Two-tool research stack: NotebookLM → Claude</h4>
+    <p>NotebookLM handled source-grounded qualitative analysis — staying tethered to actual transcripts, surfacing quotes, preventing confabulation. Claude handled the forward-looking design work — structuring insights, generating HMWs, drafting problem statements. The manual handoff between tools was intentional: that moment of copying findings is where editorial judgment enters the process.</p>
+    <div class="ai-chips" style="margin-top:12px">
+      <span class="ai-chip">NotebookLM</span>
+      <span class="ai-chip">Claude synthesis</span>
+      <span class="ai-chip">Structured insight format</span>
+      <span class="ai-chip">HMW generation</span>
+    </div>
+  </div>
+</section>
+
+<!-- DEVELOP -->
+<section class="section" id="develop">
+  <div class="section-label">
+    <span class="phase-tag" style="background:#f5e9f0;color:#7a4a63">③ Develop</span>
+    <span style="color:var(--ink-soft)">Diverge — explore, prototype, stress-test</span>
+  </div>
+  <h2 class="section-title">A 4-hour engineering ideation session that produced 7 working concepts</h2>
+  <p class="section-intro">Rather than a traditional design sprint, the Develop phase used a cross-functional Lovable workshop — designers and engineers ideating together through AI-generated prototypes in real time. 7 distinct UX directions were built, presented, and dot-voted in one session. Claude Design was used for higher-fidelity mockup iterations after the workshop.</p>
+
+  <div class="card-grid cols-2" style="margin-bottom:32px">
+    <div class="card accent-red">
+      <div class="card-eyebrow">Workshop · Lovable · 4 hours</div>
+      <h4>7 concepts built and voted on in a single session</h4>
+      <p>Pricing page, posting flow, usage dashboard, and single-improvement concepts were prototyped live. Each team member built independently then presented. Dot voting surfaced the interactive calculator and bracket-progress dashboard as the strongest directions.</p>
+      <div class="ai-chips">
+        <span class="ai-chip">Lovable</span>
+        <span class="ai-chip">Cross-functional ideation</span>
+        <span class="ai-chip">Dot voting</span>
+      </div>
+    </div>
+    <div class="card accent-red">
+      <div class="card-eyebrow">Prototyping · Claude Design + Claude Artifacts</div>
+      <h4>Working pricing calculator built in hours</h4>
+      <p>A functional React PPU calculator — with bracket breakdown, tier selection, live cost comparison, and logarithmic volume scale up to 100k ads — was built as a Claude Artifact and used directly in user testing sessions as an interactive stimulus.</p>
+      <div class="ai-chips">
+        <span class="ai-chip">Claude Design</span>
+        <span class="ai-chip">Claude Artifacts</span>
+        <span class="ai-chip">React prototype</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-grid cols-3" style="margin-bottom:0">
+    <div class="card">
+      <div class="card-eyebrow">Concept selected</div>
+      <h4>Postpaid PPU with bracket pricing + benefit tiers</h4>
+      <p>Sellers choose Basic, Premium, or Mega tier (listing quality). Post unlimited ads. Billed at month-end on incremental brackets. No expiry. No upfront commitment.</p>
+    </div>
+    <div class="card">
+      <div class="card-eyebrow">Key UX decision</div>
+      <h4>Progress-to-next-bracket as a motivational mechanic</h4>
+      <p>Usage dashboard shows how many more ads until the next cheaper rate unlocks — turning billing transparency into a posting incentive. Highest dot-voted concept in the workshop.</p>
+    </div>
+    <div class="card">
+      <div class="card-eyebrow">Stress-tested by Claude</div>
+      <h4>Auto-extend disclosure surfaced as a legal risk</h4>
+      <p>Claude flagged that auto-extended ads under variable pricing require explicit labelling under B2B regulations. Design constraint added to Phase 5 scope before it could become a launch blocker.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DELIVER -->
+<section class="section" id="deliver">
+  <div class="section-label">
+    <span class="phase-tag" style="background:#eaedfa;color:#3d4a8a">④ Deliver</span>
+    <span style="color:var(--ink-soft)">Converge — validate and hand off</span>
+  </div>
+  <h2 class="section-title">Validated across 3 markets, with AI-assisted test synthesis</h2>
+  <p class="section-intro">Usability sessions were run across PL, PT, and RO with the working calculator as the primary test stimulus. Observer notes were synthesised in Claude after each round — pattern detection across sessions that previously took a day of affinity mapping was reduced to under an hour.</p>
+
+  <div class="card-grid cols-2" style="margin-bottom:32px">
+    <div class="card accent-orange">
+      <div class="card-eyebrow">Key finding from testing</div>
+      <h4>Cost anxiety blocks free posting without a spend cap</h4>
+      <p>7 of 9 test sessions surfaced anxiety about open-ended billing. An optional monthly spend cap — not in the original brief — was added as a feature. This single finding from test synthesis directly changed the product spec.</p>
+    </div>
+    <div class="card accent-orange">
+      <div class="card-eyebrow">Success metrics</div>
+      <h4>ARPU · NNL · Seller Retention · UMUX Lite &gt;70%</h4>
+      <p>Impact tracked against OKR: KR 2.2 — migrate 100% of sellers from Verticals to Horizontals in PT and RO by EoQ1 FY27. Launch timeline: PT Jun 2026 · RO Jul 2026 · PL Aug 2026.</p>
+    </div>
+  </div>
+
+  <div class="tool-stack">
+    <div class="tool-row">
+      <span class="tool-phase" style="background:#f1eefb;color:#5a4a8a">Discover</span>
+      <div>
+        <div class="tool-name">NotebookLM + Claude web search</div>
+        <div class="tool-desc">Source-grounded qualitative analysis of 62 interviews. Competitive landscape across 5 platforms. Assumption mapping from the product brief.</div>
+      </div>
+    </div>
+    <div class="tool-row">
+      <span class="tool-phase" style="background:#e3f5ec;color:#2f7a5e">Define</span>
+      <div>
+        <div class="tool-name">Claude · Synthesis + HMW generation</div>
+        <div class="tool-desc">80+ research notes clustered into themes. 14 design insights extracted and ranked by severity. 5 HMWs stress-tested before adoption. Problem statement drafted and critiqued.</div>
+      </div>
+    </div>
+    <div class="tool-row">
+      <span class="tool-phase" style="background:#f5e9f0;color:#7a4a63">Develop</span>
+      <div>
+        <div class="tool-name">Lovable · Claude Design · Claude Artifacts</div>
+        <div class="tool-desc">4-hour cross-functional ideation workshop with 7 working Lovable prototypes. Higher-fidelity mockups in Claude Design. Working React pricing calculator as test stimulus.</div>
+      </div>
+    </div>
+    <div class="tool-row">
+      <span class="tool-phase" style="background:#eaedfa;color:#3d4a8a">Deliver</span>
+      <div>
+        <div class="tool-name">Claude · Test synthesis + documentation</div>
+        <div class="tool-desc">Post-session observer note synthesis across PL/PT/RO. Handoff documentation including decision log, edge cases, legal constraints, and phase-by-phase behaviour specs.</div>
+      </div>
+    </div>
+    <div class="tool-row">
+      <span class="tool-phase" style="background:#F7F5F0;color:#777">Always on</span>
+      <div>
+        <div class="tool-name">Claude Project · Custom system prompt</div>
+        <div class="tool-desc">Entire design methodology encoded as a reusable Claude Project — phase-switching commands, output formats, seller archetype context, and legal constraints always available without re-explaining.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="section" id="comparison">
+  <div class="section-label">
+    <span style="color:var(--ink-soft)">Old process vs AI-accelerated process</span>
+  </div>
+  <h2 class="section-title">The same diamond — fundamentally different speed and depth</h2>
+  <p class="section-intro">The double diamond didn't change. The four phases, the diverge-converge rhythm, the designer's judgment — all stayed the same. What changed was how much ground could be covered inside each phase, and how much time was freed up for the thinking that only a human can do.</p>
+
+  <div style="overflow-x:auto;margin-bottom:40px">
+  <table style="width:100%;border-collapse:collapse;font-size:13px;min-width:600px">
+    <thead>
+      <tr style="border-bottom:2px solid var(--border)">
+        <th style="text-align:left;padding:12px 16px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);width:18%">Phase</th>
+        <th style="text-align:left;padding:12px 16px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);width:14%">Activity</th>
+        <th style="text-align:left;padding:12px 16px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:#f1eefb;color:#5a4a8a;border-radius:8px 8px 0 0;width:34%">Traditional approach</th>
+        <th style="text-align:left;padding:12px 16px;font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;background:#e3f5ec;color:#2f7a5e;border-radius:8px 8px 0 0;width:34%">AI-accelerated approach</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- DISCOVER rows -->
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top">
+          <span style="display:inline-block;padding:3px 8px;background:#f1eefb;color:#5a4a8a;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase">① Discover</span>
+        </td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Interview synthesis</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Full-day affinity mapping workshop — 2 designers, sticky notes, physical or Miro board. Output: 5–8 theme clusters. Risk of groupthink from collaborative bias.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">62 transcripts uploaded to NotebookLM. Themes extracted and quote-grounded in under 1 hour. Claude upgraded themes to ranked design insights. Designer reviewed and edited — not transcribed.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top"></td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Competitive research</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Manual browsing of 3–5 competitor sites. Screenshots saved to Figma. Half a day. Often shallow — what's visible, not what's structural.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">Claude web search across Otomoto, Standvirtual, Autovit, Allegro, eBay. Pricing mechanics compared and patterned in 30 minutes. Mental model of migrating user surfaced directly.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top"></td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Assumption mapping</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Optional step, often skipped. When done: a workshop exercise, 2–3 hours, post-its on a risk matrix. Rarely documented formally.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">Product brief pasted into Claude. 15+ assumptions extracted and ranked by failure risk in 15 minutes. Became a pre-research checklist that structured the interview guide.</td>
+      </tr>
+      <!-- DEFINE rows -->
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top">
+          <span style="display:inline-block;padding:3px 8px;background:#e3f5ec;color:#2f7a5e;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase">② Define</span>
+        </td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Insight framing</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Designer manually writes insights from memory and notes. 1–2 days. Quality varies by designer experience. Format inconsistent — hard to use downstream.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">14 insights structured in "do X because Y, means Z" format with archetype tags and severity ranking. Ready to use in HMW generation immediately. Took 45 minutes.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top"></td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Problem statement</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Written by one designer, reviewed in a team session. Often takes 2–3 drafts over multiple days. Critique is gentle — no one wants to rewrite from scratch.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">5 drafts generated in one session. Each critiqued by Claude for prescriptiveness, perspective, and actionability. Designer selected and refined the strongest. Total time: 1 hour.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top"></td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">HMW questions</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Workshop exercise with team. Typically 8–12 HMWs produced. Often not categorised. Some are too solution-y and pass through unchecked.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">20 HMWs generated from insights directly, pre-categorised by theme (trust, friction, comprehension, migration), stress-tested for solution-directedness before adoption.</td>
+      </tr>
+      <!-- DEVELOP rows -->
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top">
+          <span style="display:inline-block;padding:3px 8px;background:#f5e9f0;color:#7a4a63;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase">③ Develop</span>
+        </td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Ideation</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">2-day design sprint or solo sketching. 3–5 concepts. Engineers not involved until handoff. Concepts are sketches — no tangible feel until Figma mockups are built later.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">4-hour Lovable workshop with engineers as co-creators. 7 working interactive concepts built and presented in the same session. Engineers brought technical constraints into ideation, not after it.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top"></td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Prototyping</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Figma prototype. 1–3 days to build a testable flow. Interactive calculator would require a developer ticket — likely 1–2 sprint cycles away.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">Working React pricing calculator (bracket logic, tier selection, volume up to 100k, cost comparison) built as a Claude Artifact in hours. Used as test stimulus in the same week.</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top"></td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Concept critique</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Design review with team. Critique quality depends on room — senior voices dominate. Edge cases surface later in development, not during ideation.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">Claude stress-tested each concept against all 3 seller archetypes. Auto-extend legal risk surfaced during concept review — before testing, before dev, before it became a problem.</td>
+      </tr>
+      <!-- DELIVER rows -->
+      <tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:14px 16px;vertical-align:top">
+          <span style="display:inline-block;padding:3px 8px;background:#eaedfa;color:#3d4a8a;border-radius:4px;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase">④ Deliver</span>
+        </td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Test synthesis</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Observer notes reviewed manually post-sessions. Affinity mapping to find patterns across 9 sessions: half a day. Pattern detection depends on researcher memory and note quality.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">Notes pasted into Claude after each session round. Cross-session patterns surfaced in under an hour. Cost anxiety finding (7/9 sessions) identified quickly enough to change the product spec before final handoff.</td>
+      </tr>
+      <tr>
+        <td style="padding:14px 16px;vertical-align:top"></td>
+        <td style="padding:14px 16px;vertical-align:top;font-weight:500;color:var(--ink-mid)">Handoff docs</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#faf7f3;color:var(--ink-mid)">Figma annotations + a Confluence page. Written from scratch. Edge cases often missed. Legal constraints documented separately by a different team.</td>
+        <td style="padding:14px 16px;vertical-align:top;background:#e3f5ec;color:var(--ink-mid)">Claude generated decision logs, behaviour specs, edge case documentation, and legal constraint summaries — all grounded in the project docs already uploaded to the Claude Project.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+  <!-- Summary callout -->
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:38px;color:var(--teal);line-height:1;margin-bottom:8px">3×</div>
+      <div style="font-size:12px;color:var(--ink-soft);line-height:1.5">More concept directions explored in the same time budget</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:38px;color:var(--teal);line-height:1;margin-bottom:8px">~60%</div>
+      <div style="font-size:12px;color:var(--ink-soft);line-height:1.5">Faster research synthesis across Discover and Define phases</div>
+    </div>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center">
+      <div style="font-family:'DM Serif Display',serif;font-size:38px;color:var(--teal);line-height:1;margin-bottom:8px">0</div>
+      <div style="font-size:12px;color:var(--ink-soft);line-height:1.5">Design judgment calls delegated to AI — all owned by the designer</div>
+    </div>
+  </div>
+</section>
+
+<!-- REFLECTION -->
+<section class="section" id="reflection">
+  <div class="section-label">
+    <span style="color:var(--ink-soft)">Honest reflection</span>
+  </div>
+  <h2 class="section-title">What AI changed — and what it didn't</h2>
+  <p class="section-intro">The most important design decisions in this project were not made by AI. What changed was the speed and coverage of everything surrounding those decisions.</p>
+
+  <div class="reflection-grid">
+    <div class="reflection-col ai">
+      <h4>Where AI had real leverage</h4>
+      <div class="reflection-item">Synthesised 62 interviews into ranked design insights in under an hour — what previously took a full-day affinity workshop</div>
+      <div class="reflection-item">Generated 3× more concept directions in the ideation phase, making the narrowing decision feel informed rather than arbitrary</div>
+      <div class="reflection-item">Built a working interactive prototype (pricing calculator) in hours, not a developer ticket weeks away</div>
+      <div class="reflection-item">Surfaced the auto-extend legal risk and the cost anxiety finding before they became blockers</div>
+      <div class="reflection-item">Encoded the entire methodology as a reusable Project — consistent outputs, zero re-explaining, shareable with team</div>
+    </div>
+    <div class="reflection-col designer">
+      <h4>What I owned as the designer</h4>
+      <div class="reflection-item">Deciding which insights were actually load-bearing and which were noise</div>
+      <div class="reflection-item">The problem statement — Claude generated 5 drafts, I chose the one I'd stand behind</div>
+      <div class="reflection-item">Stakeholder alignment across product, finance, legal, and commercial teams</div>
+      <div class="reflection-item">The judgment to add the spend cap when 7/9 sessions flagged cost anxiety — AI detected the pattern, I decided it warranted a product change</div>
+      <div class="reflection-item">Knowing when a concept was technically viable but wrong for the user — no amount of AI output replaces that</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /body-wrap -->
+</main>
+
+<footer class="case-footer">
+  <div><strong>Sylwia Giżanowska-Baran</strong> · Lead Product Designer · OLX Group</div>
+  <div>Pay-Per-Use · Monetisation Bravo · 2025–2026</div>
+</footer>
+
+</body>
+</html>
