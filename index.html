@@ -24,6 +24,14 @@
     position:fixed;top:0;left:0;right:0;z-index:20;
     display:flex;justify-content:space-between;align-items:center;
     padding:24px 40px;mix-blend-mode:multiply;
+    background:transparent;
+    transition:background .3s ease, backdrop-filter .3s ease;
+  }
+  nav.scrolled{
+    mix-blend-mode:normal;
+    background:rgba(251,246,240,.82);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
   }
   .brand-logo{height:42px;width:auto;display:block}
   .nav-links{display:flex;gap:34px;font-size:14px;font-weight:500}
@@ -43,7 +51,8 @@
   .intro{
     position:absolute; top:0; left:0; right:0; bottom:80px;
     display:flex; flex-direction:column; justify-content:center; align-items:center;
-    text-align:center; padding:0 6vw; z-index:2;
+    text-align:center; padding:110px 6vw 0; z-index:2;
+    transform:translateY(-50px);
   }
   .eyebrow{
     font-size:12px; letter-spacing:.30em; text-transform:uppercase; color:#8a7d74;
@@ -241,7 +250,7 @@
     <div class="eyebrow">Product Designer</div>
     <h1>Hello,<br>I'm <em>Sylwia</em></h1>
     <p class="tagline">I design calm, considered products in a <em>noisy</em> world.</p>
-    <p class="sub">The capybara isn't just decoration. She's a reminder that good design doesn't have to shout to make an impact.<br><span class="aside">But she does appreciate a good scratch.</span></p>
+    <p class="sub">The capybara isn't just decoration. She's a reminder that good design doesn't have to shout to make an impact.</p>
   </div>
 
   <svg class="stage" viewBox="0 0 1400 700" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
@@ -282,17 +291,17 @@
   <div class="wrap">
   <div class="about-grid">
     <div>
-      <div class="section-label">01 — About</div>
-      <h2>Shaping products people actually love to use, from first sketch to shipped pixel.</h2>
+      <div class="section-label">About</div>
+      <h2>I turn complex challenges into thoughtful digital experiences.</h2>
     </div>
     <div>
-      <p>With 15+ years in design, I've worked across different industries, products and scales — from healthcare applications to large, consumer-facing digital platforms.</p>
-      <p>My experience spans visual design leadership, product strategy and hands-on product design. I've shaped everything from individual interactions to complex, interconnected product experiences, always looking at the bigger picture.</p>
-      <p>I believe good design is more than making things look or feel right. It's about understanding people, asking better questions and finding clarity in complexity.</p>
+      <p>With 15+ years in design, I've worked across healthcare and e-commerce, creating digital products that make a difference in people's everyday lives. From complex systems and data-rich applications to large-scale consumer experiences, I enjoy making technology feel intuitive, useful and human.</p>
+      <p>My approach combines strategic thinking, systems perspective and hands-on design craft. I'm always looking for smarter ways to work, exploring how AI can streamline everyday design processes, accelerate exploration and reduce repetitive tasks — leaving more room for creativity, experimentation and problem-solving.</p>
+      <p>I believe good design is about more than how things look. It's about understanding people, finding clarity in complexity and making things work better.</p>
       <div class="stats">
         <div class="stat"><b>15+</b><small>Years designing</small></div>
         <div class="stat"><b>2</b><small>Industries explored</small></div>
-        <div class="stat"><b>12</b><small>Teams guided</small></div>
+        <div class="stat"><b>1</b><small>Human-centred approach</small></div>
       </div>
     </div>
   </div>
@@ -336,7 +345,7 @@
       </a>
       <a class="project" href="finance-experience-map.html">
         <div class="card-img" style="background:#e7f1fa; display:flex;align-items:center;justify-content:center;">
-          <span class="tag">Pharma</span>
+          <span class="tag">Healthcare</span>
           <img src="finance-preview.png" alt="Finance Experience Map preview in a laptop mockup" style="width:100%;height:100%;object-fit:contain;padding:52px;">
         </div>
         <div class="card-meta">
@@ -349,7 +358,7 @@
       </a>
       <a class="project" href="inteligent-building.html">
         <div class="card-img" style="background:#e7f5ed; display:flex;align-items:center;justify-content:center;">
-          <span class="tag">Pharma</span>
+          <span class="tag">Healthcare</span>
           <img src="intel-preview.png" alt="Inteligent Building preview" style="width:100%;height:100%;object-fit:contain;padding:24px;">
         </div>
         <div class="card-meta">
@@ -392,7 +401,7 @@
 <!-- CONTACT -->
 <footer id="contact">
   <div class="wrap">
-    <div class="section-label">02 — Let's talk</div>
+    <div class="section-label">Let's talk</div>
     <div class="cta">
       Have an idea?<br>
       <a href="mailto:sylwia.gizanowska@gmail.com">Let's make it <em>real</em>.</a>
@@ -628,6 +637,18 @@
     el.addEventListener('mouseenter', () => cur.classList.add('grow'));
     el.addEventListener('mouseleave', () => cur.classList.remove('grow'));
   });
+</script>
+
+<script>
+  const navEl = document.querySelector('nav');
+  const aboutEl = document.getElementById('about');
+  function syncNavBg(){
+    const trigger = aboutEl.offsetTop - navEl.offsetHeight;
+    navEl.classList.toggle('scrolled', window.scrollY >= trigger);
+  }
+  window.addEventListener('scroll', syncNavBg, {passive:true});
+  window.addEventListener('resize', syncNavBg);
+  syncNavBg();
 </script>
 
 <!-- Lenis: smooth scroll -->
