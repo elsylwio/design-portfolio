@@ -19,6 +19,7 @@
     font-family:'Instrument Sans',sans-serif; color:var(--ink);
     background:var(--paper);
     min-height:100vh; overflow-x:hidden;
+    overscroll-behavior-y:none;
   }
   nav{
     position:fixed;top:0;left:0;right:0;z-index:20;
@@ -43,7 +44,7 @@
   .hero{
     position:relative; width:100%; height:100vh; overflow:hidden;
     background:
-      radial-gradient(120% 90% at 85% 0%, #f8d9b0 0%, transparent 55%),
+      radial-gradient(120% 90% at 85% 0%, #EEE8E6 0%, transparent 55%),
       radial-gradient(120% 120% at 100% 100%, #ef8fb0 0%, transparent 45%),
       radial-gradient(90% 90% at 0% 60%, #fef2e6 0%, transparent 60%),
       var(--paper);
@@ -181,6 +182,8 @@
   .about{padding:120px 0 90px}
   .about-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:start}
   .about h2{font-family:'Fraunces',serif;font-weight:360;font-size:clamp(28px,3.5vw,44px);line-height:1.18;letter-spacing:-.02em}
+  .about-line{display:block;margin-top:28px}
+  .footer-line{display:block;margin-top:36px}
   .about h2 em{font-style:italic}
   .about p{font-size:17px;line-height:1.7;color:#5c5049;margin-top:22px}
   .stats{display:flex;gap:46px;margin-top:44px}
@@ -204,7 +207,8 @@
   .card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .8s cubic-bezier(.2,.8,.2,1);filter:saturate(.92)}
   .project:hover .card-img img{transform:scale(1.06)}
   .card-img::after{display:none}
-  .tag{position:absolute;top:16px;left:16px;z-index:2;background:var(--paper);color:var(--ink);font-size:12px;font-weight:600;letter-spacing:.02em;padding:6px 12px;border-radius:999px}
+  .tag{position:absolute;top:16px;left:16px;z-index:2;display:inline-flex;align-items:center;gap:5px;background:var(--paper);color:var(--muted);font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;border:1px solid var(--line)}
+  .tag::before{content:'✦';font-size:9px;color:var(--rose)}
   .card-meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:20px}
   .card-meta h3{font-family:'Fraunces',serif;font-weight:400;font-size:26px;letter-spacing:-.01em}
   .card-meta .yr{font-size:14px;color:var(--muted)}
@@ -215,11 +219,13 @@
   .project:hover .arrow{transform:translate(4px,-4px)}
 
   /* CONTACT / FOOTER */
+  .page-wrap{
+    position:relative; z-index:2;
+    background:var(--paper);
+  }
   footer{
-    background:
-      radial-gradient(100% 120% at 100% 0%, var(--rose) 0%, transparent 50%),
-      radial-gradient(90% 100% at 0% 100%, var(--peach) 0%, transparent 55%),
-      var(--paper);
+    position:sticky; bottom:0; z-index:1;
+    background:#EEE8E6;
     padding:100px 0 40px;border-top:1px solid var(--line);
   }
   .cta{font-family:'Fraunces',serif;font-weight:340;font-size:clamp(36px,7vw,96px);line-height:1;letter-spacing:-.03em}
@@ -244,6 +250,8 @@
     <a href="#contact">Contact</a>
   </div>
 </nav>
+
+<div class="page-wrap">
 
 <div class="hero">
   <div class="intro">
@@ -293,6 +301,11 @@
     <div>
       <div class="section-label">About</div>
       <h2>I turn complex challenges into thoughtful digital experiences.</h2>
+      <svg class="about-line" width="260" height="56" viewBox="0 0 260 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path id="about-line-path" d="M2 40 C 40 10, 70 10, 95 30 S 150 55, 180 28 S 230 2, 258 18"
+          stroke="#1A1A1A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+          vector-effect="non-scaling-stroke" style="stroke-dasharray:1 99999"/>
+      </svg>
     </div>
     <div>
       <p>With 15+ years in design, I've worked across healthcare and e-commerce, creating digital products that make a difference in people's everyday lives. From complex systems and data-rich applications to large-scale consumer experiences, I enjoy making technology feel intuitive, useful and human.</p>
@@ -317,7 +330,7 @@
     <div class="projects">
 
       <a class="project" href="ppu_case_study(5).html">
-        <div class="card-img" style="background:#edeaf5; display:flex;align-items:center;justify-content:center;">
+        <div class="card-img" style="background:linear-gradient(120deg, #ece6f6 0%, #e6dcf0 22%, #f2dde3 50%, #EEE8E6 80%, #EEE8E6 100%); display:flex;align-items:center;justify-content:center;">
           <span class="tag">Ecommerce</span>
           <img src="ppu-preview.png" alt="Pay Per Use preview" style="width:100%;height:100%;object-fit:contain;padding:32px;">
         </div>
@@ -325,13 +338,12 @@
           <div>
             <h3>Pay Per Use</h3>
             <p>A new OLX billing model, designed with AI from brief to prototype</p>
-            <div class="card-chips"><span class="chip">Vibe coding</span><span class="chip">Mobile</span><span class="chip">Product design</span></div>
           </div>
         </div>
       </a>
 
       <a class="project" href="OLX_Ratings_and_Reviews_Case_Study%202.html">
-        <div class="card-img" style="background:#fdeef4; display:flex;align-items:center;justify-content:center;">
+        <div class="card-img" style="background:#EEE8E6; display:flex;align-items:center;justify-content:center;">
           <span class="tag">Ecommerce</span>
           <img src="rr-preview.png" alt="Ratings and Reviews preview: sellers to rate list in an iPhone mockup" style="width:100%;height:100%;object-fit:contain;padding:32px;">
         </div>
@@ -339,12 +351,11 @@
           <div>
             <h3>Ratings and Reviews</h3>
             <p>Rebuilding OLX's trust layer between buyers and sellers</p>
-            <div class="card-chips"><span class="chip">Vibe coding</span><span class="chip">Mobile</span><span class="chip">Product design</span></div>
           </div>
         </div>
       </a>
       <a class="project" href="finance-experience-map.html">
-        <div class="card-img" style="background:#e7f1fa; display:flex;align-items:center;justify-content:center;">
+        <div class="card-img" style="background:#EEE8E6; display:flex;align-items:center;justify-content:center;">
           <span class="tag">Healthcare</span>
           <img src="finance-preview.png" alt="Finance Experience Map preview in a laptop mockup" style="width:100%;height:100%;object-fit:contain;padding:52px;">
         </div>
@@ -352,12 +363,11 @@
           <div>
             <h3>Finance Experience Map</h3>
             <p>Turning a rarely used internal tool into one people actually want to open</p>
-            <div class="card-chips"><span class="chip">Web app</span><span class="chip">UX research</span><span class="chip">Product design</span></div>
           </div>
         </div>
       </a>
       <a class="project" href="inteligent-building.html">
-        <div class="card-img" style="background:#e7f5ed; display:flex;align-items:center;justify-content:center;">
+        <div class="card-img" style="background:linear-gradient(120deg, #EEE8E6 0%, #EEE8E6 20%, #f4ddea 50%, #f4dde8 78%, #f7e4ec 100%); display:flex;align-items:center;justify-content:center;">
           <span class="tag">Healthcare</span>
           <img src="intel-preview.png" alt="Inteligent Building preview" style="width:100%;height:100%;object-fit:contain;padding:24px;">
         </div>
@@ -365,12 +375,11 @@
           <div>
             <h3>Inteligent Building</h3>
             <p>Bringing a paper-based research facility onto one automated touchscreen system</p>
-            <div class="card-chips"><span class="chip">IoT</span><span class="chip">UX research</span><span class="chip">Product design</span></div>
           </div>
         </div>
       </a>
       <a class="project" href="ui-explorations.html">
-        <div class="card-img" style="background:#f5c9ad; display:flex;align-items:center;justify-content:center;">
+        <div class="card-img" style="background:linear-gradient(120deg, #EEE8E6 0%, #EEE8E6 22%, #EEE8E6 50%, #f8ddc2 80%, #f6e4c8 100%); display:flex;align-items:center;justify-content:center;">
           <span class="tag">UI Design</span>
           <img src="ui-explorations-preview.png" alt="UI Explorations preview in a laptop mockup" style="width:100%;height:100%;object-fit:contain;padding:52px;">
         </div>
@@ -378,12 +387,11 @@
           <div>
             <h3>UI Explorations</h3>
             <p>Smaller mobile, dashboard and web projects</p>
-            <div class="card-chips"><span class="chip">UI design</span><span class="chip">Mobile</span><span class="chip">Web</span></div>
           </div>
         </div>
       </a>
       <a class="project" href="#">
-        <div class="card-img" style="background:#fdf3d0; display:flex;align-items:center;justify-content:center;">
+        <div class="card-img" style="background:#EEE8E6; display:flex;align-items:center;justify-content:center;">
           <span class="tag">Ecommerce</span>
         </div>
         <div class="card-meta">
@@ -398,6 +406,8 @@
   </div>
 </section>
 
+</div>
+
 <!-- CONTACT -->
 <footer id="contact">
   <div class="wrap">
@@ -406,6 +416,11 @@
       Have an idea?<br>
       <a href="mailto:sylwia.gizanowska@gmail.com">Let's make it <em>real</em>.</a>
     </div>
+    <svg class="footer-line" width="300" height="60" viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path id="footer-line-path" d="M2 20 C 50 2, 70 50, 120 32 S 180 4, 220 34 C 250 48, 270 20, 298 38"
+        stroke="#1A1A1A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+        vector-effect="non-scaling-stroke" style="stroke-dasharray:1 99999"/>
+    </svg>
     <div class="foot-row">
       <div class="foot-links">
         <a href="https://linkedin.com/in/elsylwio" target="_blank" rel="noopener">LinkedIn</a>
@@ -649,6 +664,45 @@
   window.addEventListener('scroll', syncNavBg, {passive:true});
   window.addEventListener('resize', syncNavBg);
   syncNavBg();
+
+  // draw-on animation for the abstract lines under the About heading and footer CTA
+  function drawOnScroll(id){
+    const el = document.getElementById(id);
+    if (!el) return;
+    const len = el.getTotalLength();
+    el.style.strokeDasharray = len;
+    el.style.strokeDashoffset = len;
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if (entry.isIntersecting){
+          el.style.transition = 'stroke-dashoffset 1400ms cubic-bezier(0.65,0,0.35,1)';
+          el.style.strokeDashoffset = 0;
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(el);
+  }
+  drawOnScroll('about-line-path');
+
+  drawOnScroll('footer-line-path');
+
+  // smooth, nav-offset-aware scroll for the "About / Work / Contact" links
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const id = link.getAttribute('href').slice(1);
+      const isContact = id === 'contact';
+      const target = isContact
+        ? document.documentElement.scrollHeight - window.innerHeight
+        : document.getElementById(id).offsetTop - navEl.offsetHeight;
+      if (window.lenisInstance){
+        window.lenisInstance.scrollTo(target, { duration: 1.2 });
+      } else {
+        window.scrollTo({ top: target, behavior: 'smooth' });
+      }
+    });
+  });
 </script>
 
 <!-- Lenis: smooth scroll -->
@@ -656,7 +710,7 @@
 <script>
   try {
     if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && window.Lenis) {
-      new window.Lenis({
+      window.lenisInstance = new window.Lenis({
         autoRaf: true,
         lerp: 0.12,
         wheelMultiplier: 1.1,

@@ -31,7 +31,7 @@
     --purple: #a99bd6;      /* lavender-purple — "Discover" */
   }
 
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overscroll-behavior-y: none; }
   body {
     font-family: 'Inter', sans-serif;
     background: var(--bg);
@@ -45,7 +45,7 @@
     background: #edeaf5;
     color: var(--ink);
     padding: 48px;
-    margin: 24px 48px 48px;
+    margin: 110px 48px 48px;
     border-radius: 20px;
     position: relative;
     overflow: hidden;
@@ -298,19 +298,29 @@
   .reflection-col.designer .reflection-item::before { color: var(--red); }
 
   /* FOOTER */
+  .page-wrap { position: relative; z-index: 2; background: var(--bg); }
   .case-footer {
-    background: linear-gradient(135deg, var(--hero-teal) 0%, var(--hero-mauve) 55%, var(--hero-purple) 100%);
+    position: sticky; bottom: 0; z-index: 1;
+    background: #EEE8E6;
     border-top: 1px solid var(--border); padding: 48px;
     color: var(--ink-soft); font-size: 12px;
-    display: flex; justify-content: space-between;
-    align-items: center; flex-wrap: wrap; gap: 16px;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 16px;
   }
   .case-footer strong { color: var(--ink); }
+  .case-footer-line{display:block}
 
   /* SITE HEADER */
   .site-nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 20;
     display: flex; justify-content: space-between; align-items: center;
     padding: 24px 48px;
+    background: transparent;
+    transition: background .3s ease, backdrop-filter .3s ease;
+  }
+  .site-nav.scrolled {
+    background: rgba(251,246,240,.82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
   }
   .site-nav .brand-logo { height: 42px; width: auto; display: block; }
   .nav-links { display: flex; gap: 34px; font-size: 14px; font-weight: 500; }
@@ -396,9 +406,10 @@
   </div>
 </nav>
 
+<div class="page-wrap">
+
 <!-- HERO -->
 <header class="hero">
-  <div class="hero-eyebrow">Case Study · 2025–2026</div>
   <h1>Pay-Per-Use: leading the design of a <em>new billing model</em>, with AI in every phase</h1>
   <p class="hero-sub">One designer, a set of AI agents, and a complete design process: research, a workshop with engineers, and testing with 30 real sellers. AI did the heavy lifting and I made the calls. This case study shows both sides of that arrangement.</p>
   <div class="hero-meta">
@@ -952,9 +963,15 @@
 </div>
 </main>
 
+</div>
+
 <footer class="case-footer">
-  <div><strong>Sylwia Giżanowska-Baran</strong> · Product Designer</div>
-  <div>Pay-Per-Use · 2025–2026</div>
+  <svg class="case-footer-line" width="300" height="60" viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path id="case-footer-line-path" d="M2 20 C 50 2, 70 50, 120 32 S 180 4, 220 34 C 250 48, 270 20, 298 38"
+      stroke="#1A1A1A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+      vector-effect="non-scaling-stroke" style="stroke-dasharray:1 99999"/>
+  </svg>
+  <div>© strangefruit <span style="display:inline-block;width:1px;height:12px;background:currentColor;margin:0 10px;vertical-align:middle"></span> Created with Claude Code</div>
 </footer>
 
 <div id="lightbox">
@@ -1050,6 +1067,39 @@
   window.addEventListener('resize', setActive);
   setActive();
 })();
+</script>
+
+<script>
+  // scroll-triggered blurred nav background, same as the main page
+  const siteNavEl = document.querySelector('.site-nav');
+  const heroEl = document.querySelector('.hero');
+  function syncSiteNavBg(){
+    const trigger = heroEl.offsetTop + heroEl.offsetHeight - siteNavEl.offsetHeight;
+    siteNavEl.classList.toggle('scrolled', window.scrollY >= trigger);
+  }
+  window.addEventListener('scroll', syncSiteNavBg, {passive:true});
+  window.addEventListener('resize', syncSiteNavBg);
+  syncSiteNavBg();
+</script>
+
+<script>
+  // draw-on animation for the footer line, triggered when it scrolls into view
+  const caseFooterLineEl = document.getElementById('case-footer-line-path');
+  if (caseFooterLineEl){
+    const cfLen = caseFooterLineEl.getTotalLength();
+    caseFooterLineEl.style.strokeDasharray = cfLen;
+    caseFooterLineEl.style.strokeDashoffset = cfLen;
+    const cfIo = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if (entry.isIntersecting){
+          caseFooterLineEl.style.transition = 'stroke-dashoffset 1400ms cubic-bezier(0.65,0,0.35,1)';
+          caseFooterLineEl.style.strokeDashoffset = 0;
+          cfIo.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    cfIo.observe(caseFooterLineEl);
+  }
 </script>
 
 </body>
