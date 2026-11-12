@@ -12,14 +12,20 @@
     --accent:#7a5cc9; --accent2:#3d2e6b; --bg:#fafafb; --card:#ffffff;
   }
   *{box-sizing:border-box;}
+  html{overscroll-behavior-y:none;}
   body{
     margin:0; background:var(--bg); color:var(--ink);
     font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
     line-height:1.6;
   }
   .wrap{max-width:1100px; margin:0 auto; padding:0 32px 80px;}
-  header.hero{ background:var(--bg); color:var(--ink); padding:72px 48px 64px; }
-  header.hero .inner{ max-width:none; margin:0; background:#f5c9ad; border-radius:20px; padding:44px 48px; }
+  header.hero{ background:var(--bg); color:var(--ink); padding:160px 48px 64px; }
+  header.hero .inner{ max-width:none; margin:0; border-radius:20px; padding:44px 48px;
+    background:
+      radial-gradient(90% 75% at 12% 8%,  #f9e1cf 0%, transparent 62%),
+      radial-gradient(80% 65% at 92% 92%, #f6e0e0 0%, transparent 60%),
+      linear-gradient(160deg, #f6e2cf 0%, #f8eee6 100%);
+  }
   header.hero .hero-eyebrow{
     display:flex; align-items:center; gap:12px;
     font-size:11px; font-weight:600; letter-spacing:.14em; text-transform:uppercase;
@@ -34,23 +40,120 @@
   header.hero h1 em{font-style:italic; color:#c1590c;}
   header.hero p.dek{font-size:17px; color:rgba(26,26,46,.72); max-width:620px; line-height:1.7; margin:0;}
 
-  section{margin-top:56px;}
-  h2{font-size:22px; color:var(--accent2); margin-bottom:20px;}
+  section{margin-top:88px;}
+  section:first-of-type{margin-top:48px;}
 
-  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  /* section header */
+  .sec-head{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:28px; padding-bottom:18px; border-bottom:1px solid var(--line);}
+  .sec-head h2{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400; font-size:clamp(28px,3.4vw,40px);
+    line-height:1.05; letter-spacing:-.01em; color:var(--ink); margin:0;
+  }
+  .sec-head h2 .num{
+    display:block; font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:10px;
+  }
+  .sec-head p{margin:0; font-size:14px; color:var(--sub); max-width:380px; line-height:1.55;}
+  @media(max-width:680px){.sec-head{flex-direction:column; align-items:flex-start; gap:10px;}}
+
+  /* grids */
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:28px;}
+  .grid2{display:grid; grid-template-columns:repeat(2,1fr); gap:28px;}
   @media(max-width:900px){.grid3{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:600px){.grid3{grid-template-columns:1fr;}}
+  @media(max-width:640px){.grid3,.grid2{grid-template-columns:1fr;}}
 
-  .tile{background:var(--card); border:1px solid var(--line); border-radius:14px; overflow:hidden;}
-  .tile-img{aspect-ratio:4/3; overflow:hidden; background:var(--line); cursor:zoom-in;}
-  .tile-img img{width:100%; height:100%; object-fit:cover; object-position:top; display:block; transition:transform .5s ease;}
-  .tile:hover .tile-img img{transform:scale(1.05);}
-  .tile-meta{padding:16px 18px;}
-  .tile-meta .tile-title{font-weight:600; font-size:14.5px; margin-bottom:4px;}
-  .tile-meta .tile-desc{font-size:13px; color:var(--sub); line-height:1.5; margin-bottom:6px;}
-  .tile-meta .tile-role{font-size:11px; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:.04em;}
+  /* tile = tinted pane + meta */
+  .tile{--tint:#eceafc; display:flex; flex-direction:column;}
+  .tile.t-peach{--tint:#fbe3d4;} .tile.t-mint{--tint:#dff1e6;} .tile.t-sky{--tint:#dcebf7;} .tile.t-sand{--tint:#f3ead9;}
+  .pane{
+    position:relative; background:var(--tint); border-radius:20px; overflow:hidden;
+    display:flex; align-items:center; justify-content:center; isolation:isolate;
+    transition:transform .45s cubic-bezier(.2,.7,.2,1), box-shadow .45s ease;
+  }
+  .pane::after{ /* soft inner glow */
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+    background:radial-gradient(120% 80% at 50% 110%, rgba(255,255,255,.55), transparent 60%);
+  }
+  .tile:hover .pane{transform:translateY(-4px); box-shadow:0 22px 48px -22px rgba(26,26,46,.28);}
+  .tile-meta{padding:16px 6px 0;}
+  .tile-title{font-weight:600; font-size:15.5px; margin-bottom:4px; display:flex; align-items:center; gap:10px;}
+  .tile-desc{font-size:13.5px; color:var(--sub); line-height:1.55; margin-bottom:10px;}
+  .tile-role{
+    display:inline-block; font-size:10.5px; color:var(--accent2); font-weight:600;
+    text-transform:uppercase; letter-spacing:.08em; background:#eceafc; padding:4px 9px; border-radius:20px;
+  }
+  .hint{
+    position:absolute; right:14px; bottom:14px; z-index:3; font-size:11px; font-weight:500;
+    color:var(--ink); background:rgba(255,255,255,.85); backdrop-filter:blur(6px); padding:5px 10px; border-radius:20px;
+    opacity:0; transform:translateY(4px); transition:opacity .3s, transform .3s; pointer-events:none;
+  }
+  .tile:hover .hint{opacity:1; transform:none;}
 
-  footer{margin-top:64px; padding-top:24px; border-top:1px solid var(--line); font-size:13px; color:var(--sub);}
+  /* poster — a tall composite board shown edge to edge, scrolls down on hover */
+  .pane.poster{padding:22px 22px 0; align-items:flex-end;}
+  .poster-card{
+    position:relative; z-index:1; width:100%; background:#fff; border-radius:14px 14px 0 0;
+    box-shadow:0 18px 40px -16px rgba(26,26,46,.35); overflow:hidden;
+  }
+  .poster-screen{position:relative; aspect-ratio:4/5; overflow:hidden; container-type:size; cursor:zoom-in; background:#fff;}
+  .poster-screen img{
+    display:block; width:100%; height:auto; will-change:transform;
+    transition:transform 1.1s cubic-bezier(.2,.7,.2,1);
+  }
+  .tile:hover .poster-screen img{
+    transform:translateY(calc(100cqh - 100%));
+    transition:transform 9s linear;
+  }
+
+  /* browser frame — long page scrolls inside on hover */
+  .pane.browser{padding:36px 28px 0; align-items:flex-end;}
+  .grid2 .pane.browser{padding:44px 44px 0;}
+  .window{
+    position:relative; z-index:1; width:100%; background:#fff; border-radius:12px 12px 0 0;
+    box-shadow:0 18px 40px -16px rgba(26,26,46,.35); overflow:hidden;
+  }
+  .window-bar{
+    height:28px; background:#f1f1f4; border-bottom:1px solid #e3e3ea;
+    display:flex; align-items:center; gap:6px; padding:0 12px;
+  }
+  .window-bar i{width:9px; height:9px; border-radius:50%; background:#d9d9e0; display:block;}
+  .window-bar i:nth-child(1){background:#f4a79d;} .window-bar i:nth-child(2){background:#f6d58e;} .window-bar i:nth-child(3){background:#9fd8a8;}
+  .window-bar .url{margin-left:10px; flex:1; height:14px; background:#fff; border:1px solid #e3e3ea; border-radius:7px; max-width:260px;}
+  .window-screen{position:relative; aspect-ratio:16/10; overflow:hidden; container-type:size; cursor:zoom-in; background:#fff;}
+  .grid2 .window-screen{aspect-ratio:16/9;}
+  .window-screen img{
+    display:block; width:100%; height:auto; will-change:transform;
+    transition:transform 1.1s cubic-bezier(.2,.7,.2,1);
+  }
+  .tile:hover .window-screen img{
+    transform:translateY(calc(100cqh - 100%));
+    transition:transform 7s linear;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .tile:hover .poster-screen img,
+    .tile:hover .window-screen img{transform:none; transition:none;}
+    .tile:hover .pane{transform:none;}
+  }
+
+  /* scroll reveal */
+  .reveal{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); transition-delay:calc(var(--i,0) * 90ms);}
+  .reveal.in{opacity:1; transform:none;}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1; transform:none; transition:none;}}
+
+  .page-wrap{position:relative; z-index:1; background:var(--bg);}
+  .case-footer{
+    position:fixed; left:0; right:0; bottom:0; z-index:-1;
+    background:#EEE8E6;
+    border-top:1px solid var(--line); padding:48px;
+    color:var(--sub); font-size:12px;
+    display:flex; flex-direction:column; align-items:flex-end; gap:16px;
+  }
+  .case-footer-line{display:block}
+  @media(max-width:680px){
+    .case-footer{padding:32px 24px;}
+    .case-footer-line{max-width:100%; height:auto;}
+  }
 
   #lightbox{display:none; position:fixed; inset:0; background:rgba(20,20,20,.92); z-index:999; overflow:auto;}
   #lightbox.open{display:flex; align-items:center; justify-content:center; min-height:100%; padding:60px 20px; box-sizing:border-box;}
@@ -60,12 +163,27 @@
   #lightbox.zoomed img{max-width:none; max-height:none; cursor:zoom-out;}
   #lightbox-close{position:fixed; top:20px; right:28px; width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,.12); color:#fff; border:none; font-size:22px; cursor:pointer; z-index:1000;}
 
-  .site-nav{padding:24px 48px; display:flex; justify-content:space-between; align-items:center;}
-  .site-nav .brand-logo{height:38px; width:auto; display:block;}
-  .site-nav .nav-links{display:flex; gap:28px; font-size:14px; font-weight:500;}
-  .site-nav .nav-links a{color:var(--ink); text-decoration:none; opacity:.75; transition:opacity .2s;}
+  .site-nav{
+    position:fixed; top:0; left:0; right:0; z-index:20;
+    padding:24px 48px; display:flex; justify-content:space-between; align-items:center;
+    background:transparent; transition:background .3s ease, backdrop-filter .3s ease;
+  }
+  .site-nav.scrolled{
+    background:rgba(250,250,251,.82);
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  }
+  .site-nav .brand-logo{height:42px; width:auto; display:block;}
+  .site-nav .nav-links{display:flex; gap:34px; font-size:14px; font-weight:500;}
+  .site-nav .nav-links a{color:var(--ink); text-decoration:none; opacity:.75; transition:opacity .25s; position:relative;}
+  .site-nav .nav-links a::after{
+    content:""; position:absolute; left:0; bottom:-8px; width:100%; height:10px;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16'%3E%3Cpath d='M2 10 C 18 2, 28 18, 44 8 S 76 1, 98 10' stroke='%231A1A1A' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat; background-size:100% 100%;
+    transform:scaleX(0); transform-origin:right; transition:transform .35s ease;
+  }
   .site-nav .nav-links a:hover{opacity:1;}
-  @media(max-width:600px){.site-nav .nav-links{display:none;}}
+  .site-nav .nav-links a:hover::after{transform:scaleX(1); transform-origin:left;}
+  @media(max-width:720px){.site-nav .nav-links{display:none;}}
 </style>
 </head>
 <body>
@@ -79,6 +197,8 @@
   </div>
 </nav>
 
+<div class="page-wrap">
+
 <header class="hero">
   <div class="inner">
     <div class="hero-eyebrow">UI Design</div>
@@ -90,92 +210,132 @@
 <div class="wrap">
 
 <section>
-  <h2>Mobile</h2>
+  <div class="sec-head reveal">
+    <h2><span class="num">01 &mdash; Mobile</span>Native &amp; mobile web</h2>
+    <p>Small apps presented as screen boards. Hover to scroll through the screens, click to open the board at full size.</p>
+  </div>
   <div class="grid3">
-    <div class="tile">
-      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-mobile-01.jpg" alt="Disease Symptoms Tracker native iOS app screens"></div>
+    <div class="tile t-sky reveal" style="--i:0">
+      <div class="pane poster">
+        <div class="poster-card"><div class="poster-screen"><img src="images/carbonmade/web/carbonmade-mobile-01.jpg" alt="Disease Symptoms Tracker native iOS app screens"></div></div>
+        <span class="hint">Hover to scroll &middot; click to open</span>
+      </div>
       <div class="tile-meta">
         <div class="tile-title">Symptoms Tracker</div>
         <div class="tile-desc">Native iOS app to track different disease symptoms.</div>
-        <div class="tile-role">UI Designer</div>
+        <span class="tile-role">UI Designer</span>
       </div>
     </div>
-    <div class="tile">
-      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-mobile-02.jpg" alt="herb. web app for marijuana order and delivery"></div>
+    <div class="tile t-mint reveal" style="--i:1">
+      <div class="pane poster">
+        <div class="poster-card"><div class="poster-screen"><img src="images/carbonmade/web/carbonmade-mobile-02.jpg" alt="herb. web app for marijuana order and delivery"></div></div>
+        <span class="hint">Hover to scroll &middot; click to open</span>
+      </div>
       <div class="tile-meta">
         <div class="tile-title">herb.</div>
         <div class="tile-desc">Web app for simple and fast marijuana order &amp; delivery.</div>
-        <div class="tile-role">UI Designer</div>
+        <span class="tile-role">UI Designer</span>
       </div>
     </div>
-    <div class="tile">
-      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-mobile-03.jpg" alt="Weight Tracker native iOS app screens"></div>
+    <div class="tile t-peach reveal" style="--i:2">
+      <div class="pane poster">
+        <div class="poster-card"><div class="poster-screen"><img src="images/carbonmade/web/carbonmade-mobile-03.jpg" alt="Weight Tracker native iOS app screens"></div></div>
+        <span class="hint">Hover to scroll &middot; click to open</span>
+      </div>
       <div class="tile-meta">
         <div class="tile-title">Weight Tracker</div>
         <div class="tile-desc">Native iOS app to track weight and progress over time.</div>
-        <div class="tile-role">UI Designer</div>
+        <span class="tile-role">UI Designer</span>
       </div>
     </div>
   </div>
 </section>
 
 <section>
-  <h2>Dashboards</h2>
-  <div class="grid3">
-    <div class="tile">
-      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-dashboard-01.jpg" alt="Pathogen Sequence Database web app screens"></div>
+  <div class="sec-head reveal">
+    <h2><span class="num">02 &mdash; Dashboards</span>Data-heavy tools</h2>
+    <p>Dense, filter-driven interfaces for specialists. Hover a window to scroll the page.</p>
+  </div>
+  <div class="grid2">
+    <div class="tile t-mint reveal" style="--i:0">
+      <div class="pane browser">
+        <div class="window"><div class="window-bar"><i></i><i></i><i></i><span class="url"></span></div><div class="window-screen"><img src="images/carbonmade/web/carbonmade-dashboard-01.jpg" alt="Pathogen Sequence Database web app screens"></div></div>
+        <span class="hint">Hover to scroll &middot; click to open</span>
+      </div>
       <div class="tile-meta">
         <div class="tile-title">Pathogen Sequence Database</div>
         <div class="tile-desc">Web app used by scientists for analysis of patient sample sequences from clinical studies.</div>
-        <div class="tile-role">UI Designer</div>
+        <span class="tile-role">UI Designer</span>
       </div>
     </div>
-    <div class="tile">
-      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-dashboard-02.jpg" alt="Ordino dashboard for managing internal business permits"></div>
+    <div class="tile t-sand reveal" style="--i:1">
+      <div class="pane browser">
+        <div class="window"><div class="window-bar"><i></i><i></i><i></i><span class="url"></span></div><div class="window-screen"><img src="images/carbonmade/web/carbonmade-dashboard-02.jpg" alt="Ordino dashboard for managing internal business permits"></div></div>
+        <span class="hint">Hover to scroll &middot; click to open</span>
+      </div>
       <div class="tile-meta">
         <div class="tile-title">Ordino</div>
         <div class="tile-desc">Dashboard to manage internal business with issue permits.</div>
-        <div class="tile-role">UI Designer</div>
+        <span class="tile-role">UI Designer</span>
       </div>
     </div>
   </div>
 </section>
 
 <section>
-  <h2>Web</h2>
+  <div class="sec-head reveal">
+    <h2><span class="num">03 &mdash; Web</span>Marketing &amp; editorial sites</h2>
+    <p>Landing pages and content sites where the visual tone carries the brand.</p>
+  </div>
   <div class="grid3">
-    <div class="tile">
-      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-web-01.jpg" alt="728 Project fashion crowdfunding website"></div>
+    <div class="tile reveal" style="--i:0">
+      <div class="pane browser">
+        <div class="window"><div class="window-bar"><i></i><i></i><i></i><span class="url"></span></div><div class="window-screen"><img src="images/carbonmade/web/carbonmade-web-01.jpg" alt="728 Project fashion crowdfunding website"></div></div>
+        <span class="hint">Hover to scroll</span>
+      </div>
       <div class="tile-meta">
         <div class="tile-title">728 Project</div>
         <div class="tile-desc">Fashion crowdfunding website.</div>
-        <div class="tile-role">UI Designer</div>
+        <span class="tile-role">UI Designer</span>
       </div>
     </div>
-    <div class="tile">
-      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-web-02.jpg" alt="Automotive engineering website"></div>
+    <div class="tile t-sky reveal" style="--i:1">
+      <div class="pane browser">
+        <div class="window"><div class="window-bar"><i></i><i></i><i></i><span class="url"></span></div><div class="window-screen"><img src="images/carbonmade/web/carbonmade-web-02.jpg" alt="Automotive engineering website"></div></div>
+        <span class="hint">Hover to scroll</span>
+      </div>
       <div class="tile-meta">
         <div class="tile-title">Automotive Engineering</div>
         <div class="tile-desc">Website bridging Silicon Valley ideas with traditional automotive development.</div>
-        <div class="tile-role">UX Designer</div>
+        <span class="tile-role">UX Designer</span>
       </div>
     </div>
-    <div class="tile">
-      <div class="tile-img"><img src="images/carbonmade/web/carbonmade-web-03.jpg" alt="Food addict travel and food blog website"></div>
+    <div class="tile t-peach reveal" style="--i:2">
+      <div class="pane browser">
+        <div class="window"><div class="window-bar"><i></i><i></i><i></i><span class="url"></span></div><div class="window-screen"><img src="images/carbonmade/web/carbonmade-web-03.jpg" alt="Food addict travel and food blog website"></div></div>
+        <span class="hint">Hover to scroll</span>
+      </div>
       <div class="tile-meta">
         <div class="tile-title">Food Addict</div>
         <div class="tile-desc">Food and travel blog / website.</div>
-        <div class="tile-role">UI Designer</div>
+        <span class="tile-role">UI Designer</span>
       </div>
     </div>
   </div>
 </section>
 
-<footer>
-  A collection of earlier UI projects, compiled for portfolio use.
-</footer>
+</div>
 
 </div>
+
+<footer class="case-footer">
+  <svg class="case-footer-line" width="300" height="60" viewBox="0 0 300 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path id="case-footer-line-path" d="M2 20 C 50 2, 70 50, 120 32 S 180 4, 220 34 C 250 48, 270 20, 298 38"
+      stroke="#1A1A1A" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"
+      vector-effect="non-scaling-stroke" style="stroke-dasharray:1 99999"/>
+  </svg>
+  <div>© strangefruit <span style="display:inline-block;width:1px;height:12px;background:currentColor;margin:0 10px;vertical-align:middle"></span> Created with Claude Code</div>
+</footer>
 
 <div id="lightbox" role="dialog" aria-modal="true">
   <button id="lightbox-close" aria-label="Close">&times;</button>
@@ -190,7 +350,7 @@
   var closeBtn = document.getElementById('lightbox-close');
   if (!lightbox || !lbImg) return;
 
-  document.querySelectorAll('.tile-img img').forEach(function(img) {
+  document.querySelectorAll('.poster-screen img, .window-screen img').forEach(function(img) {
     img.addEventListener('click', function() {
       lbImg.src = img.src;
       lbImg.alt = img.alt || '';
@@ -230,5 +390,69 @@
 })();
 </script>
 
+<script>
+  // staggered fade-up reveal; reduced-motion users get everything shown immediately via CSS
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) { els.forEach(function(el){ el.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if (en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:.08});
+    els.forEach(function(el){ io.observe(el); });
+  })();
+</script>
+<script>
+  (function(){
+    var navEl = document.querySelector('.site-nav');
+    var heroEl = document.querySelector('header.hero');
+    function sync(){
+      var trigger = heroEl.offsetTop + heroEl.offsetHeight - navEl.offsetHeight;
+      navEl.classList.toggle('scrolled', window.scrollY >= trigger);
+    }
+    window.addEventListener('scroll', sync, {passive:true});
+    window.addEventListener('resize', sync);
+    sync();
+  })();
+</script>
+<script>
+  // reserve scroll space equal to the fixed footer's height so it reveals
+  // from behind the page as the user scrolls to the bottom
+  (function(){
+    var pageWrapEl = document.querySelector('.page-wrap');
+    var caseFooterEl = document.querySelector('.case-footer');
+    function syncCaseFooterSpace(){
+      pageWrapEl.style.marginBottom = caseFooterEl.offsetHeight + 'px';
+    }
+    window.addEventListener('resize', syncCaseFooterSpace);
+    window.addEventListener('load', syncCaseFooterSpace);
+    syncCaseFooterSpace();
+  })();
+</script>
+<script>
+  // footer is position:fixed, so it's always "in the viewport" geometrically —
+  // trigger the line's draw-on animation on near-bottom scroll instead.
+  (function(){
+    var el = document.getElementById('case-footer-line-path');
+    if (!el) return;
+    var len = el.getTotalLength();
+    el.style.strokeDasharray = len;
+    el.style.strokeDashoffset = len;
+    var drawn = false;
+    function maybeDraw(){
+      if (drawn) return;
+      var nearBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 60;
+      if (nearBottom){
+        drawn = true;
+        el.style.transition = 'stroke-dashoffset 1400ms cubic-bezier(0.65,0,0.35,1)';
+        el.style.strokeDashoffset = 0;
+        window.removeEventListener('scroll', maybeDraw);
+      }
+    }
+    window.addEventListener('scroll', maybeDraw, {passive:true});
+    maybeDraw();
+  })();
+</script>
 </body>
 </html>

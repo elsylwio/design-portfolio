@@ -42,7 +42,10 @@
 
   /* HERO */
   .hero {
-    background: #edeaf5;
+    background:
+      radial-gradient(90% 75% at 12% 8%,  #ece3f6 0%, transparent 62%),
+      radial-gradient(80% 65% at 92% 92%, #f6dfe6 0%, transparent 60%),
+      linear-gradient(160deg, #e9e2f1 0%, #f5eeee 100%);
     color: var(--ink);
     padding: 48px;
     margin: 110px 48px 48px;
@@ -130,14 +133,14 @@
     transition: color .2s ease, border-color .2s ease, background .2s ease;
   }
   .side-nav a:hover { color: var(--ink); background: var(--bg-card); }
-  .side-nav a.active { color: var(--ink); border-left-color: var(--teal); font-weight: 600; }
+  .side-nav a.active { color: var(--ink); border-left-color: var(--purple); font-weight: 600; }
   @media (min-width: 1420px) {
     .side-nav { display: flex; }
     .diamond-nav { display: none; }
   }
 
   /* LAYOUT */
-  .body-wrap { max-width: 1100px; margin: 0 auto; padding: 0 48px; }
+  .body-wrap { max-width: 820px; margin: 0 auto; padding: 0 48px; }
 
   /* SECTIONS */
   .section { padding: 72px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 60px; }
@@ -155,11 +158,11 @@
     font-family: 'DM Serif Display', serif;
     font-size: clamp(26px, 3.5vw, 40px);
     font-weight: 400; line-height: 1.15;
-    margin-bottom: 16px; max-width: 680px;
+    margin-bottom: 16px;
   }
   .section-intro {
     font-size: 16px; color: var(--ink-mid);
-    line-height: 1.75; max-width: 620px; margin-bottom: 40px;
+    line-height: 1.75; margin-bottom: 40px;
   }
 
   /* CARDS */
@@ -176,6 +179,12 @@
     text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px;
   }
   .card h4 { font-size: 15px; font-weight: 600; line-height: 1.4; margin-bottom: 8px; }
+  .decision-label {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: #6b4fa0; margin-bottom: 10px;
+  }
+  .decision-label::before { content: '●'; font-size: 8px; }
   .card p { font-size: 13px; color: var(--ink-mid); line-height: 1.65; }
   .card.accent-purple { border-top: 3px solid var(--purple); }
   .card.accent-teal   { border-top: 3px solid var(--teal); }
@@ -256,7 +265,7 @@
   .metric-cell { background: var(--bg-card); padding: 28px 24px; text-align: center; }
   .metric-num {
     font-family: 'DM Serif Display', serif;
-    font-size: 42px; line-height: 1; color: var(--teal); margin-bottom: 6px;
+    font-size: 42px; line-height: 1; color: #6b4fa0; margin-bottom: 6px;
   }
   .metric-label { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
 
@@ -298,9 +307,9 @@
   .reflection-col.designer .reflection-item::before { color: var(--red); }
 
   /* FOOTER */
-  .page-wrap { position: relative; z-index: 2; background: var(--bg); }
+  .page-wrap { position: relative; z-index: 1; background: var(--bg); }
   .case-footer {
-    position: sticky; bottom: 0; z-index: 1;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: -1;
     background: #EEE8E6;
     border-top: 1px solid var(--border); padding: 48px;
     color: var(--ink-soft); font-size: 12px;
@@ -329,9 +338,10 @@
     position: relative; opacity: .75; transition: opacity .25s;
   }
   .nav-links a::after {
-    content: ""; position: absolute; left: 0; bottom: -4px;
-    width: 100%; height: 1px; background: var(--ink);
-    transform: scaleX(0); transform-origin: right; transition: transform .3s ease;
+    content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 16'%3E%3Cpath d='M2 10 C 18 2, 28 18, 44 8 S 76 1, 98 10' stroke='%231A1A1A' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-size: 100% 100%;
+    transform: scaleX(0); transform-origin: right; transition: transform .35s ease;
   }
   .nav-links a:hover { opacity: 1; }
   .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
@@ -348,7 +358,8 @@
   #lightbox.zoomed img { max-width: none; max-height: none; cursor: zoom-out; }
   #lightbox-close { position: fixed; top: 20px; right: 28px; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,.12); color: #fff; border: none; font-size: 22px; line-height: 1; cursor: pointer; z-index: 1000; }
   #lightbox-close:hover { background: rgba(255,255,255,.22); }
-  .figure.tall img { max-height: 560px; object-fit: contain; background: #fff; }
+  .figure.tall { display: flex; flex-direction: column; }
+  .figure.tall img { height: 560px; width: 100%; object-fit: contain; background: #fff; }
   .figcap { font-size: 12px; color: var(--ink-soft); line-height: 1.5; padding: 12px 16px; border-top: 1px solid var(--border); }
   .phone {
     position: relative; background: #1c1c1e; border-radius: 42px;
@@ -385,13 +396,15 @@
 
   @media (max-width: 680px) {
     .fig-grid.cols-2, .fig-grid.cols-3 { grid-template-columns: 1fr; }
-    .site-nav { padding: 24px; }
-    .hero { padding: 48px 24px; margin: 16px 24px 32px; }
+    .site-nav { padding: 20px 22px; }
+    .hero { padding: 48px 24px; margin: 96px 24px 32px; }
     .diamond-nav { padding: 0 24px; }
     .body-wrap { padding: 0 24px; }
     .card-grid.cols-2, .card-grid.cols-3 { grid-template-columns: 1fr; }
     .metrics-row { grid-template-columns: 1fr; }
     .reflection-grid { grid-template-columns: 1fr; }
+    .case-footer { padding: 32px 24px; }
+    .case-footer-line { max-width: 100%; height: auto; }
   }
 </style>
 </head>
@@ -415,7 +428,7 @@
   <div class="hero-meta">
     <div><div class="meta-label">Role</div><div class="meta-value">Product Designer</div></div>
     <div><div class="meta-label">Scale</div><div class="meta-value">5,882 sellers · Poland and Romania</div></div>
-    <div><div class="meta-label">Team</div><div class="meta-value">Product manager · Engineering · Product analytics · Sales team · GTM team · AMP team</div></div>
+    <div><div class="meta-label">Team</div><div class="meta-value">Product manager · Engineering · Product analytics · Sales team · GTM team · Advertising/Marketing/Pricing team</div></div>
   </div>
 </header>
 
@@ -444,15 +457,18 @@
 <section class="section" id="problem">
   <div class="section-label"><span style="color:var(--ink-soft)">The problem space</span></div>
   <h2 class="section-title">The package model made our best sellers pay to guess, and they were leaving because of it</h2>
-  <p class="section-intro">OLX's biggest sellers (car dealers, parts traders, seasonal listers) were leaving the platform, faster every month. What they need is simple: their money's worth and no unnecessary hassle. The package model gave them neither. It made them guess how many ads they'd need next month and pay upfront for a fixed number that expired after about 30 days. Guessing wrong cost them either way. And there was a third, less obvious problem.</p>
+  <p class="section-intro" style="margin-bottom:10px">OLX's biggest sellers – car dealers, parts traders and seasonal listers – were leaving the platform, and the pace was accelerating month after month.</p>
+  <p class="section-intro" style="margin-bottom:10px">What they wanted was simple: value for money and no unnecessary hassle. The existing package model delivered neither.</p>
+  <p class="section-intro" style="margin-bottom:10px">It forced them to predict how many ads they'd need the following month and pay upfront for a fixed number that expired after roughly 30 days. Get the estimate wrong, and they lost either way.</p>
+  <p class="section-intro">But there was a third, less obvious problem.</p>
 
   <div class="card-grid cols-3" style="margin-bottom:32px">
-    <div class="card accent-red">
+    <div class="card accent-purple">
       <div class="card-eyebrow">Guess too high</div>
       <h4>Money wasted</h4>
       <p>A seller who bought 100 ads but only posted 70 lost the other 30 when the month ended. They paid for ads they never got to use.</p>
     </div>
-    <div class="card accent-orange">
+    <div class="card accent-purple">
       <div class="card-eyebrow">Guess too low</div>
       <h4>Lost sales or pricier top-ups</h4>
       <p>Running out mid-month left two bad options: hold the inventory back and miss sales, or buy another package at a worse rate than the first one.</p>
@@ -472,7 +488,7 @@
 
   <p class="section-intro" style="margin-top:32px">Timing made it worse. Car parts sellers moving to OLX from automotive vertical platforms like Otomoto and Autovit were used to paying per ad. For them, packages felt like a step backwards, at the exact moment we needed them to stay. On top of that, the buy-package flow had to be repeated every 30 days.</p>
 
-  <div class="fig-grid" style="grid-template-columns:1fr;max-width:760px;margin:32px auto">
+  <div class="fig-grid" style="grid-template-columns:1fr;margin:32px auto">
     <div class="figure">
       <img src="images/payperuse/Rico-wants-one-thing.png" alt="Slide from the stakeholder presentation: Rico the seller persona surrounded by dozens of ad package boxes, thinking 'Let me pay for what I actually use'" loading="lazy">
       <div class="figcap"><strong>How I told this story to stakeholders.</strong> Rico, our seller persona, buried in package options when all he wants is to pay for what he actually uses. This slide, from the presentation I gave internally, did more for alignment than any chart.</div>
@@ -488,8 +504,9 @@
 <!-- PROCESS AT A GLANCE -->
 <section class="section" id="process">
   <div class="section-label"><span style="color:var(--ink-soft)">Process at a glance</span></div>
-  <h2 class="section-title">Two sections, not four: what I knew and decided, then what I built and proved</h2>
-  <p class="section-intro">The thinking still moved from problem to direction to build to proof, that part never changes. But splitting it into four textbook phases made a lean four-month project look more staged than it was. What actually happened was two connected efforts, and AI shows up differently in each.</p>
+  <h2 class="section-title">Two sections instead of four: from understanding the problem to proving the solution</h2>
+  <p class="section-intro" style="margin-bottom:10px">The project followed the familiar path from identifying the problem to defining a direction, building a solution and validating it. But dividing a lean, four-month project into four separate phases would make the process look more rigid and structured than it really was.</p>
+  <p class="section-intro">In reality, the work came down to two connected parts: understanding the problem and making key decisions, then designing, building and validating the solution. AI supported both parts, but in different ways.</p>
 
   <div class="card-grid cols-2" style="margin-bottom:32px">
     <div class="card" style="border-top:3px solid var(--purple)">
@@ -500,7 +517,7 @@
     <div class="card" style="border-top:3px solid var(--red)">
       <div class="card-eyebrow" style="color:#7a4a63">Building and proving it</div>
       <h4>What could the model look like, and does it actually work?</h4>
-      <p><strong>Design work:</strong> a workshop with engineers, picking the winning concept, designing straight in code, running a live usability study, deciding what to fix, handing off.<br><strong>Where AI helped:</strong> 7 working concepts in a 4-hour workshop, a fully working prototype built in Claude Code that doubled as the test stimulus and the handoff artifact, pushed into Figma through MCP for design-system documentation.</p>
+      <p><strong>Design work:</strong> a workshop with engineers, picking the winning concept, designing straight in code, running a live usability study, deciding what to fix, handing off.<br><strong>Where AI helped:</strong> 7 working concepts explored in a 4-hour workshop, rapid prototyping and design iteration in Claude Code, and selected concepts transferred directly into Figma via MCP for further refinement.</p>
     </div>
   </div>
 
@@ -513,7 +530,7 @@
       <div><strong style="color:var(--ink)">Lovable</strong> · fast, throwaway prototyping in the ideation workshop</div>
       <div><strong style="color:var(--ink)">Claude Design</strong> · on-brand design explorations for inspiration</div>
       <div><strong style="color:var(--ink)">Claude Code</strong> · the fully working prototype used for testing and handoff</div>
-      <div><strong style="color:var(--ink)">Figma via MCP</strong> · the prototype pushed into our design system for documentation</div>
+      <div><strong style="color:var(--ink)">Figma via MCP</strong> · selected concepts transferred into Figma for further design development and refinement</div>
     </div>
   </div>
 </section>
@@ -584,7 +601,7 @@
   </div>
 
   <div style="background:var(--yellow-light);border:1px solid var(--yellow);border-radius:12px;padding:24px 28px;margin-top:32px;margin-bottom:48px">
-    <div class="card-eyebrow">Designer decision</div>
+    <div class="decision-label">Designer decision</div>
     <p style="font-size:14px;color:var(--ink-mid);line-height:1.7">The AI tools found plenty of patterns in the archive and the earlier research. My job was deciding which ones set the direction: with hybrid commission models already tested and rejected as unfair, and no reliable way to charge on offline sales, I focused the project on pure usage-based pricing. Charge for ads actually posted, nothing else.</p>
   </div>
 
@@ -606,7 +623,7 @@
     </div>
   </div>
 
-  <div class="fig-grid" style="grid-template-columns:1fr;max-width:760px;margin:32px auto">
+  <div class="fig-grid" style="grid-template-columns:1fr;margin:32px auto">
     <div class="figure">
       <img src="images/payperuse/Persona.png" alt="Persona card for Rico, the High Volume Lister: owner of a vehicle dismantling station selling thousands of used auto parts, with goals, needs, pain points and desired solutions" loading="lazy">
       <div class="figcap"><strong>Rico, the High Volume Lister.</strong> Owner of a vehicle dismantling station with thousands of listings and tight margins. His pain points read like a brief for this project: prepaid packages that don't match fluctuating inventory, rigid listing limits, and being forced to upgrade mid-month.</div>
@@ -631,7 +648,7 @@
   </div>
 
   <div style="background:var(--yellow-light);border:1px solid var(--yellow);border-radius:12px;padding:24px 28px;margin-top:32px">
-    <div class="card-eyebrow">Designer decision</div>
+    <div class="decision-label">Designer decision</div>
     <p style="font-size:14px;color:var(--ink-mid);line-height:1.7">Claude drafted 5 versions of the problem statement. I picked the one that named the guessing itself as the problem. That version steered the team away from "let's build better packages" and toward getting rid of the forecast altogether.</p>
   </div>
   </div>
@@ -684,7 +701,9 @@
       <div class="figcap"><strong>User flows from the workshop board.</strong> Every core flow mapped next to its alternative, with the rejected paths labelled "worse UX". Anyone reading the board later can see what we chose and why.</div>
     </div>
     <div class="figure tall">
-      <img src="images/payperuse/Pay%20per%20use%20-%20ideation%20-%20Outcome.jpg" alt="Ideation outcome board with screen explorations across buy package, plans, monthly usage and billing" loading="lazy">
+      <div style="height:560px; display:flex; align-items:center; justify-content:center; background:#fff">
+        <img src="images/payperuse/Pay%20per%20use%20-%20ideation%20-%20Outcome.jpg" alt="Ideation outcome board with screen explorations across buy package, plans, monthly usage and billing" loading="lazy" style="height:auto; max-height:460px; width:auto; max-width:100%; cursor:zoom-in">
+      </div>
       <div class="figcap"><strong>Ideation outcome.</strong> Screen explorations for the three areas that make up the concept (Buy Package, My Plans, and Monthly Usage), annotated and narrowed down after dot voting.</div>
     </div>
   </div>
@@ -709,12 +728,12 @@
   </div>
 
   <div style="background:var(--yellow-light);border:1px solid var(--yellow);border-radius:12px;padding:24px 28px;margin-top:32px">
-    <div class="card-eyebrow">Designer decision</div>
+    <div class="decision-label">Designer decision</div>
     <p style="font-size:14px;color:var(--ink-mid);line-height:1.7">Dot voting showed the favourites, but the final pick was mine: bracket pricing with benefit tiers. Showing sellers how close they are to a cheaper rate gives them a reason to post more, which answered the "sellers cap themselves" insight from earlier directly.</p>
   </div>
 
-  <div class="card" style="margin-top:16px;margin-bottom:48px">
-    <div class="card-eyebrow">The pivot: volume discounts to incremental brackets</div>
+  <div class="card" style="margin-top:16px;margin-bottom:48px;background:#fdf0ee;border:1px solid #e8b4ac;border-left:4px solid #c0392b">
+    <div class="card-eyebrow" style="display:flex;align-items:center;gap:6px;color:#c0392b;font-weight:700">⚠ The pivot: volume discounts to incremental brackets</div>
     <p style="font-size:14px;color:var(--ink-mid);line-height:1.7">The team's first instinct was a simple volume discount: post more, get a lower rate on everything. Together with engineering and stakeholders, we decided to walk that back. It had technical obstacles that would have slowed delivery, and a bigger problem: it was easy to game, a seller could inflate volume just to unlock a lower rate, then coast, which put real revenue at risk. Incremental bracket pricing (a fixed rate per tier of ads, not one rate applied retroactively to everything) closed that loophole while keeping the part sellers actually wanted: a visible reason to post more.</p>
   </div>
 
@@ -801,7 +820,7 @@
   <!-- Handoff -->
   <div class="card-grid cols-2">
     <div class="card accent-orange" style="background:var(--yellow-light);border-color:var(--yellow)">
-      <div class="card-eyebrow">Designer decision</div>
+      <div class="decision-label">Designer decision</div>
       <h4>4 issues ranked fix-before-handoff</h4>
       <p>UMUX-Lite gave us the overall score, but deciding what to fix was mine. Out of everything the 30 sessions turned up, I marked 4 issues as must-fix before handoff. Each one became a real design change: a tooltip explaining the confusing 200 PLN charge, the price per listing shown right away instead of hidden in a dropdown, a label explaining why Agriculture sits under "Parts", and simpler, colour-coded pricing screens. The test shaped the final design instead of just approving it.</p>
     </div>
@@ -1083,22 +1102,39 @@
 </script>
 
 <script>
-  // draw-on animation for the footer line, triggered when it scrolls into view
+  // reserve scroll space equal to the fixed footer's height so it reveals
+  // from behind the page as the user scrolls to the bottom
+  const pageWrapEl = document.querySelector('.page-wrap');
+  const caseFooterEl = document.querySelector('.case-footer');
+  function syncCaseFooterSpace(){
+    pageWrapEl.style.marginBottom = caseFooterEl.offsetHeight + 'px';
+  }
+  window.addEventListener('resize', syncCaseFooterSpace);
+  window.addEventListener('load', syncCaseFooterSpace);
+  syncCaseFooterSpace();
+</script>
+
+<script>
+  // footer is position:fixed, so it's always "in the viewport" geometrically —
+  // trigger the line's draw-on animation on near-bottom scroll instead.
   const caseFooterLineEl = document.getElementById('case-footer-line-path');
   if (caseFooterLineEl){
     const cfLen = caseFooterLineEl.getTotalLength();
     caseFooterLineEl.style.strokeDasharray = cfLen;
     caseFooterLineEl.style.strokeDashoffset = cfLen;
-    const cfIo = new IntersectionObserver((entries)=>{
-      entries.forEach(entry=>{
-        if (entry.isIntersecting){
-          caseFooterLineEl.style.transition = 'stroke-dashoffset 1400ms cubic-bezier(0.65,0,0.35,1)';
-          caseFooterLineEl.style.strokeDashoffset = 0;
-          cfIo.disconnect();
-        }
-      });
-    }, { threshold: 0.4 });
-    cfIo.observe(caseFooterLineEl);
+    let cfDrawn = false;
+    function maybeDrawCaseFooterLine(){
+      if (cfDrawn) return;
+      const nearBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 60;
+      if (nearBottom){
+        cfDrawn = true;
+        caseFooterLineEl.style.transition = 'stroke-dashoffset 1400ms cubic-bezier(0.65,0,0.35,1)';
+        caseFooterLineEl.style.strokeDashoffset = 0;
+        window.removeEventListener('scroll', maybeDrawCaseFooterLine);
+      }
+    }
+    window.addEventListener('scroll', maybeDrawCaseFooterLine, {passive:true});
+    maybeDrawCaseFooterLine();
   }
 </script>
 
