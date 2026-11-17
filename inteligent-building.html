@@ -167,6 +167,15 @@
   .site-nav .nav-links a:hover{opacity:1;}
   .site-nav .nav-links a:hover::after{transform:scaleX(1); transform-origin:left;}
   @media(max-width:720px){.site-nav .nav-links{display:none;} .fig-grid{grid-template-columns:1fr;}}
+  /* abstract line on the right of the hero, drawn on load like the footer line */
+  .hero-line{position:absolute; right:56px; top:42%; transform:translateY(-50%); width:min(28%,340px); height:auto; overflow:visible; pointer-events:none; z-index:1}
+  header.hero .inner{position:relative}
+  @media(max-width:1000px){.hero-line{display:none}}
+  .hl-tip, .hl-ring{opacity:0; transform-box:fill-box; transform-origin:center}
+  .hl-mark{opacity:0; transform:scale(0); transform-box:fill-box; transform-origin:center; transition:transform .45s cubic-bezier(.34,1.56,.64,1), opacity .3s ease}
+  .hl-mark.on{opacity:1; transform:scale(1)}
+  .hl-ring.pulse{animation:hl-pulse 1.5s ease-out 2}
+  @keyframes hl-pulse{from{opacity:.55; transform:scale(1)} to{opacity:0; transform:scale(3.4)}}
 </style>
 </head>
 <body>
@@ -191,6 +200,17 @@
       <div class="meta-item"><b>Client</b>Roche</div>
       <div class="meta-item"><b>Role</b>Business Analyst, UX Designer / UI Designer</div>
     </div>
+    <svg class="hero-line" viewBox="0 0 360 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path id="hero-line-glow" d="M180 82 C 180 70, 200 68, 204 82 C 210 104, 172 112, 160 88 C 146 56, 196 34, 226 60 C 262 92, 220 146, 160 134 C 100 122, 96 50, 150 28 C 210 6, 300 30, 354 96" transform="translate(4 7)"
+      stroke="#b7dcc4" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"
+      style="stroke-dasharray:1 99999"/>
+    <path id="hero-line-path" d="M180 82 C 180 70, 200 68, 204 82 C 210 104, 172 112, 160 88 C 146 56, 196 34, 226 60 C 262 92, 220 146, 160 134 C 100 122, 96 50, 150 28 C 210 6, 300 30, 354 96"
+      stroke="#1A1A1A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"
+      style="stroke-dasharray:1 99999"/>
+    <g id="hero-line-marks"></g>
+    <circle id="hero-line-ring" class="hl-ring" r="5" stroke="#1A1A1A" stroke-width="1.2"/>
+    <circle id="hero-line-tip" class="hl-tip" r="4.5" fill="#1A1A1A"/>
+  </svg>
   </div>
 </header>
 
@@ -446,5 +466,54 @@
     maybeDraw();
   })();
 </script>
+<script>
+  // hero line: a pen tip draws it on load, a green highlight trails behind, and markers
+  // pop where the line starts to flow; shown finished when reduced motion is on
+  (function(){
+    var p = document.getElementById('hero-line-path');
+    if (!p) return;
+    var glow = document.getElementById('hero-line-glow');
+    var tip = document.getElementById('hero-line-tip');
+    var ring = document.getElementById('hero-line-ring');
+    var marksG = document.getElementById('hero-line-marks');
+    var len = p.getTotalLength();
+    var MARKS = [0.55, 0.74, 0.9];
+    var marks = MARKS.map(function(f){
+      var pt = p.getPointAtLength(len * f);
+      var c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('cx', pt.x); c.setAttribute('cy', pt.y); c.setAttribute('r', 4);
+      c.setAttribute('fill', '#2f8f5c'); c.setAttribute('class', 'hl-mark');
+      marksG.appendChild(c); return c;
+    });
+    var end = p.getPointAtLength(len);
+    function place(el, pt){ el.setAttribute('cx', pt.x); el.setAttribute('cy', pt.y); }
+    place(ring, end);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      p.style.strokeDasharray = 'none'; glow.style.strokeDasharray = 'none';
+      marks.forEach(function(c){ c.style.transition = 'none'; c.classList.add('on'); });
+      place(tip, end); tip.style.opacity = 1;
+      return;
+    }
+    [p, glow].forEach(function(el){ el.style.strokeDasharray = len; el.style.strokeDashoffset = len; });
+    function ease(t){ return t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2; }
+    var DUR = 2600, start = null;
+    function frame(now){
+      if (start === null) start = now;
+      var t = Math.min(1, (now - start) / DUR);
+      var k = ease(t), kg = ease(Math.max(0, (t - .14) / .86));
+      p.style.strokeDashoffset = len * (1 - k);
+      glow.style.strokeDashoffset = len * (1 - kg);
+      place(tip, p.getPointAtLength(len * k));
+      marks.forEach(function(c, i){ if (k >= MARKS[i]) c.classList.add('on'); });
+      if (t < 1) { requestAnimationFrame(frame); }
+      else { ring.classList.add('pulse'); }
+    }
+    window.addEventListener('load', function(){
+      setTimeout(function(){ tip.style.opacity = 1; requestAnimationFrame(frame); }, 350);
+    });
+  })();
+</script>
+
 </body>
 </html>
