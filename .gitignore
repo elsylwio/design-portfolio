@@ -1,2 +1,11 @@
 .DS_Store
 **/.DS_Store
+
+# unencrypted sources for the password-protected story deck
+_story-src/
+
+# full source repo of the prototype (company code, node_modules); only its build in prototype/ is published
+pay-per-use-prototype/
+
+# unused originals and old drafts, kept locally only
+_archive/
