@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pay-Per-Use · The Story</title>
+<title>Pay per use: interview walkthrough</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&family=Manrope:wght@400;500;700;800&family=Roboto:ital,wght@0,300;0,700;0,900;1,300&display=swap" rel="stylesheet">
@@ -435,15 +435,30 @@
   }
   .deck:focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; }
   #deck-img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  #deck-img[hidden], .stage[hidden] { display: none; }
   .stage {
     position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; overflow: hidden;
     transform: translate(-50%, -50%) scale(var(--s, 1)); z-index: 2; pointer-events: none;
     font-family: 'Manrope', 'Inter', sans-serif; color: #fff; line-height: 1.3;
   }
-  .deck-zone { position: absolute; top: 0; bottom: 0; width: 50%; background: none; border: 0; padding: 0; }
+  .deck-zone { position: absolute; top: 0; bottom: 0; width: 50%; background: none; border: 0; padding: 0 outline: 0; -webkit-tap-highlight-color: transparent; }
+  .deck-zone:focus, .deck-zone:focus-visible { outline: 0; box-shadow: none; }
+  .deck.is-fs:focus-visible { outline: 0; }
   .deck-zone.prev { left: 0; cursor: w-resize; }
   .deck-zone.next { right: 0; cursor: e-resize; }
-  .deck:fullscreen { border: 0; border-radius: 0; background: #000; }
+  /* .is-fs is set from script so this works in every browser, prefixed or not */
+  .deck.is-fs, .deck:fullscreen {
+    position: fixed; inset: 0; width: 100vw; height: 100vh; max-width: none; margin: 0; aspect-ratio: auto;
+    border: 0; border-radius: 0; outline: 0; box-shadow: none; background-color: #000; background-size: 100% 100%; background-repeat: no-repeat;
+  }
+  .deck::backdrop { background: #000; }
+  /* full screen, photo slides: let the photo (and its veil) run into the spare space instead of stopping at 16:9 */
+  .deck.is-fs .stage:has(.fill-img, .rico-col, .s6-rico), .deck.is-fs .stage > :has(> .fill-img, > .rico-col, > .s6-rico) { overflow: visible; }
+  .deck.is-fs .stage .fill-img, .deck.is-fs .stage .s15-veil { inset: calc(-1 * var(--fy, 0px)) calc(-1 * var(--fx, 0px)); }
+  /* Rico's photo column on slides 5 and 6 runs to the top, bottom and right edge of the screen */
+  .deck.is-fs .stage .rico-col, .deck.is-fs .stage .s6-rico {
+    top: calc(-1 * var(--fy, 0px)); height: calc(1080px + 2 * var(--fy, 0px)); width: calc(716px + var(--fx, 0px) + 4px);
+  }
   .deck-bar { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 16px; position: relative; }
   .deck-btn {
     font: inherit; font-size: 14px; color: var(--ink); background: var(--bg-card);
@@ -492,14 +507,14 @@
 <main class="deck-wrap">
   <div class="deck-head">
     <div>
-      <div class="section-label" style="margin-bottom:8px"><span style="color:var(--ink-soft)">Interview story</span></div>
-      <h1 class="deck-title">Pay-Per-Use: the story</h1>
+      <div class="section-label" style="margin-bottom:8px"><span style="color:var(--ink-soft)">Interview walkthrough</span></div>
+      <h1 class="deck-title">Pay per use: interview walkthrough</h1>
     </div>
     <a class="deck-back" href="ppu_case_study.html">&larr; Detailed case study</a>
   </div>
 
   <form class="gate" id="gate" autocomplete="off">
-    <label class="gate-label" for="gate-pw">This presentation is password-protected</label>
+    <label class="gate-label" for="gate-pw">Private walkthrough for interviewers. Password-protected.</label>
     <div class="gate-row">
       <input class="gate-input" id="gate-pw" type="password" placeholder="Password" aria-describedby="gate-msg" autofocus required>
       <button class="deck-btn" id="gate-btn" type="submit">Open</button>
@@ -508,7 +523,7 @@
   </form>
 
   <div id="deck-area" hidden>
-    <div class="deck" id="deck" tabindex="0" aria-roledescription="slide deck" aria-label="Pay-Per-Use presentation">
+    <div class="deck" id="deck" tabindex="0" aria-roledescription="slide deck" aria-label="Pay per use interview walkthrough">
       <img id="deck-img" alt="" width="1920" height="1080">
       <div class="stage" id="deck-stage" hidden></div>
       <button class="deck-zone prev" id="deck-prev-zone" aria-label="Previous slide" tabindex="-1"></button>
@@ -748,33 +763,20 @@
         });
       },
       17: function(t, q){
-        titleIn(t, q);
-        t.from(q('.v17-lead'), {y:20, autoAlpha:0, duration:.4}, '-=.2')
-         .from(q('.v17-score'), {y:40, autoAlpha:0, duration:.55, ease:'power3.out'})
-         .from(q('.v17-score .v-kick'), {autoAlpha:0, duration:.3}, '-=.2');
-        q('.v17-row').forEach(function(row, k){
-          var at = 'row' + k, bar = row.querySelector('.v17-track i'), b = row.querySelector('b');
-          t.addLabel(at, k ? '+=.3' : '>');
-          t.from(row, {autoAlpha:0, x:-20, duration:.35}, at);
-          t.from(bar, {scaleX:0, duration:k === 2 ? 1.4 : .9, ease:k === 2 ? 'back.out(1.1)' : 'power2.out'}, at);
-          if (b.dataset.count) countUp(t, b, at, 1.4);
-          else if (/·/.test(b.textContent)) {
-            var o = {a:0, b:0}; t.to(o, {a:62, b:58, duration:.9, ease:'power2.out',
-              onUpdate:function(){ b.textContent = Math.round(o.a) + ' · ' + Math.round(o.b); },
-              onComplete:function(){ b.textContent = '62 · 58'; }}, at);
-          } else countText(t, b, at, .9);
-        });
-        t.fromTo(q('.v17-row.result b'), {scale:1}, {scale:1.15, duration:.2, yoyo:true, repeat:1, ease:'power1.inOut'})
-         .from(q('.v17-note'), {autoAlpha:0, y:10, duration:.4})
-         .from(q('.v17-task'), {y:40, scale:.94, autoAlpha:0, duration:.45, stagger:.18, ease:'back.out(1.5)'}, '-=.2')
-         .addLabel('tasks', '<');
-        q('.v17-task b').forEach(function(el, k){ countUp(t, el, 'tasks+=' + (k * .18), 1); });
-        t.from(q('.v17-quote'), {y:50, autoAlpha:0, duration:.6, ease:'power3.out'}, '+=.3');
-        var w = words(q('.v17-quote p')[0]);
-        t.from(w, {y:18, autoAlpha:0, duration:.3, stagger:.07}, '-=.2');
-        var hundred = w.filter(function(s){ return s.textContent === '101'; })[0];
-        if (hundred) countText(t, hundred, '<+=' + (w.indexOf(hundred) * .07), .9);
-        t.from(q('.v17-quote span:not(.wd)'), {autoAlpha:0, duration:.5}, '+=.3');
+        t.from(q('.title'), {y:30, autoAlpha:0, duration:.5})
+         .from(q('.v17-lead'), {y:20, autoAlpha:0, duration:.4}, '-=.2')
+         .from(q('.v17-line'), {scaleX:0, duration:.7, ease:'power2.inOut'})
+         .from(q('.v17-mark.before'), {y:-20, autoAlpha:0, duration:.4})
+         .from(q('.v17-mark.target'), {y:-20, autoAlpha:0, duration:.4}, '+=.2')
+         .from(q('.v17-mark.result'), {scale:0, autoAlpha:0, duration:.6, ease:'back.out(2.2)'}, '+=.3')
+         .from(q('.v17-hero'), {y:30, autoAlpha:0, duration:.5}, '-=.3')
+         .addLabel('big', '<');
+        countUp(t, q('.v17-big')[0], 'big', 1.2);
+        t.from(q('.v17-stats > div'), {y:24, autoAlpha:0, duration:.4, stagger:.15}, '+=.1')
+         .addLabel('st', '<');
+        q('.v17-stats b').forEach(function(el, k){ countUp(t, el, 'st+=' + (k * .15), .9); });
+        t.from(q('.v17-quote'), {x:80, autoAlpha:0, duration:.6, ease:'power3.out'}, '+=.4')
+         .from(q('.v17-so'), {autoAlpha:0, duration:.5}, '+=.5');
       },
       19: function(t, q){
         titleIn(t, q);
@@ -812,14 +814,19 @@
         q('.v20-stats b').forEach(function(el, k){ countText(t, el, 'st+=' + (k * .2), 1); });
       },
       1: function(t, q){
-        t.from(q('.s1-title'), {y:70, autoAlpha:0, duration:.8, ease:'power3.out'})
-         .from(q('.s1-sub'), {y:30, autoAlpha:0, duration:.6}, '-=.4')
-         .from(q('.s1-time'), {x:-24, autoAlpha:0, duration:.5}, '-=.2')
-         .from(q('.s1-foot, .s1-page'), {autoAlpha:0, duration:.5}, '-=.2');
+        t.from(q('.t1-bg'), {autoAlpha:0, duration:1})
+         .from(q('.t1-bg img'), {scale:1.08, duration:2.4, ease:'power2.out'}, '<')
+         .from(q('.t1-eyebrow'), {y:20, autoAlpha:0, duration:.5}, '-=2')
+         .from(q('.t1-title'), {y:60, autoAlpha:0, duration:.8, ease:'power3.out'}, '-=1.7')
+         .from(q('.t1-sub'), {y:30, autoAlpha:0, duration:.6}, '-=.4')
+         .from(q('.t1-sub em'), {scale:1.15, duration:.5, ease:'back.out(2.5)'}, '-=.2')
+         .from(q('.t1-meta div'), {x:-20, autoAlpha:0, duration:.4, stagger:.15}, '-=.2')
+         .from(q('.t1-name'), {autoAlpha:0, duration:.5});
       },
       2: function(t, q){
         t.from(q('.s2-title .w'), {y:30, autoAlpha:0, duration:.6, stagger:.3})
-         .from(q('.s2-title em'), {scale:1.3, duration:.45, stagger:.14, ease:'back.out(3)'}, '-=.5')
+         .from(q('.s2-title em'), {scale:1.15, duration:.5, stagger:.14, ease:'power2.out'}, '-=.5')
+         .from(q('.s2-title em'), {autoAlpha:0, duration:.5, stagger:.14, ease:'power2.in'}, '<')
          .from(q('.s2-frame'), {autoAlpha:0, duration:.4}, '-=.2')
          .from(q('.s2-fig .p1'), {y:30, scale:.94, autoAlpha:0, duration:.55, ease:'back.out(1.4)'})
          .from(q('.s2-fig .p2'), {scale:0, rotation:-90, autoAlpha:0, duration:.4, ease:'back.out(2.5)'}, '-=.1')
@@ -972,6 +979,7 @@
       next.disabled = i === TOTAL;
       if (bundle.html[n]) {
         stage.innerHTML = bundle.html[n];
+        paintBars();
         stage.querySelectorAll('img[data-enc]').forEach(function(el){
           image(el.dataset.enc).then(function(url){ el.src = url; }).catch(function(){});
         });
@@ -996,8 +1004,28 @@
 
     function fit(){
       var r = deck.getBoundingClientRect();
-      stage.style.setProperty('--s', Math.min(r.width / 1920, r.height / 1080));
+      // a hair of overscan hides sub-pixel seams at the slide edges
+      var k = Math.min(r.width / 1920, r.height / 1080);
+      stage.style.setProperty('--s', isFull() ? k * 1.002 : k);
+      // spare space around the 1920x1080 slide, in slide pixels
+      stage.style.setProperty('--fx', isFull() ? Math.max(0, (r.width / k - 1920) / 2) + 'px' : '0px');
+      stage.style.setProperty('--fy', isFull() ? Math.max(0, (r.height / k - 1080) / 2) + 'px' : '0px');
     }
+    // full screen on a screen that is not 16:9: fill the spare space with the slide's own background, not black
+    function paintBars(){
+      var root = stage.firstElementChild;
+      if (isFull() && root && !stage.hidden) {
+        var cs = getComputedStyle(root);
+        deck.style.backgroundColor = cs.backgroundColor;
+        deck.style.backgroundImage = cs.backgroundImage;
+      } else {
+        deck.style.backgroundColor = ''; deck.style.backgroundImage = '';
+      }
+    }
+    function isFull(){ return (document.fullscreenElement || document.webkitFullscreenElement) === deck; }
+    function onFull(){ deck.classList.toggle('is-fs', isFull()); fit(); paintBars(); }
+    document.addEventListener('fullscreenchange', onFull);
+    document.addEventListener('webkitfullscreenchange', onFull);
     if (window.ResizeObserver) { new ResizeObserver(fit).observe(deck); }
     window.addEventListener('resize', fit);
 
@@ -1042,10 +1070,11 @@
       else if (e.key === 'f' || e.key === 'F') { toggleFull(); }
     });
     function toggleFull(){
-      if (document.fullscreenElement) { document.exitFullscreen(); }
+      if (isFull()) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); }
       else if (deck.requestFullscreen) { deck.requestFullscreen(); }
+      else if (deck.webkitRequestFullscreen) { deck.webkitRequestFullscreen(); }
     }
-    if (!deck.requestFullscreen) { full.hidden = true; }
+    if (!deck.requestFullscreen && !deck.webkitRequestFullscreen) { full.hidden = true; }
     full.addEventListener('click', toggleFull);
 
     // stay unlocked across refreshes in the same tab
