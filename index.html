@@ -295,7 +295,8 @@
   .phone-screen{position:relative;aspect-ratio:1170/2300;border-radius:32px 32px 0 0;overflow:hidden;background:#fff;container-type:size}
   .phone-island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:28%;height:20px;border-radius:20px;background:var(--ink);z-index:2;pointer-events:none}
   .card-img.phone img{width:100%;margin:0;filter:none;will-change:transform;transition:transform 1.1s cubic-bezier(.2,.7,.2,1)}
-  .project:hover .card-img.phone img{transform:translateY(calc(100cqh - 100%));transition:transform 9s linear}
+  /* scroll time per card: long screens keep 9s, shorter ones set --scroll-dur so they move at a similar pace */
+  .project:hover .card-img.phone img{transform:translateY(calc(100cqh - 100%));transition:transform var(--scroll-dur,9s) linear}
   /* tablet project: same CSS frame language as the phone, landscape */
   .card-img.tablet{padding:0;align-items:center}
   .tablet-frame{
@@ -486,8 +487,8 @@
 
       <a class="project t-blush reveal" style="--i:1" href="ratings-and-reviews.html">
         <div class="card-img phone">
-          <div class="phone-frame"><div class="phone-island"></div><div class="phone-screen"><img src="images/Buyer-Rate seller.png" alt="Ratings and Reviews: sellers to rate list"></div></div>
-          <span class="card-hint">Read case study</span>
+          <div class="phone-frame"><div class="phone-island"></div><div class="phone-screen" style="--scroll-dur:7.3s"><img src="images/ratings-received.webp" alt="Ratings and Reviews: Ratings received screen with score, buyer feedback and individual ratings"></div></div>
+          <span class="card-hint">Hover to scroll &middot; read case study</span>
         </div>
         <div class="card-meta">
           <div>
