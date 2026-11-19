@@ -37,7 +37,7 @@
     font-size:clamp(36px,5vw,60px); line-height:1.08; letter-spacing:-.01em;
     margin:0 0 22px; max-width:720px;
   }
-  header.hero h1 em{font-style:italic; color:#c1590c;}
+  header.hero h1 em{font-style:italic; color:transparent; -webkit-text-stroke:1.4px var(--ink);}
   header.hero p.dek{font-size:17px; color:rgba(26,26,46,.72); max-width:620px; line-height:1.7; margin:0;}
 
   section{margin-top:88px;}
@@ -51,7 +51,7 @@
   }
   .sec-head h2 .num{
     display:block; font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
-    letter-spacing:.14em; text-transform:uppercase; color:var(--accent); margin-bottom:10px;
+    letter-spacing:.12em; text-transform:uppercase; color:#8a7d74; margin-bottom:12px;
   }
   .sec-head p{margin:0; font-size:14px; color:var(--sub); max-width:380px; line-height:1.55;}
   @media(max-width:680px){.sec-head{flex-direction:column; align-items:flex-start; gap:10px;}}
@@ -210,9 +210,8 @@
 
 <header class="hero">
   <div class="inner">
-    <div class="hero-eyebrow">UI Design</div>
-    <h1>UI <em>Explorations</em></h1>
-    <p class="dek">A set of smaller UI projects &mdash; mobile apps, dashboards and websites &mdash; designed as standalone visual pieces rather than full case studies.</p>
+    <h1>UI Explorations: smaller projects designed as <em>standalone visual pieces</em></h1>
+    <p class="dek">Mobile apps, dashboards and websites, shown as screen boards rather than full case studies.</p>
     <svg class="hero-line" viewBox="0 0 360 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <path id="hero-line-glow" d="M6 60 C 30 20, 50 20, 70 60 S 110 100, 130 60 S 170 20, 190 60 C 206 94, 250 130, 284 100 C 312 76, 290 40, 264 56 C 236 74, 280 140, 354 120" transform="translate(4 7)"
       stroke="#f5c39e" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round" opacity=".6"
@@ -231,7 +230,7 @@
 
 <section>
   <div class="sec-head reveal">
-    <h2><span class="num">01 &mdash; Mobile</span>Native &amp; mobile web</h2>
+    <h2><span class="num">Mobile</span>Native &amp; mobile web</h2>
     <p>Small apps presented as screen boards. Hover to scroll through the screens, click to open the board at full size.</p>
   </div>
   <div class="grid3">
@@ -273,7 +272,7 @@
 
 <section>
   <div class="sec-head reveal">
-    <h2><span class="num">02 &mdash; Dashboards</span>Data-heavy tools</h2>
+    <h2><span class="num">Dashboards</span>Data-heavy tools</h2>
     <p>Dense, filter-driven interfaces for specialists. Hover a window to scroll the page.</p>
   </div>
   <div class="grid2">
@@ -304,7 +303,7 @@
 
 <section>
   <div class="sec-head reveal">
-    <h2><span class="num">03 &mdash; Web</span>Marketing &amp; editorial sites</h2>
+    <h2><span class="num">Web</span>Marketing &amp; editorial sites</h2>
     <p>Landing pages and content sites where the visual tone carries the brand.</p>
   </div>
   <div class="grid3">

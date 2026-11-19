@@ -44,13 +44,15 @@
     font-size:clamp(36px,5vw,60px); line-height:1.08; letter-spacing:-.01em;
     margin:0 0 22px; max-width:720px;
   }
-  header.hero h1 em{font-style:italic; color:var(--accent2);}
+  header.hero h1 em{font-style:italic; color:transparent; -webkit-text-stroke:1.4px var(--ink);}
   header.hero p.dek{font-size:17px; color:rgba(26,26,46,.72); max-width:600px; line-height:1.7; margin:0;}
   .meta-row{display:flex; gap:32px; margin-top:38px; flex-wrap:wrap;}
   .meta-item{font-size:13px; color:rgba(26,26,46,.8);}
   .meta-item b{display:block; color:rgba(26,26,46,.5); font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px;}
 
-  section{margin-top:56px; scroll-margin-top:60px;}
+  section{padding:64px 0; border-bottom:1px solid var(--line); scroll-margin-top:60px;}
+  section:last-of-type{border-bottom:none;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
 
   .diamond-nav{
     background:var(--bg); border-bottom:1px solid var(--line);
@@ -90,11 +92,20 @@
     .side-nav{display:flex;}
     .diamond-nav{display:none;}
   }
-  h2{
-    font-size:24px; color:var(--accent2); border-bottom:2px solid var(--line);
-    padding-bottom:10px; margin-bottom:20px;
+  /* section headings: same treatment as Pay-Per-Use and Ratings & Reviews */
+  .section-label{
+    font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+    color:#8a7d74; margin-bottom:24px; display:flex; align-items:center; gap:10px;
   }
-  h3{font-size:18px; color:var(--ink); margin:28px 0 10px;}
+  h2, .section-title{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(26px,3.5vw,40px); line-height:1.15; color:var(--ink);
+    margin:0 0 20px;
+  }
+  h3{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(20px,2.4vw,24px); line-height:1.25; color:var(--ink); margin:36px 0 12px;
+  }
   p{color:#33334a; margin:0 0 14px;}
   ul{margin:0 0 14px; padding-left:20px; color:#33334a;}
   li{margin-bottom:6px;}
@@ -199,9 +210,8 @@
 
 <header class="hero">
   <div class="inner">
-    <div class="hero-eyebrow">Product Design Case Study</div>
-    <h1>Finance <em>Experience Map</em></h1>
-    <p class="dek">Turning a rarely used, unfriendly internal tool into a development resource people actually want to open.</p>
+    <h1>Finance Experience Map: redesigning a career-development tool <em>people actually want to open</em></h1>
+    <p class="dek">Roche Finance employees had a tool for planning their development, but almost no one used it. I redesigned it from site map to final UI, so it is clearer, on-brand and worth coming back to.</p>
     <div class="meta-row">
       <div class="meta-item"><b>Client</b>Roche</div>
       <div class="meta-item"><b>Role</b>Interaction Designer, UI Designer, Usability Test contributor</div>
@@ -240,8 +250,9 @@
 
 <div class="wrap">
 
-<section id="background" style="margin-top:56px">
-  <h2>Overview</h2>
+<section id="background">
+  <div class="section-label">Overview</div>
+  <h2 class="section-title">An outdated tool for planning careers that hardly anyone used</h2>
   <p class="lead">The Finance Experience Map is a resource aimed at helping employees in Finance create a more meaningful and useful Individual Development Plan. The tool provides an overview of different competencies and respective development actions that can help as you check-in with your manager on your personal development needs.</p>
 
   <div class="grid2">
@@ -257,7 +268,8 @@
 </section>
 
 <section id="research">
-  <h2>The Research</h2>
+  <div class="section-label">Research</div>
+  <h2 class="section-title">A co-creation workshop showed the tool wasn&#39;t clear, current or relevant</h2>
   <p>The design process was followed by user research. To understand user needs and the tool's pain points, UX Researchers facilitated a co-creation workshop for the key users and stakeholders.</p>
 
   <div class="grid2">
@@ -298,7 +310,8 @@
 </section>
 
 <section id="role">
-  <h2>Role &amp; Deliverables</h2>
+  <div class="section-label">Role and deliverables</div>
+  <h2 class="section-title">Interaction and UI design, from site map to developer handoff</h2>
   <div class="phase-badge">My role</div>
   <p>Interaction Designer, UI Designer, Usability Test contributor.</p>
   <h3>Deliverables</h3>
@@ -314,7 +327,8 @@
 </section>
 
 <section id="design">
-  <h2>Site Map &amp; Wireframes</h2>
+  <div class="section-label">Site map and wireframes</div>
+  <h2 class="section-title">Fewer layers and a clear starting point, tested as a clickable prototype</h2>
   <figure>
     <img src="images/carbonmade/web/carbonmade-finance-03.jpg" alt="Site map showing navigation from login through competencies, development plan and experience map">
     <figcaption>Site map: navigation from login through competencies, development plan and experience map.</figcaption>
@@ -328,7 +342,8 @@
 </section>
 
 <section id="usability">
-  <h2>Usability Test</h2>
+  <div class="section-label">Usability test</div>
+  <h2 class="section-title">Easy to use overall, with the career map as the clear favourite</h2>
   <p>Users in general have very positive opinions about the new Finance Experience Map prototype. They think it's a helpful solution and are glad it's being redesigned. Using the tool is easy; tasks were performed without serious problems and no critical errors happened, though in some cases there's still room for improvement.</p>
   <ul>
     <li>Personalization is not welcomed by all users, as some worry it may limit their development possibilities and aren't sure how to complete personalization steps.</li>
@@ -344,7 +359,8 @@
 </section>
 
 <section id="final">
-  <h2>Final UI Design</h2>
+  <div class="section-label">Final UI</div>
+  <h2 class="section-title">An on-brand tool built around a personal development timeline</h2>
   <div class="fig-grid">
     <figure>
       <img src="images/carbonmade/web/carbonmade-finance-06.jpg" alt="Final competencies screen showing Finance Core and Roche Core competency groups">

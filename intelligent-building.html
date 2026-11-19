@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Inteligent Building Case Study</title>
+<title>Intelligent Building Case Study</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -44,13 +44,15 @@
     font-size:clamp(36px,5vw,60px); line-height:1.08; letter-spacing:-.01em;
     margin:0 0 22px; max-width:720px;
   }
-  header.hero h1 em{font-style:italic; color:var(--accent2);}
+  header.hero h1 em{font-style:italic; color:transparent; -webkit-text-stroke:1.4px var(--ink);}
   header.hero p.dek{font-size:17px; color:rgba(26,26,46,.72); max-width:600px; line-height:1.7; margin:0;}
   .meta-row{display:flex; gap:32px; margin-top:38px; flex-wrap:wrap;}
   .meta-item{font-size:13px; color:rgba(26,26,46,.8);}
   .meta-item b{display:block; color:rgba(26,26,46,.5); font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px;}
 
-  section{margin-top:56px; scroll-margin-top:60px;}
+  section{padding:64px 0; border-bottom:1px solid var(--line); scroll-margin-top:60px;}
+  section:last-of-type{border-bottom:none;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
 
   .diamond-nav{
     background:var(--bg); border-bottom:1px solid var(--line);
@@ -89,11 +91,20 @@
     .side-nav{display:flex;}
     .diamond-nav{display:none;}
   }
-  h2{
-    font-size:24px; color:var(--accent2); border-bottom:2px solid var(--line);
-    padding-bottom:10px; margin-bottom:20px;
+  /* section headings: same treatment as Pay-Per-Use and Ratings & Reviews */
+  .section-label{
+    font-size:10px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+    color:#8a7d74; margin-bottom:24px; display:flex; align-items:center; gap:10px;
   }
-  h3{font-size:18px; color:var(--ink); margin:28px 0 10px;}
+  h2, .section-title{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(26px,3.5vw,40px); line-height:1.15; color:var(--ink);
+    margin:0 0 20px;
+  }
+  h3{
+    font-family:'DM Serif Display',Georgia,serif; font-weight:400;
+    font-size:clamp(20px,2.4vw,24px); line-height:1.25; color:var(--ink); margin:36px 0 12px;
+  }
   p{color:#33334a; margin:0 0 14px;}
   ul{margin:0 0 14px; padding-left:20px; color:#33334a;}
   li{margin-bottom:6px;}
@@ -193,9 +204,8 @@
 
 <header class="hero">
   <div class="inner">
-    <div class="hero-eyebrow">Product Design Case Study</div>
-    <h1>Inteligent <em>Building</em></h1>
-    <p class="dek">Designing a touchscreen system that brought a fully paper-based research facility onto one automated, intuitive interface.</p>
+    <h1>Intelligent Building: moving a paper-based research facility onto <em>one touchscreen system</em></h1>
+    <p class="dek">Scientists and animal care staff tracked everything in their research building on paper. I designed the web-based touchscreen app that replaced it, from on-site shadowing to the final tablet UI.</p>
     <div class="meta-row">
       <div class="meta-item"><b>Client</b>Roche</div>
       <div class="meta-item"><b>Role</b>Business Analyst, UX Designer / UI Designer</div>
@@ -233,8 +243,9 @@
 
 <div class="wrap">
 
-<section id="problem" style="margin-top:56px">
-  <h2>Problem to Solve</h2>
+<section id="problem">
+  <div class="section-label">Problem and users</div>
+  <h2 class="section-title">A research facility run on paper, for people who aren&#39;t at home with technology</h2>
   <p class="lead">Create a fully integrated and automated intelligent building system that allows users to manage the building, modules and rooms. The previous building had no automated solution and didn't use any other systems &mdash; all activities related to research were performed on paper, tracked manually.</p>
 
   <h3>Users</h3>
@@ -247,13 +258,15 @@
 </section>
 
 <section id="team">
-  <h2>Team &amp; Role</h2>
+  <div class="section-label">Team and role</div>
+  <h2 class="section-title">Starting as the main contact to the business, in a hybrid analyst and designer role</h2>
   <p>I started the project as the main contact to the business, in a hybrid role of Business Analyst, UX Designer / UI Designer. As the project entered a more advanced phase, I was supported by an additional Business Analyst, Interaction Designer and UX Researcher.</p>
   <p>The design team worked in Kanban, while the developer team worked in Scrum. One design representative was always part of the Scrum meetings, participating in daily standups, planning, demos and retrospectives.</p>
 </section>
 
 <section id="process">
-  <h2>Design Process</h2>
+  <div class="section-label">Design process</div>
+  <h2 class="section-title">Shadowing scientists on site to match real work with business requirements</h2>
   <p>We started working closely with Business Analysts on the business side. At the very beginning they provided very detailed documentation with requirements. Our main goal was to understand the current solution, its constraints and issues &mdash; so we conducted many interviews with business BAs and regular users, and did some shadowing on site: observing scientists' daily work, the tools they used, and the issues they ran into. We needed to match the business needs with these findings.</p>
 
   <figure>
@@ -270,7 +283,8 @@
 </section>
 
 <section id="ui">
-  <h2>UI &amp; Interaction Design</h2>
+  <div class="section-label">UI and interaction design</div>
+  <h2 class="section-title">Material Design adapted to Vuetify, and tested regularly with users</h2>
   <p>User interface design was based on Material Design, with some exceptions. Initial interaction design was created in InVision as a fully clickable mockup. When developers decided to go with the Vuetify.js framework, the UX/UI and interaction designers made the most of the components and patterns it already defined.</p>
 
   <div class="fig-grid">
@@ -290,7 +304,8 @@
 </section>
 
 <section id="final">
-  <h2>Final Product</h2>
+  <div class="section-label">Final product</div>
+  <h2 class="section-title">A tablet interface refined with usability test feedback</h2>
   <p>Here is the final product design. The mockup was improved with feedback from usability tests applied, along with some minor changes to the user interface.</p>
 
   <figure>
@@ -305,7 +320,8 @@
 </section>
 
 <section id="next">
-  <h2>Next Steps</h2>
+  <div class="section-label">Next steps</div>
+  <h2 class="section-title">Next: a web dashboard to run the whole building</h2>
   <p>Our next step was to create a dashboard (web app) that allows you to control, manage and administrate the building settings &mdash; a separate, longer story.</p>
 
   <figure>
