@@ -326,7 +326,7 @@
     <p class="dek">The old rating system was barely used and hard to trust. We replaced it with a transparent star rating tied to each confirmed transaction, now live in Poland, Romania and Ukraine.</p>
     <div class="meta-row">
       <div class="meta-item"><b>Role</b>Product Designer</div>
-      <div class="meta-item"><b>Team</b><span class="todo">TODO: e.g. 1 PM, 1 researcher, 6 engineers</span></div>
+      <div class="meta-item"><b>Team</b>Product Manager · Product Designer · Researcher · Product Analyst · Engineering · QA · GTM · Legal</div>
       <div class="meta-item"><b>Markets</b>Poland · Romania · Ukraine</div>
     </div>
     <svg class="hero-line" viewBox="0 0 360 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -383,14 +383,17 @@
     <div class="card">
       <h4>What I did</h4>
       <ul>
-        <li><span class="todo">TODO: what you owned end to end, e.g. "Designed the buyer rating flow, rating management and profile display"</span></li>
-        <li><span class="todo">TODO: e.g. "Ran the design jam and moderated the usability tests"</span></li>
-        <li><span class="todo">TODO: e.g. "Wrote the acceptance criteria and did design QA"</span></li>
+        <li>Owned the whole design process, from discovery and definition to design and prototyping.</li>
+        <li>Shaped the hypotheses and key product decisions, such as rating triggers, with the PM and the team.</li>
+        <li>Decided on the rating tags based on card sorting research.</li>
+        <li>Wrote the usability test scenarios with our researcher.</li>
+        <li>Defined acceptance criteria with QA and ran design QA.</li>
+        <li>Set the success metrics with our Product Manager and Product Analyst.</li>
       </ul>
     </div>
     <div class="card">
       <h4>The result</h4>
-      <p>Live in 3 markets in about 6 months, with 2.29M ratings collected in Poland and Romania by late October 2024.</p>
+      <p>Live in 3 markets in about 6 months, with 3.6M ratings in Poland and Romania by the end of 2024, well ahead of forecast. Ads from sellers with a score converted up to 37% better to delivery.</p>
     </div>
   </div>
 </section>
@@ -484,12 +487,12 @@
       <p>If we introduce Buyer Rating Management, then sellers' trust in the rating will be higher, because the rating will become an established, stable entry point for providing feedback.</p>
     </div>
     <div class="card">
-      <h4>Buyer hypothesis <span style="color:var(--sub);font-weight:500;text-transform:none;letter-spacing:0">(later disproven)</span></h4>
+      <h4>Buyer hypothesis <span style="color:var(--sub);font-weight:500;text-transform:none;letter-spacing:0">(not confirmed)</span></h4>
       <p>If we simplify the rating grading (starting from a low-effort binary model as one candidate), then user understanding of the rating will be higher, because the flow requires less effort to complete.</p>
     </div>
   </div>
   <p>Underlying belief: gathering valuable, quality ratings increases sellers' trust, measured by a change in the share of valid ratings and by higher CX survey scores. Transparency of the rating choice empowers users to make informed decisions and drives higher satisfaction.</p>
-  <div class="callout"><b>Spoiler:</b> this hypothesis turned out to be wrong. "Less effort = better understanding" pointed us to thumbs up/down, but testing showed users valued the <b>granularity and familiarity of stars</b> more than the effort thumbs saved. How we got there is in <a href="#test">Testing</a>.</div>
+  <div class="callout"><b>Spoiler:</b> testing didn't confirm this hypothesis. "Less effort = better understanding" pointed us to thumbs up/down, but in usability tests neither thumbs nor stars came out as a clear winner, and we chose stars for their <b>granularity and familiarity</b>. How we got there is in <a href="#test">Testing</a>.</div>
 
   <h3>Risks considered</h3>
   <ul>
@@ -516,10 +519,11 @@
   <p><b>Priority 1:</b> meet legal requirements and make ratings fully transactional. <b>Priority 2:</b> meet user needs across every place ratings appear: the ad page, seller mini-sites, private profiles and MyOLX.</p>
 
   <h3>Success metrics</h3>
-  <p>We tracked two groups of metrics:</p>
+  <p>With the Product Manager and Product Analyst, we set up metrics in three layers:</p>
   <ul>
-    <li><b>Ratings collection</b>: share of eligible buyers who rate, time to rate, and drop-off inside the flow.</li>
-    <li><b>Impact on buying</b>: how many buyers view ratings before purchasing, how ratings relate to purchase decisions and repeat buying, plus overall product health (successful transactions, retention).</li>
+    <li><b>North Star: Ratings Response Rate</b>, the share of requested ratings that buyers actually give. It tells us whether the rating flow is easy to understand and complete, and whether buyers think ratings are worth leaving.</li>
+    <li><b>Health metrics: Score Coverage</b>, the share of active Pay &amp; Ship sellers who have a score (the team's main goal for the first year), and <b>Share of Manually Moderated Ratings</b>, which should stay low if buyers leave valid ratings.</li>
+    <li><b>Product and UX metrics</b> for every part of the system: seller rating conversion, average ratings per seller and per buyer, score and tag penetration, filter use, drop-off in the rating flow, rejection reasons and support tickets about ratings.</li>
   </ul>
   <div class="callout"><b>Early signal:</b> buyers who give ratings show significantly bigger engagement with the product: more sessions, more replies, more ad views from rated sellers, and more events per session.</div>
 </section>
@@ -620,8 +624,8 @@
     <li><b>Objective & quantifiable</b>: a numeric scale is easier to interpret and aggregate into a score.</li>
     <li><b>Impactful & fair</b>: each rating meaningfully moves the score, keeping the signal honest for both sides.</li>
   </ul>
-  <div class="callout"><b>The turning point:</b> the low-effort model looked right on paper, and our own hypothesis backed it. The evidence showed users would trade a little extra effort for a rating they found more accurate and easier to trust, so we changed course.</div>
-  <p>The tags that shipped:</p>
+  <div class="callout"><b>The turning point:</b> the low-effort model looked right on paper, and our own hypothesis backed it. Testing didn't prove it: users were comfortable with both options, so we chose stars for the more nuanced and familiar rating they give, even at a little extra effort.</div>
+  <p>We decided on the final tag set based on card sorting research. The tags that shipped:</p>
   <div style="margin:12px 0 4px;">
     <span class="tag-pill">Item as described</span>
     <span class="tag-pill">Secure packaging</span>
@@ -714,26 +718,57 @@
 
 <section id="outcomes">
   <div class="section-label">Outcomes</div>
-  <h2 class="section-title">2.29M ratings in five months across Poland and Romania</h2>
+  <h2 class="section-title">3.6M ratings in seven months, well ahead of forecast</h2>
   <p>Ratings &amp; Reviews 2.0 shipped market by market: <b>Poland (3 Jun 2024)</b>, <b>Romania (12 Aug 2024)</b>, and <b>Ukraine (16 Dec 2024)</b>. Rolling out one market at a time let us monitor and adjust before going wider.</p>
 
   <div class="outcome-grid">
     <div class="card">
-      <div class="stat">2.29M</div>
-      <div class="label">ratings in Poland &amp; Romania within 5 months of the first launch</div>
+      <div class="stat">3.6M</div>
+      <div class="label">ratings in Poland and Romania from June to December 2024</div>
     </div>
     <div class="card">
-      <div class="stat">~2 days</div>
-      <div class="label">faster for 5-star ratings than lower grades, a timing signal we now design around</div>
+      <div class="stat">155%</div>
+      <div class="label">of the ratings forecast in Poland, July to December 2024</div>
     </div>
     <div class="card">
-      <div class="stat">3 markets</div>
-      <div class="label">live on the new transactional system within ~6 months</div>
+      <div class="stat">571K</div>
+      <div class="label">sellers in Poland received a rating in December 2024 alone</div>
     </div>
   </div>
 
+  <p>There is no clean before/after comparison of scores: the old system calculated them with a different algorithm. Instead, we tracked the new system against two forecasts, one based on how the old system performed and one based on the new system's first month in Poland. Actual numbers beat both. In Poland, monthly ratings grew from 242K in June to 642K in December, several times what the old system's performance predicted.</p>
+
+  <div class="table-scroll"><table>
+    <tr><th>Market</th><th>Ratings given vs forecast</th><th>Sellers rated vs forecast</th></tr>
+    <tr><td><b>Poland</b> (Jul–Dec 2024)</td><td>129–204%</td><td>196–300%</td></tr>
+    <tr><td><b>Romania</b> (Sep–Dec 2024)</td><td>69–104%, on forecast from October</td><td>155–238%</td></tr>
+    <tr><td><b>Ukraine</b> (Dec 2024–Mar 2025)</td><td>103–151%</td><td>202–297%</td></tr>
+  </table></div>
+  <p style="font-size:13px;color:var(--sub);margin-top:-4px">Forecast based on the new system's performance in Poland in June 2024. Romania's first, partial month (August) is left out.</p>
+
+  <p>The number of sellers who received a rating ran even further ahead of forecast than the number of ratings. Ratings were spread across many more sellers than expected, which is exactly what score coverage needs: more sellers with a score buyers can use.</p>
+
+  <h3>Impact on buying</h3>
+  <p>The new system picked up fast: it passed <b>1M ratings on 19 August 2024</b>, just 1.5 months after launch in Poland. With that volume, our analysts could start answering the question that mattered most: do scores change how buyers behave?</p>
+  <p>They compared ads from sellers with a score against ads from sellers without one, over one week in Poland, in three categories: Toys, Women's Clothes and Phones. To compare like with like, they balanced the two groups on price, photos, title length and description length, and left out the best-performing ads.</p>
+  <div class="outcome-grid">
+    <div class="card">
+      <div class="stat">+37%</div>
+      <div class="label">delivery click conversion on ads with a score in Women's Clothes and Phones</div>
+    </div>
+    <div class="card">
+      <div class="stat">+10.2%</div>
+      <div class="label">delivery click conversion on ads with a score in Toys</div>
+    </div>
+    <div class="card">
+      <div class="stat">Fewer</div>
+      <div class="label">calls, texts and chats on ads with a score</div>
+    </div>
+  </div>
+  <p>Ads with a score converted better to delivery (the "buy with delivery" click) in every category we looked at. At the same time, they got fewer calls, texts and chat messages. Our hypothesis: when buyers can see a score, they need to contact the seller less to check whether they can be trusted, which matches what we heard in qualitative research. So fewer contacts can be a good sign, not a drop in interest.</p>
+  <div class="callout"><b>A caveat:</b> this is a correlation in balanced groups, not a controlled experiment. It shows a clear positive link between scores and delivery clicks, but not how big the effect on purchases really is. The next step was an A/B test to measure it properly.</div>
+
   <p>Early behavioural data also revealed a useful pattern: <b>5-star ratings were submitted faster</b> (≈7.6 days from delivery on average) than lower grades (≈9.5–10.4 days). Satisfied buyers seem to rate quickly and near-effortlessly, while a slower rating is a soft signal of a more considered, often more negative, experience. This shaped how we time rating prompts and follow-ups.</p>
-  <p><span class="todo">TODO: add 1–2 before/after numbers for the success metrics defined earlier, e.g. "share of eligible buyers who rate went from X% to Y%" or "share of valid ratings up X pts". Compare against the legacy baseline: 60% of buyers had given only one valid rating.</span></p>
   <div class="callout"><b>Read with care:</b> 94.6% of ratings were 5-star. That skew is partly genuine satisfaction and partly a known property of marketplace rating systems (positivity bias, reluctance to leave negative feedback). We treated the distribution as a starting baseline to improve on, not a finished success metric, which is exactly what the next phase addressed.</div>
 </section>
 
@@ -745,19 +780,18 @@
   <h3>What users told us</h3>
   <p>Feedback was mixed in the early weeks after launch. Some users pushed back on the new scoring model and the reset of visible history, questioning why prior ratings weren't fully carried over and asking for more transparency on how the new score was calculated. This fed directly into a backlog of trust and clarity improvements (better explanation copy, clearer legacy-rating labeling).</p>
 
-  <h3>What the data showed</h3>
-  <p>We measured the success metrics defined earlier, ran A/B tests on flow and copy variants, ran HEART surveys, and watched session recordings (Smartlook, Hotjar, UXCam) to see where buyers dropped out of the rating flow.</p>
-  <p><span class="todo">TODO: one concrete finding, e.g. "An A/B test of the prompt copy raised completion by X%" or "Recordings showed most drop-off at the tag step, so we…"</span></p>
+  <h3>The measurement plan after launch</h3>
+  <p>After launch, we tracked the North Star and health metrics on dashboards, compared actual results with the forecasts every month, and planned to run A/B tests on flow and copy variants, run HEART surveys, and watch session recordings (Hotjar) to see where buyers drop out of the rating flow.</p>
 
   <div class="callout">The feedback loop closed back into the design backlog: clearer explanation of "revalued" ratings, more transparent legacy-score handling, and continued refinement of the moderation and tag system based on real usage patterns.</div>
 </section>
 
 <section id="reflection">
   <div class="section-label">Reflection</div>
-  <h2 class="section-title">The hardest part was letting go of our own hypothesis</h2>
-  <p>A trustworthy rating isn't a widget. It needs every actor in the system (buyer, seller, support agent, moderator) and the moderation and transparency mechanics that make a score believable, not just visible.</p>
-  <p>The biggest lesson for me was about our own assumptions. We started with a reasonable hypothesis that less effort would mean better understanding, and it was wrong. Keeping three genuinely different concepts alive long enough to test them with users, instead of settling the stakeholder disagreement in a meeting, is what exposed the real trade-off between simplicity and perceived accuracy.</p>
-  <p>Next time, I'd plan the move away from legacy ratings with users earlier. The early pushback after launch was mostly about old ratings and how the new score is calculated, and better explanation upfront would have prevented some of it.</p>
+  <h2 class="section-title">The hardest decisions weren't about the interface</h2>
+  <p>A trustworthy rating isn't a widget. Most of what makes a score believable sits outside the UI: asking for a rating only after the package is delivered, starting from a clean score instead of mixing old and new ratings, and having Legal review every flow and line of copy while the UOKiK investigation was ongoing. My job was to make those rules feel simple and fair to buyers and sellers.</p>
+  <p>We expected the low-effort thumbs model to win. In moderated sessions with 17 OLX users, neither option came out as a clear winner, so we chose stars because they give more nuance, people already know them, and they leave room for tags and written reviews later. For me, the lesson was that a test with no clear winner is still a result. The decision then has to rest on reasoning the whole team understands and agrees with.</p>
+  <p>Next time, I'd run research before shaping the solution. We started from customer complaints and legal requirements and used research afterwards to confirm and fill the gaps. With a known problem and a legal deadline that made sense, but it meant some questions came late.</p>
 </section>
 
 </div>
