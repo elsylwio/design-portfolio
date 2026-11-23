@@ -5,8 +5,36 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OLX Pay per use – Choose package</title>
-    <script type="module" crossorigin src="/prototype/assets/index-BMkv3RSC.js"></script>
-    <link rel="stylesheet" crossorigin href="/prototype/assets/index-C-x9mtLL.css">
+    <script>
+(function (m, a, z, e) {
+  var s, t, u, v;
+  try {
+    t = m.sessionStorage.getItem('maze-us');
+  } catch (err) {}
+
+  if (!t) {
+    t = new Date().getTime();
+    try {
+      m.sessionStorage.setItem('maze-us', t);
+    } catch (err) {}
+  }
+
+  u = document.currentScript || (function () {
+    var w = document.getElementsByTagName('script');
+    return w[w.length - 1];
+  })();
+  v = u && u.nonce;
+
+  s = a.createElement('script');
+  s.src = z + '?apiKey=' + e;
+  s.async = true;
+  if (v) s.setAttribute('nonce', v);
+  a.getElementsByTagName('head')[0].appendChild(s);
+  m.mazeUniversalSnippetApiKey = e;
+})(window, document, 'https://snippet.maze.co/maze-universal-loader.js', 'dcf42bf8-7cad-4554-9941-31490080dafb');
+</script>
+    <script type="module" crossorigin src="/prototype/assets/index-BxpKu_to.js"></script>
+    <link rel="stylesheet" crossorigin href="/prototype/assets/index-DzlzGDJz.css">
   </head>
   <body>
     <div id="root"></div>
