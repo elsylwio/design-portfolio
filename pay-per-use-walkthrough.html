@@ -454,7 +454,7 @@
   .deck::backdrop { background: #000; }
   /* full screen, photo slides: let the photo (and its veil) run into the spare space instead of stopping at 16:9 */
   .deck.is-fs .stage:has(.fill-img, .rico-col, .s6-rico), .deck.is-fs .stage > :has(> .fill-img, > .rico-col, > .s6-rico) { overflow: visible; }
-  .deck.is-fs .stage .fill-img, .deck.is-fs .stage .s15-veil { inset: calc(-1 * var(--fy, 0px)) calc(-1 * var(--fx, 0px)); }
+  .deck.is-fs .stage .fill-img, .deck.is-fs .stage .s15-veil, .deck.is-fs .stage .q21-veil { inset: calc(-1 * var(--fy, 0px)) calc(-1 * var(--fx, 0px)); }
   /* Rico's photo column on slides 5 and 6 runs to the top, bottom and right edge of the screen */
   .deck.is-fs .stage .rico-col, .deck.is-fs .stage .s6-rico {
     top: calc(-1 * var(--fy, 0px)); height: calc(1080px + 2 * var(--fy, 0px)); width: calc(716px + var(--fx, 0px) + 4px);
